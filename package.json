@@ -1,7 +1,7 @@
 {
-  "name": "my-app",
+  "name": "DH2321vt24group8",
   "version": "0.1.0",
-  "homepage": "https://AugustPaulsrud.github.io/DH2321vt24group8"
+  "homepage": "https://AugustPaulsrud.github.io/DH2321vt24group8",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.17.0",
