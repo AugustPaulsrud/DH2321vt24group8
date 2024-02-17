@@ -9,6 +9,8 @@
 # TODO: Implement check for deficient columns in the parsed CSV
 
 import csv
+import numpy as np
+import pandas as pd
 
 class parser:
     def __init__(self, input_tsv_file, output_csv_file=-1):
@@ -98,9 +100,8 @@ class parser:
                                         self.marker_dict[self.marker_idx[i]]['name'], self.marker_dict[self.marker_idx[i]]['trajectory'], 
                                         marker_positions[0], marker_positions[1], marker_positions[2]])
 
-    def getJSON(self):
+    def initData(self):
         import json
-        
 
         if self.json_file != -1:
             return self.json_file
@@ -121,7 +122,29 @@ class parser:
                                         columns[5]: marker_positions[0], columns[6]: marker_positions[1], columns[7]: marker_positions[2]})
 
         self.json_file = json.dumps(self.json_file)
+        
+        self.data = pd.json_normalize(json.loads(self.json_file)).astype({"FRAME": "int", "TIME": "float", 
+                                                                "X": "float", "Y": "float", "Z": "float"})
         return self.json_file
+    
+    def getVelocities(self):
+
+        WINDOW_SIZE = 3
+        
+        self.data.sort_values(by=["MARKER_NR", "FRAME"], inplace=True)
+        
+        self.data["flag"] = (self.data.loc[:, ["MARKER_NR"]].shift(-1) == self.data.loc[:, ["MARKER_NR"]].shift(1))
+        self.data[["VX", "VY", "VZ"]] = ((self.data.loc[:, ["X", "Y", "Z"]].shift(-1) - self.data.loc[:, ["X", "Y", "Z"]].shift(1)) / 0.01).where(self.data["flag"], np.nan).round(10)
+
+        self.data["VELOCITY"] = np.sqrt(self.data["VX"]**2 + self.data["VY"]**2 + self.data["VZ"]**2).rolling(window=WINDOW_SIZE, center=True).mean().round(3)
+
+        self.data.drop(columns=["flag"], inplace=True)
+        self.data.sort_index(inplace=True)
+        
+    def outputCSV(self):
+        self.data.to_csv(self.output_csv_file, index=False)
+        
+        
 
 def main():
     import sys
@@ -149,7 +172,9 @@ def main():
 
     try:
         p.parse()
-        p.writeCSV()
+        p.initData()
+        p.getVelocities()
+        p.outputCSV()
     except Exception as e:
         print("Parsing failed: ", e)
         sys.exit(1)
