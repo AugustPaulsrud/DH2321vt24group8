@@ -13,14 +13,14 @@ import csv
 class parser:
     def __init__(self, input_tsv_file, output_csv_file=-1):
 
-        if input_tsv_file.startswith('tsv/'):
+        if 'tsv/' in input_tsv_file:
             self.input_tsv_file = input_tsv_file
         else:
             self.input_tsv_file = "tsv/" + input_tsv_file
 
         if output_csv_file == -1:
             self.output_csv_file = "csv/" + self.input_tsv_file.rsplit('.', 1)[0].rsplit("/", 1)[1] + '.csv'
-        elif output_csv_file.startswith('csv/'):
+        elif 'csv/' in output_csv_file:
             self.output_csv_file = output_csv_file
         else:
             self.output_csv_file = "csv/" + output_csv_file

@@ -9,6 +9,7 @@ Usage:
 - `python parse.py <name_of_tsv_file>`
 
 ## Parsed Files
-| Index | Title                                                   | Parsed | Parsing Date | Parsing Time |
-| ----: | :------------------------------------------------------ | :----: | :----------: | :----------: |
-| 0     | [EVDa_SimCaTip_Ale0003](csv/EVDa_SimCaTip_Ale0003.csv)  | Yes    | 02/15/2024   | 13:08        |
+| Index | Title                                                         | Parsed | Parsing Date | Parsing Time |
+| ----: | :------------------------------------------------------------ | :----: | :----------: | :----------: |
+| 0     | [EVDa_SimCaTip_Ale0003](csv/EVDa_SimCaTip_Ale0003.csv)        | Yes    | 02/15/2024   | 13:08        |
+| 1     | [EVDb_SimCaPlus_Mario0006](csv/EVDb_SimCaPlus_Mario0006.csv)  | Yes    | 02/17/2024   | 11:23        |
