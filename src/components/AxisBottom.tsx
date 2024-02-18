@@ -27,6 +27,22 @@ export const AxisBottom = ({
     }));
   }, [xScale]);
 
+    // var svg = d3.select("svg");
+  // svg.append("text")
+  //   .attr("class", "x label")
+  //   .attr("text-anchor", "end")
+  //   .attr("x", width)
+  //   .attr("y", height - 6)
+  //   .text("income per capita, inflation-adjusted (dollars)");
+
+  // svg.append("text")
+  //   .attr("class", "y label")
+  //   .attr("text-anchor", "end")
+  //   .attr("y", 6)
+  //   .attr("dy", ".5em")
+  //   .attr("transform", "rotate(-90)")
+  //   .text("life expectancy (years)");
+
   return (
     <>
       {/* Ticks and labels */}
@@ -48,7 +64,7 @@ export const AxisBottom = ({
               fontSize: "10px",
               textAnchor: "middle",
               transform: "translateY(20px)",
-              fill: "#D2D7D3",
+              fill: "#505050",
             }}
           >
             {value}

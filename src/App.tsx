@@ -9,7 +9,7 @@ function App() {
   return (
     <div>
     <h1>CSV Scatterplot</h1>
-    <Scatterplot width={600} height={600} />
+    <Scatterplot width={600} height={600} csv_file={"EVDa_SimCaTip_Ale0003"} />
   </div>
   );
 }
