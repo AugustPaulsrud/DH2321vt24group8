@@ -140,14 +140,97 @@ class parser:
 
         self.data.drop(columns=["flag"], inplace=True)
         self.data.sort_index(inplace=True)
+    
+    def getCenter(self):
+        print("Getting centers...")
+        p = []
+        for d in self.data.loc[self.data.PHANTOM == "skull"].groupby("FRAME"):
+            temp = d[1].loc[:, ["MARKER_NR", "X", "Y", "Z"]].set_index("MARKER_NR").T
+            
+            v1 = temp.phantom4 - temp.phantom2
+            v2 = temp.phantom1 - temp.phantom2
+            
+            midpoint = np.round(temp.phantom2 + np.dot(v2, v1) / np.dot(v1, v1) * v1, 3)
+            
+            current = d[1].iloc[0]
+            
+            p.append([current.FRAME, current.TIME, current.PHANTOM, "midpoint", "calculated", 
+                                midpoint.X, midpoint.Y, midpoint.Z, np.nan, np.nan, np.nan, np.nan])
+            
+            if d[0] % 1000 == 0:
+                print(f"Frame {d[0]}/ {self.NO_OF_FRAMES} done.")
+        print("Done.")
+            
+        self.data = pd.concat([self.data, pd.DataFrame(p, columns=self.data.columns)], ignore_index=True)
+        self.data = self.data.sort_values(by=["FRAME", "MARKER_NR"]).reset_index(drop=True)
+    
+    class normalizeVector():
+        def __init__(self, vector):
+            self.length = 487.589617
+            self.offset = 0
+            
+            self.vector = vector
+            self.refPoint = np.array([0, 0, 1], dtype=np.float64)
+            self.refAngle = np.arccos(np.dot(vector, self.refPoint) / (np.linalg.norm(vector) * np.linalg.norm(self.refPoint)))
+            self.refAxis = np.cross(vector, self.refPoint) 
+            self.refAxis = self.refAxis / np.linalg.norm(self.refAxis)
+            self.q = np.sin(self.refAngle / 2) * self.refAxis
+            self.q = np.insert(self.q, 0, np.cos(self.refAngle / 2), axis = 0)
+            self.p = vector.values
+            self.p = np.insert(self.p, 0, 0, axis = 0)
+            self.qi = np.array([self.q[0], -self.q[1], -self.q[2], -self.q[3]], dtype=np.float64)
+            
+            self.start = self.normalize()
+            if np.abs(self.start[2] - self.length) > 1e-6:
+                self.offset = self.length - self.start[2]
+                self.start[2] = self.length
+            
         
+        def quaternion_multiply(self, quaternion1, quaternion0):
+            w0, x0, y0, z0 = quaternion0
+            w1, x1, y1, z1 = quaternion1
+            return np.array([-x1 * x0 - y1 * y0 - z1 * z0 + w1 * w0,
+                            x1 * w0 + y1 * z0 - z1 * y0 + w1 * x0,
+                            -x1 * z0 + y1 * w0 + z1 * x0 + w1 * y0,
+                            x1 * y0 - y1 * x0 + z1 * w0 + w1 * z0], dtype=np.float64)
+            
+        
+        def normalize(self, vector=None):
+            if vector is None:
+                vector = self.p
+            else:
+                vector = vector.values
+                vector = np.insert(vector, 0, 0, axis = 0)
+            
+            result = self.quaternion_multiply(self.quaternion_multiply(self.q, vector), self.qi)[1:] 
+            result[2] = result[2] + self.offset
+            
+            return result
+    
+    def getNormalized(self):
+        print("Normalizing...")
+        nRows = self.data.shape[0]
+        normalizer = self.normalizeVector(self.data.loc[(self.data.FRAME == 1) & (self.data.MARKER_NR == "midpoint"), 
+                                                            ["X", "Y", "Z"]].astype(np.float64).squeeze())
+        for index, row in self.data.iterrows():
+            self.data.loc[index, ["X", "Y", "Z"]] = np.round(normalizer.normalize(row[["X", "Y", "Z"]].astype(np.float64).squeeze()), 3)
+            
+            if index % 1000 == 0:
+                print(f"Rows {index}/ {nRows} done.")
+        
+        print("Done.")
+        
+            
     def outputCSV(self):
         self.data.to_csv(self.output_csv_file, index=False)
-        
+
         
 
 def main():
     import sys
+    import time
+    
+    start = time.time()
 
     try:
         assert len(sys.argv) > 1 and len(sys.argv) <= 3
@@ -174,7 +257,10 @@ def main():
         p.parse()
         p.initData()
         p.getVelocities()
+        p.getCenter()
+        p.getNormalized()
         p.outputCSV()
+        print(f"Time taken: {round(time.time() - start, 3)}s")
     except Exception as e:
         print("Parsing failed: ", e)
         sys.exit(1)
