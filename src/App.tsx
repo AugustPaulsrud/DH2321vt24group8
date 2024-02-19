@@ -1,15 +1,24 @@
 import React from 'react';
-import logo from './logo.svg';
+import Navbar from './components/Navbar';
+import { Route, Routes} from 'react-router-dom';
+import Home from './pages/Home';
+import Visuals from './pages/Visuals';
 import './App.css';
 
-function App() {
+const App = () => {
+  // Routes allows the code to be scalable, by allowing different pages by specifying their path
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Group 8 DH2321 vt 24</h1>
-      </header>
-    </div>
+      <>
+          <Navbar/>
+          <div className="container">
+              <Routes>
+                <Route path="/" element={<Home/>}/>
+                  <Route path="Home" element={<Home/>}/>
+                  <Route path="Visuals" element={<Visuals/>}/>
+              </Routes>
+          </div>
+      </>
   );
-}
+};
 
 export default App;
