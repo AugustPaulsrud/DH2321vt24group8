@@ -166,57 +166,40 @@ class parser:
     
     class normalizeVector():
         def __init__(self, vector):
-            self.length = 487.589617
+            
+            # hyperparameters
+            self.refPoint = np.array([391.05266052, 333.05802599, 184.30882738], dtype=np.float64)
+            
+            # rotation
+            self.mid = vector
+            self.angle = np.arccos(np.dot(self.mid, self.refPoint) / (np.linalg.norm(self.mid) * np.linalg.norm(self.refPoint)))
+            self.rotationMatrix = np.array([[np.cos(self.angle), -np.sin(self.angle), 0],
+                                        [np.sin(self.angle), np.cos(self.angle), 0],
+                                        [0, 0, 1]], dtype=np.float64)
+            
+            # translation
             self.offset = 0
-            
-            self.vector = vector
-            self.refPoint = np.array([0, 0, 1], dtype=np.float64)
-            self.refAngle = np.arccos(np.dot(vector, self.refPoint) / (np.linalg.norm(vector) * np.linalg.norm(self.refPoint)))
-            self.refAxis = np.cross(vector, self.refPoint) 
-            self.refAxis = self.refAxis / np.linalg.norm(self.refAxis)
-            self.q = np.sin(self.refAngle / 2) * self.refAxis
-            self.q = np.insert(self.q, 0, np.cos(self.refAngle / 2), axis = 0)
-            self.p = vector.values
-            self.p = np.insert(self.p, 0, 0, axis = 0)
-            self.qi = np.array([self.q[0], -self.q[1], -self.q[2], -self.q[3]], dtype=np.float64)
-            
-            self.start = self.normalize()
-            if np.abs(self.start[2] - self.length) > 1e-6:
-                self.offset = self.length - self.start[2]
-                self.start[2] = self.length
-            
-        
-        def quaternion_multiply(self, quaternion1, quaternion0):
-            w0, x0, y0, z0 = quaternion0
-            w1, x1, y1, z1 = quaternion1
-            return np.array([-x1 * x0 - y1 * y0 - z1 * z0 + w1 * w0,
-                            x1 * w0 + y1 * z0 - z1 * y0 + w1 * x0,
-                            -x1 * z0 + y1 * w0 + z1 * x0 + w1 * y0,
-                            x1 * y0 - y1 * x0 + z1 * w0 + w1 * z0], dtype=np.float64)
-            
+            if np.linalg.norm(self.rotationMatrix @ self.mid - self.refPoint) > 1e-3:
+                self.offset = self.rotationMatrix @ self.mid - self.refPoint
         
         def normalize(self, vector=None):
             if vector is None:
-                vector = self.p
-            else:
-                vector = vector.values
-                vector = np.insert(vector, 0, 0, axis = 0)
+                vector = self.mid
             
-            result = self.quaternion_multiply(self.quaternion_multiply(self.q, vector), self.qi)[1:] 
-            result[2] = result[2] + self.offset
+            result = self.rotationMatrix @ vector 
+            result = (result.T - self.offset).T
             
             return result
     
     def getNormalized(self):
         print("Normalizing...")
-        nRows = self.data.shape[0]
-        normalizer = self.normalizeVector(self.data.loc[(self.data.FRAME == 1) & (self.data.MARKER_NR == "midpoint"), 
-                                                            ["X", "Y", "Z"]].astype(np.float64).squeeze())
-        for index, row in self.data.iterrows():
-            self.data.loc[index, ["X", "Y", "Z"]] = np.round(normalizer.normalize(row[["X", "Y", "Z"]].astype(np.float64).squeeze()), 3)
+        for d in self.data.groupby("FRAME"):
+            normalizer = self.normalizeVector(d[1].loc[d[1].MARKER_NR == "midpoint", ["X", "Y", "Z"]].astype(np.float64).squeeze())
+            self.data.loc[d[1].index, ["X", "Y", "Z"]] = pd.DataFrame(np.round(normalizer.normalize(d[1].loc[:, ["X", "Y", "Z"]].T.astype(np.float64).values).T, 3),
+                                                                      index=d[1].index, columns=["X", "Y", "Z"])
             
-            if index % 1000 == 0:
-                print(f"Rows {index}/ {nRows} done.")
+            if d[0] % 1000 == 0:
+                print(f"Frame {d[0]}/ {self.NO_OF_FRAMES} done.")
         
         print("Done.")
         
