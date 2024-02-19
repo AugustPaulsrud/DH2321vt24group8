@@ -3,7 +3,6 @@ import { AxisLeft } from './AxisLeft';
 import { AxisBottom } from './AxisBottom';
 import { useEffect, useState } from 'react';
 import { DSVRowArray } from 'd3';
-import { InteractionData, Tooltip } from "./Tooltip";
 
 // https://d3js.org/d3-zoom
 // https://observablehq.com/@d3/x-y-zoom?collection=@d3/d3-zoom
@@ -29,39 +28,25 @@ type CSVData = dataFormat | null; //DSVRowArray | null;
 const x_label = "TIME";
 const y_label = "X";
 
-export const Scatterplot = ({ width, height, csv_file }: ScatterplotProps) => {
+export const ScatterplotSimple = ({ width, height, csv_file }: ScatterplotProps) => {
   //const initialState: CSVData = null;
 
   // useMemo instead?
-  //const [fetchedCSVData, setFetchedCSVdata] = useState<dataFormat[]>([]); //useState<CSVData>(initialState);
-
-  const [hovered, setHovered] = useState<InteractionData | null>(null);
-
+  const [fetchedCSVData, setFetchedCSVdata] = useState<dataFormat[]>([]); //useState<CSVData>(initialState);
 
   //const [data, setData] = useState<dataFormat[]>([]);
 
-  let fetchedCSVData: dataFormat[] = [];
+  //let fetchedCSVData: dataFormat[] = [];
 
   d3.csv(`${process.env.PUBLIC_URL}/data/csv/${csv_file}.csv`).then(res => {
-        fetchedCSVData = res.map((d: any) => ({
+        const processedData = res.map((d: any) => ({
           x: d.X,
           y: d.Y,
           group: d.MARKER_NR,
         }));
+        setFetchedCSVdata(processedData);
         //fetchedCSVData.push(res);
       });
-  
-  // if (!(fetchedCSVData && fetchedCSVData.length)) {
-  //   d3.csv(`${process.env.PUBLIC_URL}/data/csv/${csv_file}.csv`).then(res => {
-  //     const processedData = res.map((d: any) => ({
-  //       x: d.X,
-  //       y: d.Y,
-  //       group: d.MARKER_NR,
-  //     }));
-  //     //setFetchedCSVdata(res);
-  //     setFetchedCSVdata(processedData);
-  //   });
-  // }
   
   // Layout. The div size is set by the given props.
   // The bounds (=area inside the axis) is calculated by substracting the margins
@@ -73,16 +58,6 @@ export const Scatterplot = ({ width, height, csv_file }: ScatterplotProps) => {
   const xScale = d3.scaleLinear().domain([-100, 500]).range([0, boundsWidth]);
 
   const allGroups = fetchedCSVData.map((d) => String(d.group));
-  
-  // add the options to the button
-  d3.select("#selectButton")
-  .selectAll('myOptions')
-   .data(allGroups)
-  .enter()
-  .append('option')
-  .text(function (d) { return d; }) // text showed in the menu
-  .attr("value", function (d) { return d; }) // corresponding value returned by the button
-
   
   const colorScale = d3
     .scaleOrdinal<string>()
@@ -102,67 +77,15 @@ export const Scatterplot = ({ width, height, csv_file }: ScatterplotProps) => {
         fill={colorScale(d.group)}
         fillOpacity={0.2}
         strokeWidth={1}
-        onMouseEnter={() =>
-          setHovered({
-            xPos: xScale(d.x),
-            yPos: yScale(d.y),
-            name: d.group,
-          })
-        }
-        onMouseLeave={() => setHovered(null)}
       />
     );
   });
 
 
-  // A function that update the chart
-  function update(selectedGroup: any) {
-
-    // Create new data with the selection?
-    var dataFilter = fetchedCSVData.filter(function(d){return d.group==selectedGroup})
-
-    // Give these new data to update 
-    
-      allShapes = dataFilter.map((d, i) => {
-          return (
-            <circle
-              key={i}
-              r={0.5}
-              cx={xScale(d.y)}
-              cy={yScale(d.x)}
-              opacity={1}
-              stroke={colorScale(d.group)}
-              fill={colorScale(d.group)}
-              fillOpacity={0.2}
-              strokeWidth={1}
-              onMouseEnter={() =>
-                setHovered({
-                  xPos: xScale(d.x),
-                  yPos: yScale(d.y),
-                  name: d.group,
-                })
-              }
-              onMouseLeave={() => setHovered(null)}
-            />
-          );
-        });
-  }
-
-  // When the button is changed, run the updateChart function
-  d3.select("#selectButton").on("change", function(d) {
-      // recover the option that has been chosen
-      var selectedOption = d3.select(this).property("value")
-      // run the updateChart function with this selected option
-      update(selectedOption)
-  })
-
-
   return (
     <div>
-      <select id="selectButton"></select>
       { (fetchedCSVData && fetchedCSVData.length) ? 
       <>
-      <div style={{ position: "relative" }}>
       <svg width={width} height={height}>
       <g
         width={boundsWidth}
@@ -214,22 +137,6 @@ export const Scatterplot = ({ width, height, csv_file }: ScatterplotProps) => {
         {allShapes}
       </g>
     </svg>
-    {/* Tooltip */}
-    <div
-        style={{
-          width: boundsWidth,
-          height: boundsHeight,
-          position: "absolute",
-          top: 0,
-          left: 0,
-          pointerEvents: "none",
-          marginLeft: MARGIN.left,
-          marginTop: MARGIN.top,
-        }}
-      >
-        <Tooltip interactionData={hovered} />
-      </div>
-      </div>
     </>
        : 
        <h1>Loading...</h1>
