@@ -157,13 +157,19 @@ const groupedShapesAndLines = allMarkerGroups.map((group) => {
     .filter((d) => selectedGroups.includes(d.group) && d.group === group)
     .filter((d) => d.time >= timeStart && d.time <= timeEnd);
 
+    var oldX = 0;
+    var oldY = 0;
+
   const shapesAndLines = groupData.map((d, i, array) => {
-    const angle = (d.time / maxTime) * Math.PI * 2;
     const arrowhead = d3Symbol().type(symbolTriangle).size(20);
     const x = xScale(d.x);
     const y = yScale(d.y);
-    const rotation = (angle - Math.PI / 2) * (180 / Math.PI);
+
+    const rotation = (270 - (Math.atan2(oldY - y, oldX - x)) * 180 / Math.PI)% 360
     const transform = `translate(${x},${y}) rotate(${rotation})`;
+
+    oldX = x;
+    oldY = y;
 
     // Render the arrowhead as a <path> element
     const shape = (
