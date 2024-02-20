@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import Plotly from 'plotly.js/lib/core';
 import Scatter3d from 'plotly.js/lib/scatter3d';
 import createPlotlyComponent from 'react-plotly.js/factory';
-
 import * as d3 from 'd3';
+
+var Plotly = require('plotly.js/lib/core');
+Plotly.register(require('plotly.js/lib/scatter3d'));
 
 const Plot = createPlotlyComponent(Plotly);
 
