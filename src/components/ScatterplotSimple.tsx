@@ -44,6 +44,10 @@ export const ScatterplotSimple = ({ width, height, csv_file }: ScatterplotProps)
    const [upperY, setUpperY] = useState<number>(500);
    const [lowerY, setLowerY] = useState<number>(0);
 
+   const [timeStart, setTimeStart] = useState<number>(0);
+   const [timeEnd, setTimeEnd] = useState<number>(60);
+   const [timeMax, setTimeMax] = useState<number>(60);
+
   const svgRef = useRef<SVGSVGElement>(null);
 
   // Create a zoom behavior
@@ -63,14 +67,18 @@ export const ScatterplotSimple = ({ width, height, csv_file }: ScatterplotProps)
         }));
         setFetchedCSVdata(processedData);
 
-        const maxX = d3.max(fetchedCSVData, (d) => d.x) || 500;
-        const maxY = d3.max(fetchedCSVData, (d) => d.y) || 500;
-        const minX = d3.min(fetchedCSVData, (d) => d.x) || 0;
-        const minY = d3.min(fetchedCSVData, (d) => d.y) || 0;
+        const maxX = d3.max(processedData, (d) => d.x) || 500;
+        const maxY = d3.max(processedData, (d) => d.y) || 500;
+        const minX = d3.min(processedData, (d) => d.x) || 0;
+        const minY = d3.min(processedData, (d) => d.y) || 0;
         setUpperX(maxX);
         setUpperY(maxY);
         setLowerX(minX);
         setLowerY(minY);
+
+        const maxTime = d3.max(processedData, (d) => d.time) || 60;
+        setTimeMax(maxTime);
+        setTimeEnd(maxTime);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -137,6 +145,7 @@ export const ScatterplotSimple = ({ width, height, csv_file }: ScatterplotProps)
   // Build the shapes
   const filteredShapes = fetchedCSVData
     .filter((d) => selectedGroups.includes(d.group))
+    .filter((d) => d.time >= timeStart && d.time <= timeEnd)
     .map((d, i) => {
 
       // Calculate the angle based on the time column
@@ -168,6 +177,7 @@ export const ScatterplotSimple = ({ width, height, csv_file }: ScatterplotProps)
             xPos: xScale(d.x),
             yPos: yScale(d.y),
             name: d.group,
+            time: d.time,
           })
         }
         onMouseLeave={() => setHovered(null)}
@@ -184,6 +194,10 @@ export const ScatterplotSimple = ({ width, height, csv_file }: ScatterplotProps)
       {fetchedCSVData.length ? (
       <>
       <div>
+      <label>Select time range:</label>
+      <input type="text" value={timeStart} onChange={e => setTimeStart(parseInt(e.target.value))} />
+      <input type="text" value={timeEnd} onChange={e => setTimeEnd(parseInt(e.target.value))} />
+      <br />
       <label>Select X range:</label>
       <input type="text" value={lowerX} onChange={e => setLowerX(parseInt(e.target.value))} />
       <input type="text" value={upperX} onChange={e => setUpperX(parseInt(e.target.value))} />

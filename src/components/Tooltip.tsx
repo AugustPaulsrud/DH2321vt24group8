@@ -5,6 +5,7 @@ export type InteractionData = {
   xPos: number;
   yPos: number;
   name: string;
+  time: number;
 };
 
 type TooltipProps = {
@@ -29,6 +30,8 @@ export const Tooltip = ({ interactionData }: TooltipProps) => {
       X: {interactionData.xPos}
       <br />
       Y: {interactionData.yPos}
+      <br />
+      Time: {interactionData.time}
     </div>
   );
 };

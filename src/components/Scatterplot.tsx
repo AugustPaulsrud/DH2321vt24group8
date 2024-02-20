@@ -107,6 +107,7 @@ export const Scatterplot = ({ width, height, csv_file }: ScatterplotProps) => {
             xPos: xScale(d.x),
             yPos: yScale(d.y),
             name: d.group,
+            time: 0,
           })
         }
         onMouseLeave={() => setHovered(null)}
@@ -140,6 +141,7 @@ export const Scatterplot = ({ width, height, csv_file }: ScatterplotProps) => {
                   xPos: xScale(d.x),
                   yPos: yScale(d.y),
                   name: d.group,
+                  time: 0,
                 })
               }
               onMouseLeave={() => setHovered(null)}
