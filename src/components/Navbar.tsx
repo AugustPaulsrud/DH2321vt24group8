@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link, useMatch, useResolvedPath } from "react-router-dom";
 import { Bars3BottomRightIcon, XMarkIcon } from '@heroicons/react/24/solid'
 
@@ -9,9 +8,9 @@ const Navbar = () => {
         {name:"Home",link:"/"},
         {name:"Visuals",link:"/"},
         {name:"Miscellaneous",link:"/"},
-
       ];
-      let [open, setOpen] =useState(false);
+
+    let [open, setOpen] = useState(false);
 
     return (
         <div className='shadow-md w-full top-0 left-0 p-2'>
