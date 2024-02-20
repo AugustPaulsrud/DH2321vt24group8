@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { DSVRowArray } from 'd3';
 import { symbol as d3Symbol, symbolTriangle } from 'd3';
 import { InteractionData, Tooltip } from "./Tooltip";
+import MultiRangeSlider, { ChangeResult } from "multi-range-slider-react";
 
 // https://d3js.org/d3-zoom
 // https://observablehq.com/@d3/x-y-zoom?collection=@d3/d3-zoom
@@ -225,23 +226,53 @@ const groupedShapesAndLines = allMarkerGroups.map((group) => {
   // Flatten the array to avoid nested arrays
   const flattenedShapesAndLines = groupedShapesAndLines.flat();
 
-
   return (
     <div>
       {fetchedCSVData.length ? (
       <>
       <div>
-      <label>Select time range:</label>
-      <input type="text" value={timeStart} onChange={e => setTimeStart(parseInt(e.target.value))} />
-      <input type="text" value={timeEnd} onChange={e => setTimeEnd(parseInt(e.target.value))} />
+      <label>Select time range:</label> 
+      <MultiRangeSlider
+			  min={0}
+        max={10}
+        step={1}
+        minValue={timeStart}
+        maxValue={timeEnd}
+        onChange={(e: ChangeResult) => {
+          setTimeStart(e.minValue);
+          setTimeEnd(e.maxValue);
+          //console.log(e);
+			  }}
+		  />
       <br />
       <label>Select X range:</label>
-      <input type="text" value={lowerX} onChange={e => setLowerX(parseInt(e.target.value))} />
-      <input type="text" value={upperX} onChange={e => setUpperX(parseInt(e.target.value))} />
+      <MultiRangeSlider
+			  min={0}
+        max={500}
+        step={10}
+        minValue={lowerX}
+        maxValue={upperX}
+        onChange={(e: ChangeResult) => {
+          setLowerX(e.minValue);
+          setUpperX(e.maxValue);
+          //console.log(e);
+			  }}
+		  />
       <br />
       <label>Select Y range:</label>
-      <input type="text" value={lowerY} onChange={e => setLowerY(parseInt(e.target.value))} />
-      <input type="text" value={upperY} onChange={e => setUpperY(parseInt(e.target.value))} />
+      <MultiRangeSlider
+			  min={0}
+        max={500}
+        step={10}
+        minValue={lowerY}
+        maxValue={upperY}
+        onChange={(e: ChangeResult) => {
+          setLowerY(e.minValue);
+          setUpperY(e.maxValue);
+          //console.log(e);
+			  }}
+		  />
+      <br />
       </div>
       <div>
             <label>Select Groups:</label>
