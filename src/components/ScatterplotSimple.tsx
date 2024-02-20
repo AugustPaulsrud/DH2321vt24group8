@@ -4,6 +4,7 @@ import { AxisBottom } from './AxisBottom';
 import { useEffect, useRef, useState } from 'react';
 import { DSVRowArray } from 'd3';
 import { symbol as d3Symbol, symbolTriangle } from 'd3';
+import { InteractionData, Tooltip } from "./Tooltip";
 
 // https://d3js.org/d3-zoom
 // https://observablehq.com/@d3/x-y-zoom?collection=@d3/d3-zoom
@@ -34,15 +35,21 @@ export const ScatterplotSimple = ({ width, height, csv_file }: ScatterplotProps)
   const [fetchedCSVData, setFetchedCSVdata] = useState<dataFormat[]>([]);
   const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
 
+  const [hovered, setHovered] = useState<InteractionData | null>(null);
+
    // State variable to trigger a re-render
-   const [forceRender, setForceRender] = useState<number>(0);
+   //const [forceRender, setForceRender] = useState<number>(0);
+   const [upperX, setUpperX] = useState<number>(500);
+   const [lowerX, setLowerX] = useState<number>(0);
+   const [upperY, setUpperY] = useState<number>(500);
+   const [lowerY, setLowerY] = useState<number>(0);
 
   const svgRef = useRef<SVGSVGElement>(null);
 
   // Create a zoom behavior
-  const zoom = d3.zoom()
-    .scaleExtent([0.5, 5]) // Set the zoom scale range
-    .on('zoom', handleZoom);
+  // const zoom = d3.zoom()
+  //   .scaleExtent([0.5, 5]) // Set the zoom scale range
+  //   .on('zoom', handleZoom);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,31 +62,44 @@ export const ScatterplotSimple = ({ width, height, csv_file }: ScatterplotProps)
           time: d.TIME,
         }));
         setFetchedCSVdata(processedData);
+
+        const maxX = d3.max(fetchedCSVData, (d) => d.x) || 500;
+        const maxY = d3.max(fetchedCSVData, (d) => d.y) || 500;
+        const minX = d3.min(fetchedCSVData, (d) => d.x) || 0;
+        const minY = d3.min(fetchedCSVData, (d) => d.y) || 0;
+        setUpperX(maxX);
+        setUpperY(maxY);
+        setLowerX(minX);
+        setLowerY(minY);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
 
-    if (svgRef.current) {
-      d3.select(svgRef.current).call(zoom as any); // Use 'as any' to satisfy TypeScript
-    }
+    // if (svgRef.current) {
+    //   d3.select(svgRef.current).call(zoom as any); // Use 'as any' to satisfy TypeScript
+    // }
 
     fetchData();
-  }, [csv_file, zoom]); 
+  }, [csv_file]); //, zoom
   
     // Zoom event handler
-  function handleZoom(event: d3.D3ZoomEvent<SVGSVGElement, null>) {
-    const { transform } = event;
+  // function handleZoom(event: d3.D3ZoomEvent<SVGSVGElement, null>) {
+  //   const { transform } = event;
 
-    const updatedXScale = d3.scaleLinear().domain([-100, 500]).range([0, boundsWidth].map(d => transform.applyX(d)));
-    const updatedYScale = d3.scaleLinear().domain([0, 400]).range([boundsHeight, 0].map(d => transform.applyY(d)));
+  //   //const updatedXScale = d3.scaleLinear().domain([-100, 500]).range([0, boundsWidth].map(d => transform.applyX(d)));
+  //   //const updatedYScale = d3.scaleLinear().domain([0, 400]).range([boundsHeight, 0].map(d => transform.applyY(d)));
 
-    setForceRender(prev => prev + 1);
+  //   //setForceRender(prev => prev + 1);
+  //   //const updatedXScale = d3.scaleLinear().domain([-100, upperX]).range([0, boundsWidth].map(d => transform.applyX(d)));
 
-    // Update the scales
-    xScale.domain(updatedXScale.domain());
-    yScale.domain(updatedYScale.domain());
-  }
+  //   setUpperX(transform.k * upperX);
+  //   setUpperY(transform.k * upperY);
+
+  //   // Update the scales
+  //   //xScale.domain(updatedXScale.domain());
+  //   //yScale.domain(updatedYScale.domain());
+  // }
   
 
   const allMarkerGroups = Array.from(new Set(fetchedCSVData.map((d) => d.group)));
@@ -101,12 +121,13 @@ export const ScatterplotSimple = ({ width, height, csv_file }: ScatterplotProps)
   const boundsHeight = height - MARGIN.top - MARGIN.bottom;
 
   // Scales
-  const yScale = d3.scaleLinear().domain([0, 400]).range([boundsHeight, 0]);
-  const xScale = d3.scaleLinear().domain([-100, 500]).range([0, boundsWidth]);
+  const yScale = d3.scaleLinear().domain([lowerY, upperY]).range([boundsHeight, 0]);
+  const xScale = d3.scaleLinear().domain([lowerX, upperX]).range([0, boundsWidth]);
 
   const allGroups = fetchedCSVData.map((d) => String(d.group));
 
   const maxTime = d3.max(fetchedCSVData, (d) => d.time) || 400;
+  //setUpperX(maxX);
 
   const colorScale = d3
     .scaleOrdinal<string>()
@@ -125,8 +146,8 @@ export const ScatterplotSimple = ({ width, height, csv_file }: ScatterplotProps)
     const arrowhead = d3Symbol().type(symbolTriangle).size(20);
 
     // Calculate position
-    const x = xScale(d.y);
-    const y = yScale(d.x);
+    const x = xScale(d.x);
+    const y = yScale(d.y);
 
     // Apply the rotation to the arrowhead symbol
     const rotation = (angle - Math.PI / 2) * (180 / Math.PI);
@@ -142,6 +163,14 @@ export const ScatterplotSimple = ({ width, height, csv_file }: ScatterplotProps)
         stroke={colorScale(d.group)}
         fillOpacity={1.0}
         strokeWidth={0.5}
+        onMouseEnter={() =>
+          setHovered({
+            xPos: xScale(d.x),
+            yPos: yScale(d.y),
+            name: d.group,
+          })
+        }
+        onMouseLeave={() => setHovered(null)}
       />
     );
     }
@@ -154,6 +183,15 @@ export const ScatterplotSimple = ({ width, height, csv_file }: ScatterplotProps)
     <div>
       {fetchedCSVData.length ? (
       <>
+      <div>
+      <label>Select X range:</label>
+      <input type="text" value={lowerX} onChange={e => setLowerX(parseInt(e.target.value))} />
+      <input type="text" value={upperX} onChange={e => setUpperX(parseInt(e.target.value))} />
+      <br />
+      <label>Select Y range:</label>
+      <input type="text" value={lowerY} onChange={e => setLowerY(parseInt(e.target.value))} />
+      <input type="text" value={upperY} onChange={e => setUpperY(parseInt(e.target.value))} />
+      </div>
       <div>
             <label>Select Groups:</label>
             {allMarkerGroups.map((group) => (
@@ -168,6 +206,7 @@ export const ScatterplotSimple = ({ width, height, csv_file }: ScatterplotProps)
             ))}
       </div>
 
+      <div style={{ position: "relative" }}>
       <svg ref={svgRef} width={width} height={height}>
       <g
         width={boundsWidth}
@@ -219,6 +258,21 @@ export const ScatterplotSimple = ({ width, height, csv_file }: ScatterplotProps)
         {filteredShapes}
       </g>
     </svg>
+    <div
+        style={{
+          width: boundsWidth,
+          height: boundsHeight,
+          position: "absolute",
+          top: 0,
+          left: 0,
+          pointerEvents: "none",
+          marginLeft: MARGIN.left,
+          marginTop: MARGIN.top,
+        }}
+      >
+        <Tooltip interactionData={hovered} />
+      </div>
+      </div>
     </>
        ) : (
        <h1>Loading...</h1>

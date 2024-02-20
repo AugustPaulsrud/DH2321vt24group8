@@ -24,7 +24,11 @@ export const Tooltip = ({ interactionData }: TooltipProps) => {
         top: interactionData.yPos,
       }}
     >
-      {interactionData.name}
+      Marker: {interactionData.name}
+      <br />
+      X: {interactionData.xPos}
+      <br />
+      Y: {interactionData.yPos}
     </div>
   );
 };
