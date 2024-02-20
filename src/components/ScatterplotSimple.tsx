@@ -128,9 +128,18 @@ export const ScatterplotSimple = ({ width, height, csv_file }: ScatterplotProps)
   const boundsWidth = width - MARGIN.right - MARGIN.left;
   const boundsHeight = height - MARGIN.top - MARGIN.bottom;
 
+  // // Scales
+  // const yScale = d3.scaleLinear().domain([lowerY, upperY]).range([boundsHeight, 0]);
+  // const xScale = d3.scaleLinear().domain([lowerX, upperX]).range([0, boundsWidth]);
+
   // Scales
   const yScale = d3.scaleLinear().domain([lowerY, upperY]).range([boundsHeight, 0]);
   const xScale = d3.scaleLinear().domain([lowerX, upperX]).range([0, boundsWidth]);
+
+  useEffect(() => {
+    yScale.domain([lowerY, upperY]).range([boundsHeight, 0]);
+    xScale.domain([lowerX, upperX]).range([0, boundsWidth]);
+  }, [lowerX, upperX, lowerY, upperY]);
 
   const allGroups = fetchedCSVData.map((d) => String(d.group));
 
@@ -142,30 +151,24 @@ export const ScatterplotSimple = ({ width, height, csv_file }: ScatterplotProps)
     .domain(allGroups)
     .range(["#e0ac2b", "#e85252", "#6689c6", "#9a6fb0", "#a53253"]);
 
-  // Build the shapes
-  const filteredShapes = fetchedCSVData
-    .filter((d) => selectedGroups.includes(d.group))
-    .filter((d) => d.time >= timeStart && d.time <= timeEnd)
-    .map((d, i) => {
+  // Build the shapes and lines
+const groupedShapesAndLines = allMarkerGroups.map((group) => {
+  const groupData = fetchedCSVData
+    .filter((d) => selectedGroups.includes(d.group) && d.group === group)
+    .filter((d) => d.time >= timeStart && d.time <= timeEnd);
 
-      // Calculate the angle based on the time column
-    const angle = (d.time / maxTime) * Math.PI * 2; // Assuming time is in the range [0, 400]
-    
-    // Create arrowhead symbol
+  const shapesAndLines = groupData.map((d, i, array) => {
+    const angle = (d.time / maxTime) * Math.PI * 2;
     const arrowhead = d3Symbol().type(symbolTriangle).size(20);
-
-    // Calculate position
     const x = xScale(d.x);
     const y = yScale(d.y);
-
-    // Apply the rotation to the arrowhead symbol
     const rotation = (angle - Math.PI / 2) * (180 / Math.PI);
     const transform = `translate(${x},${y}) rotate(${rotation})`;
 
     // Render the arrowhead as a <path> element
-    return (
+    const shape = (
       <path
-        key={i}
+        key={`shape-${i}`}
         d={arrowhead() || ''}
         transform={transform}
         fill={colorScale(d.group)}
@@ -183,10 +186,38 @@ export const ScatterplotSimple = ({ width, height, csv_file }: ScatterplotProps)
         onMouseLeave={() => setHovered(null)}
       />
     );
+
+    // Connect data points with lines
+    if (i > 0) {
+      const prevData = array[i - 1];
+      const lineX1 = xScale(prevData.x);
+      const lineY1 = yScale(prevData.y);
+      const lineX2 = xScale(d.x);
+      const lineY2 = yScale(d.y);
+
+      const line = (
+        <line
+          key={`line-${i}`}
+          x1={lineX1}
+          y1={lineY1}
+          x2={lineX2}
+          y2={lineY2}
+          stroke={colorScale(d.group)}
+          strokeWidth={0.5}
+        />
+      );
+
+      return [shape, line];
     }
-    );
 
+    return shape;
+  });
 
+  return shapesAndLines;
+  });
+
+  // Flatten the array to avoid nested arrays
+  const flattenedShapesAndLines = groupedShapesAndLines.flat();
 
 
   return (
@@ -269,7 +300,7 @@ export const ScatterplotSimple = ({ width, height, csv_file }: ScatterplotProps)
         </g>
 
         {/* Circles */}
-        {filteredShapes}
+        {flattenedShapesAndLines}
       </g>
     </svg>
     <div
