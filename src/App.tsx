@@ -1,9 +1,11 @@
 import React from 'react';
 import Navbar from './components/Navbar';
 import { Route, Routes} from 'react-router-dom';
+
+// Pages
 import Home from './pages/Home';
 import Visuals from './pages/Visuals';
-import './App.css';
+import Miscellaneous from './pages/Miscellaneous';
 
 const App = () => {
   // Routes allows the code to be scalable, by allowing different pages by specifying their path
@@ -15,6 +17,7 @@ const App = () => {
                 <Route path="/" element={<Home/>}/>
                   <Route path="Home" element={<Home/>}/>
                   <Route path="Visuals" element={<Visuals/>}/>
+                  <Route path="Miscellaneous" element={<Miscellaneous/>}/>
               </Routes>
           </div>
       </>
