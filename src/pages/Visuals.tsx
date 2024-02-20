@@ -1,4 +1,6 @@
 import React from "react";
+import { ScatterplotSimple } from "../components/ScatterplotSimple";
+import Plot3D from "../components/Plot3D";
 
 const Visuals = () => {
     const [is3D, setIs3D] = React.useState(false); // State to track whether to render 2D or 3D graph
@@ -23,6 +25,9 @@ const Visuals = () => {
                     Show 3D Graph
                 </button>
             </div>
+            { is3D ? <Plot3D width={800} height={600} csv_file={"EVDa_SimCaTip_Ale0003"} /> : 
+            <ScatterplotSimple width={600} height={600} csv_file={"EVDa_SimCaTip_Ale0003"} /> }
+            
         </div>
     );
 };
