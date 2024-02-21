@@ -120,22 +120,6 @@ const Visuals = () => {
 			  }}
 		  />
       <br />
-      <label>Select X range:</label>
-      <MultiRangeSlider
-        style={{width: "90%"}}
-        className="m-2"
-			  min={0}
-        max={1000}
-        step={10}
-        minValue={lowerX}
-        maxValue={upperX}
-        onChange={(e: ChangeResult) => {
-          setLowerX(e.minValue);
-          setUpperX(e.maxValue);
-          //console.log(e);
-			  }}
-		  />
-      <br />
       <label>Select Z range:</label>
       <MultiRangeSlider
         style={{width: "90%"}}
@@ -155,9 +139,10 @@ const Visuals = () => {
       </div>
             { is3D ? 
             ( // 3D Graph
-                <div className="flex flex-col md:flex-row w-full justify-center items-center md:divide-x-2 max-md:divide-y-2">
-                    <div className="ml-5">
-                        <div className="pt-20 relative inline-block top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                <div className="flex flex-col md:flex-row w-full justify-center items-center">
+                    <div className="md:mr-5">
+                        <div className="pt-20">
+                            <h2 className="text-xl font-bold mb-4">Study #1</h2>
                             <select
                                 className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
                                 onChange={(e) => setSelectedCsvFile1(e.target.value)}
@@ -169,10 +154,11 @@ const Visuals = () => {
                                 ))}
                             </select>
                         </div>
-                        <Plot3D width={700} height={700} csv_file={selectedCsvFile1} /> 
+                        <Plot3D width={600} height={700} csv_file={selectedCsvFile1} /> 
                     </div>
-                    <div className="[&>*]:mx-5">
-                        <div className="pt-20 relative inline-block top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    <div className="md:ml-5 relative">
+                        <div className="pt-20">
+                            <h2 className="text-xl font-bold mb-4">Study #2</h2>
                             <select
                                 className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
                                 onChange={(e) => setSelectedCsvFile2(e.target.value)}
@@ -184,14 +170,15 @@ const Visuals = () => {
                                 ))}
                             </select>
                         </div>
-                        <Plot3D width={700} height={700} csv_file={selectedCsvFile2} /> 
+                        <Plot3D width={600} height={700} csv_file={selectedCsvFile2} /> 
                     </div>
                 </div>
             ) : 
             ( // 2D Graph
-                <div className="flex flex-col md:flex-row w-full justify-center items-center max-md:divide-y-2">
-                    <div className="[&>*]:mr-5">
-                        <div className="pt-20 relative inline-block top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ">
+                <div className="flex flex-col md:flex-row w-full justify-center items-center">
+                    <div className="md:mr-5 relative">
+                        <div className="mb-4 pt-20">
+                            <h2 className="text-xl font-bold mb-4">Study #1</h2>
                             <select
                                 className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
                                 onChange={(e) => setSelectedCsvFile1(e.target.value)}
@@ -208,8 +195,9 @@ const Visuals = () => {
                         <ScatterXZ width={600} height={600} csv_file={selectedCsvFile1} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />
                         <ScatterYZ width={600} height={600} csv_file={selectedCsvFile1} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> 
                     </div>
-                    <div className="[&>*]:ml-5">
-                        <div className="pt-20 relative inline-block top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    <div className="md:ml-5 relative">
+                        <div className="pt-20 mb-4">
+                            <h2 className="text-xl font-bold mb-4">Study #2</h2>
                             <select
                                 className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
                                 onChange={(e) => setSelectedCsvFile2(e.target.value)}
