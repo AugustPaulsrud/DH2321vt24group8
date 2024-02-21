@@ -31,7 +31,7 @@ type CSVData = dataFormat | null; //DSVRowArray | null;
 const x_label = "X";
 const y_label = "Y";
 
-export const ScatterplotSimple = ({ width, height, csv_file }: ScatterplotProps) => {
+export const ScatterplotSimple = (props: ScatterplotProps) => {
   const [fetchedCSVData, setFetchedCSVdata] = useState<dataFormat[]>([]);
   const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
 
@@ -57,8 +57,9 @@ export const ScatterplotSimple = ({ width, height, csv_file }: ScatterplotProps)
 
   useEffect(() => {
     const fetchData = async () => {
+      if (props.csv_file != "") {
       try {
-        const response = await d3.csv(`${process.env.PUBLIC_URL}/data/csv/${csv_file}.csv`);
+        const response = await d3.csv(`${process.env.PUBLIC_URL}/data/csv/${props.csv_file}.csv`);
         const processedData = response.map((d: any) => ({
           x: +d.X,
           y: +d.Y,
@@ -82,6 +83,7 @@ export const ScatterplotSimple = ({ width, height, csv_file }: ScatterplotProps)
       } catch (error) {
         console.error('Error fetching data:', error);
       }
+    }
     };
 
     // if (svgRef.current) {
@@ -89,7 +91,7 @@ export const ScatterplotSimple = ({ width, height, csv_file }: ScatterplotProps)
     // }
 
     fetchData();
-  }, [csv_file]); //, zoom
+  }, [props.csv_file]); //, zoom
   
     // Zoom event handler
   // function handleZoom(event: d3.D3ZoomEvent<SVGSVGElement, null>) {
@@ -125,8 +127,8 @@ export const ScatterplotSimple = ({ width, height, csv_file }: ScatterplotProps)
   
   // Layout. The div size is set by the given props.
   // The bounds (=area inside the axis) is calculated by substracting the margins
-  const boundsWidth = width - MARGIN.right - MARGIN.left;
-  const boundsHeight = height - MARGIN.top - MARGIN.bottom;
+  const boundsWidth = props.width - MARGIN.right - MARGIN.left;
+  const boundsHeight = props.height - MARGIN.top - MARGIN.bottom;
 
   // // Scales
   // const yScale = d3.scaleLinear().domain([lowerY, upperY]).range([boundsHeight, 0]);
@@ -258,7 +260,7 @@ const groupedShapesAndLines = allMarkerGroups.map((group) => {
       </div>
 
       <div style={{ position: "relative" }}>
-      <svg ref={svgRef} width={width} height={height}>
+      <svg ref={svgRef} width={props.width} height={props.height}>
       <g
         width={boundsWidth}
         height={boundsHeight}
