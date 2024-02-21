@@ -278,18 +278,23 @@ const groupedShapesAndLines = allMarkerGroups.map((group) => {
 		  />
       <br />
       </div>
-      <div>
-            <label>Select Groups:</label>
+      <div className="flex items-center mt-4">
+        <label className="p-4">Select Groups:</label>
+          <div className="grid grid-cols-3 gap-2">
             {allMarkerGroups.map((group) => (
-              <label>
-              <input
-                type="checkbox"
-                checked={selectedGroups.includes(group)}
-                onChange={() => handleGroupChange(group)}
-              />
-              {group}
-            </label>
+              <div key={group} className="flex items-center">
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={selectedGroups.includes(group)}
+                    onChange={() => handleGroupChange(group)}
+                    className="form-checkbox h-5 w-5 text-indigo-600"
+                  />
+                  <span className="ml-2 text-gray-700">{group}</span>
+                </label>
+              </div>
             ))}
+          </div>
       </div>
 
       <div style={{ position: "relative" }}>
