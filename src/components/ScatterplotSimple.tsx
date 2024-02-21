@@ -83,6 +83,8 @@ export const ScatterplotSimple = (props: ScatterplotProps) => {
       } catch (error) {
         console.error('Error fetching data:', error);
       }
+    } else {
+      setFetchedCSVdata([]); // Unselect data (?)
     }
     };
 
