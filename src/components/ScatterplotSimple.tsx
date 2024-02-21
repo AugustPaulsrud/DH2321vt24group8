@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { DSVRowArray } from 'd3';
 import { symbol as d3Symbol, symbolTriangle } from 'd3';
 import { InteractionData, Tooltip } from "./Tooltip";
+import MultiRangeSlider, { ChangeResult } from "multi-range-slider-react";
 
 // https://d3js.org/d3-zoom
 // https://observablehq.com/@d3/x-y-zoom?collection=@d3/d3-zoom
@@ -31,7 +32,7 @@ type CSVData = dataFormat | null; //DSVRowArray | null;
 const x_label = "X";
 const y_label = "Y";
 
-export const ScatterplotSimple = ({ width, height, csv_file }: ScatterplotProps) => {
+export const ScatterplotSimple = (props: ScatterplotProps) => {
   const [fetchedCSVData, setFetchedCSVdata] = useState<dataFormat[]>([]);
   const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
 
@@ -57,8 +58,9 @@ export const ScatterplotSimple = ({ width, height, csv_file }: ScatterplotProps)
 
   useEffect(() => {
     const fetchData = async () => {
+      if (props.csv_file != "") {
       try {
-        const response = await d3.csv(`${process.env.PUBLIC_URL}/data/csv/${csv_file}.csv`);
+        const response = await d3.csv(`${process.env.PUBLIC_URL}/data/csv/${props.csv_file}.csv`);
         const processedData = response.map((d: any) => ({
           x: +d.X,
           y: +d.Y,
@@ -82,6 +84,9 @@ export const ScatterplotSimple = ({ width, height, csv_file }: ScatterplotProps)
       } catch (error) {
         console.error('Error fetching data:', error);
       }
+    } else {
+      setFetchedCSVdata([]); // Unselect data (?)
+    }
     };
 
     // if (svgRef.current) {
@@ -89,7 +94,7 @@ export const ScatterplotSimple = ({ width, height, csv_file }: ScatterplotProps)
     // }
 
     fetchData();
-  }, [csv_file]); //, zoom
+  }, [props.csv_file]); //, zoom
   
     // Zoom event handler
   // function handleZoom(event: d3.D3ZoomEvent<SVGSVGElement, null>) {
@@ -125,8 +130,8 @@ export const ScatterplotSimple = ({ width, height, csv_file }: ScatterplotProps)
   
   // Layout. The div size is set by the given props.
   // The bounds (=area inside the axis) is calculated by substracting the margins
-  const boundsWidth = width - MARGIN.right - MARGIN.left;
-  const boundsHeight = height - MARGIN.top - MARGIN.bottom;
+  const boundsWidth = props.width - MARGIN.right - MARGIN.left;
+  const boundsHeight = props.height - MARGIN.top - MARGIN.bottom;
 
   // // Scales
   // const yScale = d3.scaleLinear().domain([lowerY, upperY]).range([boundsHeight, 0]);
@@ -225,23 +230,53 @@ const groupedShapesAndLines = allMarkerGroups.map((group) => {
   // Flatten the array to avoid nested arrays
   const flattenedShapesAndLines = groupedShapesAndLines.flat();
 
-
   return (
     <div>
       {fetchedCSVData.length ? (
       <>
       <div>
-      <label>Select time range:</label>
-      <input type="text" value={timeStart} onChange={e => setTimeStart(parseInt(e.target.value))} />
-      <input type="text" value={timeEnd} onChange={e => setTimeEnd(parseInt(e.target.value))} />
+      <label>Select time range:</label> 
+      <MultiRangeSlider
+			  min={0}
+        max={10}
+        step={1}
+        minValue={timeStart}
+        maxValue={timeEnd}
+        onChange={(e: ChangeResult) => {
+          setTimeStart(e.minValue);
+          setTimeEnd(e.maxValue);
+          //console.log(e);
+			  }}
+		  />
       <br />
       <label>Select X range:</label>
-      <input type="text" value={lowerX} onChange={e => setLowerX(parseInt(e.target.value))} />
-      <input type="text" value={upperX} onChange={e => setUpperX(parseInt(e.target.value))} />
+      <MultiRangeSlider
+			  min={0}
+        max={500}
+        step={10}
+        minValue={lowerX}
+        maxValue={upperX}
+        onChange={(e: ChangeResult) => {
+          setLowerX(e.minValue);
+          setUpperX(e.maxValue);
+          //console.log(e);
+			  }}
+		  />
       <br />
       <label>Select Y range:</label>
-      <input type="text" value={lowerY} onChange={e => setLowerY(parseInt(e.target.value))} />
-      <input type="text" value={upperY} onChange={e => setUpperY(parseInt(e.target.value))} />
+      <MultiRangeSlider
+			  min={0}
+        max={500}
+        step={10}
+        minValue={lowerY}
+        maxValue={upperY}
+        onChange={(e: ChangeResult) => {
+          setLowerY(e.minValue);
+          setUpperY(e.maxValue);
+          //console.log(e);
+			  }}
+		  />
+      <br />
       </div>
       <div className="flex items-center mt-4">
         <label className="p-4">Select Groups:</label>
@@ -263,7 +298,7 @@ const groupedShapesAndLines = allMarkerGroups.map((group) => {
       </div>
 
       <div style={{ position: "relative" }}>
-      <svg ref={svgRef} width={width} height={height}>
+      <svg ref={svgRef} width={props.width} height={props.height}>
       <g
         width={boundsWidth}
         height={boundsHeight}
