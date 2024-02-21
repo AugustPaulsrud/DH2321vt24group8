@@ -77,7 +77,7 @@ const Visuals = () => {
         style={{width: "90%"}}
         className="m-2"
 			  min={0}
-        max={10}
+        max={60}
         step={1}
         minValue={timeStart}
         maxValue={timeEnd}
@@ -217,7 +217,7 @@ const Visuals = () => {
                 </div>
             )}
             <div className="justify-center items-center">
-                <VelocityChart csvFile1={selectedCsvFile1} csvFile2={selectedCsvFile2} /> 
+                <VelocityChart csvFile1={selectedCsvFile1} csvFile2={selectedCsvFile2} timeStart={timeStart} timeEnd={timeEnd} /> 
             </div>
         </div>
     );

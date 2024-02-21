@@ -6,6 +6,8 @@ import * as d3 from 'd3';
 interface VelocityChartProps {
   csvFile1: string;
   csvFile2: string;
+  timeStart: number;
+  timeEnd: number;
 }
 
 type dataFormat = {
@@ -17,10 +19,13 @@ type dataFormat = {
 const x_label = "TIME";
 const y_label = "VELOCITY";
 
-export const VelocityChart: React.FC<VelocityChartProps> = ({ csvFile1, csvFile2 }) => {
+export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
     const [fetchedCSVData1, setFetchedCSVData1] = useState<dataFormat[]>([]);
     const [fetchedCSVData2, setFetchedCSVData2] = useState<dataFormat[]>([]);
     const [hovered, setHovered] = useState<InteractionData | null>(null);
+
+    const [timeStart, setTimeStart] = useState<number>(0);
+    const [timeEnd, setTimeEnd] = useState<number>(60);
 
     const svgRef = useRef<SVGSVGElement | null>(null);
 
@@ -30,10 +35,17 @@ export const VelocityChart: React.FC<VelocityChartProps> = ({ csvFile1, csvFile2
     const height = 400 - margin.top - margin.bottom;
 
     useEffect(() => {
+        setTimeStart(props.timeStart);
+        setTimeEnd(props.timeEnd);
+      }, [
+          props.timeStart,
+          props.timeEnd,]);
+
+    useEffect(() => {
         // Load data from CSV files
         Promise.all([
-            d3.csv(`${process.env.PUBLIC_URL}/data/csv/${csvFile1}.csv`),
-            d3.csv(`${process.env.PUBLIC_URL}/data/csv/${csvFile2}.csv`)
+            d3.csv(`${process.env.PUBLIC_URL}/data/csv/${props.csvFile1}.csv`),
+            d3.csv(`${process.env.PUBLIC_URL}/data/csv/${props.csvFile2}.csv`)
         ]).then(([data1, data2]) => {
             const processedData1 = data1.map((d: any) => ({
                 time: +d.TIME,
@@ -50,13 +62,14 @@ export const VelocityChart: React.FC<VelocityChartProps> = ({ csvFile1, csvFile2
         });
         console.log("Fetched Data 1:", fetchedCSVData1);
         console.log("Fetched Data 2:", fetchedCSVData2);
-    }, [csvFile1, csvFile2]);
+    }, [props.csvFile1, props.csvFile2]);
 
     useEffect(() => {
         if (!fetchedCSVData1.length || !fetchedCSVData2.length || !svgRef.current) return;
 
         // Combine data from both CSV files
-        const combinedData = [...fetchedCSVData1, ...fetchedCSVData2];
+        const combinedData = [...fetchedCSVData1, ...fetchedCSVData2].filter((d) => d.time >= timeStart && d.time <= timeEnd);;
+        
 
         // Create scales for x and y axes
         const xScale = d3.scaleLinear()
