@@ -1,9 +1,14 @@
-import React, { useState , useEffect} from "react";
+import React, { useState , useEffect, useRef} from "react";
+import { VelocityChart } from "../components/VelocityPlot";
 import { ScatterplotSimple } from "../components/ScatterplotSimple";
 import Plot3D from "../components/Plot3D";
 
+
 const Visuals = () => {
-    const [is3D, setIs3D] = useState(false); // State to track whether to render 2D or 3D graph
+    // State to track whether to render 2D or 3D graph
+    const [is3D, setIs3D] = useState(false);
+
+    // Initial state for selected CSV files as empty string
     const [selectedCsvFile1, setSelectedCsvFile1] = useState("");
     const [selectedCsvFile2, setSelectedCsvFile2] = useState("");
 
@@ -54,11 +59,41 @@ const Visuals = () => {
                 </button>
             </div>
             { is3D ? 
-            ( 
-                <div>
-                    <Plot3D width={800} height={600} csv_file={"EVDa_SimCaTip_Ale0003"} />  
+            ( // 3D Graph
+                <div className="flex flex-col md:flex-row w-full justify-center items-center md:divide-x-2 max-md:divide-y-2">
+                    <div>
+                        <div className="pt-20 relative inline-block top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                            <select
+                                className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+                                onChange={(e) => setSelectedCsvFile1(e.target.value)}
+                                value={selectedCsvFile1}
+                            >
+                                <option value="" className="font-bold">Select Study...</option>
+                                {csvFiles.map((file, index) => (
+                                    <option key={index} value={file}>{file}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <Plot3D width={700} height={700} csv_file={selectedCsvFile1} /> 
+                    </div>
+                    <div className="[&>*]:mx-5">
+                        <div className="pt-20 relative inline-block top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                            <select
+                                className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+                                onChange={(e) => setSelectedCsvFile2(e.target.value)}
+                                value={selectedCsvFile2}
+                            >
+                                <option value="">Select Study...</option>
+                                {csvFiles.map((file, index) => (
+                                    <option key={index} value={file}>{file}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <Plot3D width={700} height={700} csv_file={selectedCsvFile2} /> 
+                    </div>
                 </div>
-            ) : (
+            ) : 
+            ( // 2D Graph
                 <div className="flex flex-col md:flex-row w-full justify-center items-center md:divide-x-2 max-md:divide-y-2">
                     <div>
                         <div className="pt-20 relative inline-block top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
@@ -89,8 +124,10 @@ const Visuals = () => {
                             </select>
                         </div>
                         <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile2} /> 
+                        <VelocityChart csvFile1={selectedCsvFile1} csvFile2={selectedCsvFile2} />
                     </div>
                 </div>
+                
             )}
         </div>
     );

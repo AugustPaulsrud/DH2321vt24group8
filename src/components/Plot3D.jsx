@@ -12,6 +12,11 @@ const Plot3D = ({ width, height, csv_file }) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
+    if (!csv_file) {
+      // If csv_file is empty or undefined, set data to an empty array
+      setData([]);
+      return;
+    }
     // Using d3 to fetch and parse CSV data
     d3.csv(`${process.env.PUBLIC_URL}/data/csv/${csv_file}.csv`).then((csvData) => {
       // Process the CSV data to extract X, Y, Z, and MARKER_NR columns

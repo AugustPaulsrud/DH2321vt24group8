@@ -2,6 +2,12 @@ import React, { useState } from "react";
 import { Link, useMatch, useResolvedPath } from "react-router-dom";
 import { Bars3BottomRightIcon, XMarkIcon } from '@heroicons/react/24/solid'
 
+/*
+    This component was heavily inspired by the Header component from https://www.youtube.com/watch?v=7JGBGhuWxl0
+    in order to create a responsive header design that can dynamically fit different screen sizes for desktop and mobile.
+    The component was modified to fit with React Router to allow seamless navigation between pages. 
+ */
+
 // Navbar Functional Component
 const Navbar = () => {
     const Links =[
