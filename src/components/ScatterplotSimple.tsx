@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from 'react';
 import { DSVRowArray } from 'd3';
 import { symbol as d3Symbol, symbolTriangle } from 'd3';
 import { InteractionData, Tooltip } from "./Tooltip";
-import MultiRangeSlider, { ChangeResult } from "multi-range-slider-react";
 
 // https://d3js.org/d3-zoom
 // https://observablehq.com/@d3/x-y-zoom?collection=@d3/d3-zoom
@@ -17,12 +16,20 @@ type ScatterplotProps = {
   width: number;
   height: number;
   csv_file: string;
+  upperX: number;
+  lowerX: number;
+  upperY: number;
+  lowerY: number;
+  timeStart: number;
+  timeEnd: number;
+  timeMax: number;
   //data: { x: number; y: number }[];
 };
 
 type dataFormat = {
   x: number; 
   y: number;
+  z: number;
   group: string;
   time: number;
 };
@@ -40,9 +47,9 @@ export const ScatterplotSimple = (props: ScatterplotProps) => {
 
    // State variable to trigger a re-render
    //const [forceRender, setForceRender] = useState<number>(0);
-   const [upperX, setUpperX] = useState<number>(500);
+   const [upperX, setUpperX] = useState<number>(1000);
    const [lowerX, setLowerX] = useState<number>(0);
-   const [upperY, setUpperY] = useState<number>(500);
+   const [upperY, setUpperY] = useState<number>(1000);
    const [lowerY, setLowerY] = useState<number>(0);
 
    const [timeStart, setTimeStart] = useState<number>(0);
@@ -64,23 +71,25 @@ export const ScatterplotSimple = (props: ScatterplotProps) => {
         const processedData = response.map((d: any) => ({
           x: +d.X,
           y: +d.Y,
+          z: +d.Z,
           group: d.MARKER_NR,
           time: d.TIME,
         }));
         setFetchedCSVdata(processedData);
 
-        const maxX = d3.max(processedData, (d) => d.x) || 500;
-        const maxY = d3.max(processedData, (d) => d.y) || 500;
-        const minX = d3.min(processedData, (d) => d.x) || 0;
-        const minY = d3.min(processedData, (d) => d.y) || 0;
-        setUpperX(maxX);
-        setUpperY(maxY);
-        setLowerX(minX);
-        setLowerY(minY);
+        // TODO: Implement this!
+        // const maxX = d3.max(processedData, (d) => d.x) || 500;
+        // const maxY = d3.max(processedData, (d) => d.y) || 500;
+        // const minX = d3.min(processedData, (d) => d.x) || 0;
+        // const minY = d3.min(processedData, (d) => d.y) || 0;
+        // setUpperX(maxX);
+        // setUpperY(maxY);
+        // setLowerX(minX);
+        // setLowerY(minY);
 
-        const maxTime = d3.max(processedData, (d) => d.time) || 60;
-        setTimeMax(maxTime);
-        setTimeEnd(maxTime);
+        // const maxTime = d3.max(processedData, (d) => d.time) || 60;
+        // setTimeMax(maxTime);
+        // setTimeEnd(maxTime);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -95,6 +104,23 @@ export const ScatterplotSimple = (props: ScatterplotProps) => {
 
     fetchData();
   }, [props.csv_file]); //, zoom
+
+  // TODO; Implement for Z axis
+    useEffect(() => {
+      setUpperX(props.upperX);
+      setLowerX(props.lowerX);
+      setUpperY(props.upperY);
+      setLowerY(props.lowerY);
+      setTimeStart(props.timeStart);
+      setTimeEnd(props.timeEnd);
+      setTimeMax(props.timeMax);
+    }, [props.upperX,
+        props.lowerX,
+        props.upperY,
+        props.lowerY,
+        props.timeStart,
+        props.timeEnd,
+        props.timeMax,]);
   
     // Zoom event handler
   // function handleZoom(event: d3.D3ZoomEvent<SVGSVGElement, null>) {
@@ -190,6 +216,9 @@ const groupedShapesAndLines = allMarkerGroups.map((group) => {
           setHovered({
             xPos: xScale(d.x),
             yPos: yScale(d.y),
+            xRaw: d.x,
+            yRaw: d.y,
+            zRaw: d.z,
             name: d.group,
             time: d.time,
           })
@@ -234,56 +263,6 @@ const groupedShapesAndLines = allMarkerGroups.map((group) => {
     <div>
       {fetchedCSVData.length ? (
       <>
-      <div>
-      <label>Select time range:</label> 
-      <MultiRangeSlider
-        style={{width: "90%"}}
-        className="m-2"
-			  min={0}
-        max={10}
-        step={1}
-        minValue={timeStart}
-        maxValue={timeEnd}
-        onChange={(e: ChangeResult) => {
-          setTimeStart(e.minValue);
-          setTimeEnd(e.maxValue);
-          //console.log(e);
-			  }}
-		  />
-      <br />
-      <label>Select X range:</label>
-      <MultiRangeSlider
-        style={{width: "90%"}}
-        className="m-2"
-			  min={0}
-        max={500}
-        step={10}
-        minValue={lowerX}
-        maxValue={upperX}
-        onChange={(e: ChangeResult) => {
-          setLowerX(e.minValue);
-          setUpperX(e.maxValue);
-          //console.log(e);
-			  }}
-		  />
-      <br />
-      <label>Select Y range:</label>
-      <MultiRangeSlider
-        style={{width: "90%"}}
-        className="m-2"
-			  min={0}
-        max={500}
-        step={10}
-        minValue={lowerY}
-        maxValue={upperY}
-        onChange={(e: ChangeResult) => {
-          setLowerY(e.minValue);
-          setUpperY(e.maxValue);
-          //console.log(e);
-			  }}
-		  />
-      <br />
-      </div>
       <div className="flex items-center mt-4">
         <label className="p-4">Select Groups:</label>
           <div className="grid grid-cols-3 gap-2">

@@ -4,6 +4,9 @@ import styles from "./tooltip.module.css";
 export type InteractionData = {
   xPos: number;
   yPos: number;
+  xRaw: number;
+  yRaw: number;
+  zRaw: number;
   name: string;
   time: number;
 };
@@ -27,9 +30,11 @@ export const Tooltip = ({ interactionData }: TooltipProps) => {
     >
       Marker: {interactionData.name}
       <br />
-      X: {interactionData.xPos}
+      X: {interactionData.xRaw}
       <br />
-      Y: {interactionData.yPos}
+      Y: {interactionData.yRaw}
+      <br />
+      Z: {interactionData.zRaw}
       <br />
       Time: {interactionData.time}
     </div>

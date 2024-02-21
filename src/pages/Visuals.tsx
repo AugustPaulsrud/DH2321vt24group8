@@ -1,9 +1,18 @@
 import React, { useState , useEffect, useRef} from "react";
 import { ScatterplotSimple } from "../components/ScatterplotSimple";
 import Plot3D from "../components/Plot3D";
-
+import MultiRangeSlider, { ChangeResult } from "multi-range-slider-react";
 
 const Visuals = () => {
+    const [upperX, setUpperX] = useState<number>(1000);
+   const [lowerX, setLowerX] = useState<number>(0);
+   const [upperY, setUpperY] = useState<number>(1000);
+   const [lowerY, setLowerY] = useState<number>(0);
+
+   const [timeStart, setTimeStart] = useState<number>(0);
+   const [timeEnd, setTimeEnd] = useState<number>(60);
+   const [timeMax, setTimeMax] = useState<number>(60);
+
     // State to track whether to render 2D or 3D graph
     const [is3D, setIs3D] = useState(false);
 
@@ -57,6 +66,56 @@ const Visuals = () => {
                     Show 3D Graph
                 </button>
             </div>
+            <div>
+      <label>Select time range:</label> 
+      <MultiRangeSlider
+        style={{width: "90%"}}
+        className="m-2"
+			  min={0}
+        max={10}
+        step={1}
+        minValue={timeStart}
+        maxValue={timeEnd}
+        onChange={(e: ChangeResult) => {
+          setTimeStart(e.minValue);
+          setTimeEnd(e.maxValue);
+          //console.log(e);
+			  }}
+		  />
+      <br />
+      <label>Select X range:</label>
+      <MultiRangeSlider
+        style={{width: "90%"}}
+        className="m-2"
+			  min={0}
+        max={1000}
+        step={10}
+        minValue={lowerX}
+        maxValue={upperX}
+        onChange={(e: ChangeResult) => {
+          setLowerX(e.minValue);
+          setUpperX(e.maxValue);
+          //console.log(e);
+			  }}
+		  />
+      <br />
+      <label>Select Y range:</label>
+      <MultiRangeSlider
+        style={{width: "90%"}}
+        className="m-2"
+			  min={0}
+        max={1000}
+        step={10}
+        minValue={lowerY}
+        maxValue={upperY}
+        onChange={(e: ChangeResult) => {
+          setLowerY(e.minValue);
+          setUpperY(e.maxValue);
+          //console.log(e);
+			  }}
+		  />
+      <br />
+      </div>
             { is3D ? 
             ( // 3D Graph
                 <div className="flex flex-col md:flex-row w-full justify-center items-center md:divide-x-2 max-md:divide-y-2">
@@ -107,7 +166,7 @@ const Visuals = () => {
                                 ))}
                             </select>
                         </div>
-                        <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile1} /> 
+                        <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile1} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> 
                     </div>
                     <div className="[&>*]:ml-5">
                         <div className="pt-20 relative inline-block top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
@@ -122,7 +181,7 @@ const Visuals = () => {
                                 ))}
                             </select>
                         </div>
-                        <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile2} /> 
+                        <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile2} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> 
                     </div>
                 </div>
                 
