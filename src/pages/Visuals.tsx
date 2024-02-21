@@ -154,7 +154,7 @@ const Visuals = () => {
                                 ))}
                             </select>
                         </div>
-                        <Plot3D width={600} height={700} csv_file={selectedCsvFile1} /> 
+                        <Plot3D width={600} height={700} csv_file={selectedCsvFile1} timeStart={timeStart} timeEnd={timeEnd} /> 
                     </div>
                     <div className="md:ml-5 relative">
                         <div className="pt-20">
@@ -170,7 +170,7 @@ const Visuals = () => {
                                 ))}
                             </select>
                         </div>
-                        <Plot3D width={600} height={700} csv_file={selectedCsvFile2} /> 
+                        <Plot3D width={600} height={700} csv_file={selectedCsvFile2} timeStart={timeStart} timeEnd={timeEnd} /> 
                     </div>
                 </div>
             ) : 
