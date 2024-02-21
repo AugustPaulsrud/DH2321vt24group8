@@ -120,6 +120,38 @@ const Visuals = () => {
 			  }}
 		  />
       <br />
+      <label>Select X range:</label>
+      <MultiRangeSlider
+        style={{width: "90%"}}
+        className="m-2"
+			  min={0}
+        max={1000}
+        step={10}
+        minValue={lowerX}
+        maxValue={upperX}
+        onChange={(e: ChangeResult) => {
+          setLowerX(e.minValue);
+          setUpperX(e.maxValue);
+          //console.log(e);
+			  }}
+		  />
+      <br />
+      <label>Select Z range:</label>
+      <MultiRangeSlider
+        style={{width: "90%"}}
+        className="m-2"
+			  min={0}
+        max={1000}
+        step={10}
+        minValue={lowerZ}
+        maxValue={upperZ}
+        onChange={(e: ChangeResult) => {
+          setLowerZ(e.minValue);
+          setUpperZ(e.maxValue);
+          //console.log(e);
+			  }}
+		  />
+      <br />
       </div>
             { is3D ? 
             ( // 3D Graph
