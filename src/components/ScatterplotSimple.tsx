@@ -237,6 +237,8 @@ const groupedShapesAndLines = allMarkerGroups.map((group) => {
       <div>
       <label>Select time range:</label> 
       <MultiRangeSlider
+        style={{width: "90%"}}
+        className="m-2"
 			  min={0}
         max={10}
         step={1}
@@ -251,6 +253,8 @@ const groupedShapesAndLines = allMarkerGroups.map((group) => {
       <br />
       <label>Select X range:</label>
       <MultiRangeSlider
+        style={{width: "90%"}}
+        className="m-2"
 			  min={0}
         max={500}
         step={10}
@@ -265,6 +269,8 @@ const groupedShapesAndLines = allMarkerGroups.map((group) => {
       <br />
       <label>Select Y range:</label>
       <MultiRangeSlider
+        style={{width: "90%"}}
+        className="m-2"
 			  min={0}
         max={500}
         step={10}
@@ -366,7 +372,10 @@ const groupedShapesAndLines = allMarkerGroups.map((group) => {
       </div>
     </>
        ) : (
-       <h1>Loading...</h1>
+       // If no data is available, render a placeholder
+        <div className="text-center text-gray-400">
+          No data available
+        </div>
        )}
     </div>
   );

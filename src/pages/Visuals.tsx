@@ -1,5 +1,4 @@
 import React, { useState , useEffect, useRef} from "react";
-import { VelocityChart } from "../components/VelocityPlot";
 import { ScatterplotSimple } from "../components/ScatterplotSimple";
 import Plot3D from "../components/Plot3D";
 
@@ -44,7 +43,7 @@ const Visuals = () => {
 
     return (
         <div className="flex flex-col p-4 w-full">
-            <div className="flex space-x-4 w-full mb-4">
+            <div className="flex space-x-4 w-full mb-4 ml-4">
                 <button
                     className={`px-4 py-2 rounded-md ${is3D ? 'bg-gray-300' : 'bg-blue-500 text-white'}`}
                     onClick={() => setIs3D(false)}
@@ -61,7 +60,7 @@ const Visuals = () => {
             { is3D ? 
             ( // 3D Graph
                 <div className="flex flex-col md:flex-row w-full justify-center items-center md:divide-x-2 max-md:divide-y-2">
-                    <div>
+                    <div className="ml-5">
                         <div className="pt-20 relative inline-block top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                             <select
                                 className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
@@ -94,9 +93,9 @@ const Visuals = () => {
                 </div>
             ) : 
             ( // 2D Graph
-                <div className="flex flex-col md:flex-row w-full justify-center items-center md:divide-x-2 max-md:divide-y-2">
-                    <div>
-                        <div className="pt-20 relative inline-block top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                <div className="flex flex-col md:flex-row w-full justify-center items-center max-md:divide-y-2">
+                    <div className="[&>*]:mr-5">
+                        <div className="pt-20 relative inline-block top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 ">
                             <select
                                 className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
                                 onChange={(e) => setSelectedCsvFile1(e.target.value)}
@@ -110,7 +109,7 @@ const Visuals = () => {
                         </div>
                         <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile1} /> 
                     </div>
-                    <div className="[&>*]:mx-5">
+                    <div className="[&>*]:ml-5">
                         <div className="pt-20 relative inline-block top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                             <select
                                 className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
@@ -124,7 +123,6 @@ const Visuals = () => {
                             </select>
                         </div>
                         <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile2} /> 
-                        <VelocityChart csvFile1={selectedCsvFile1} csvFile2={selectedCsvFile2} />
                     </div>
                 </div>
                 
