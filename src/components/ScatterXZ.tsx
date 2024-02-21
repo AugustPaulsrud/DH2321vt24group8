@@ -273,7 +273,7 @@ const groupedShapesAndLines = allMarkerGroups.map((group) => {
                     onChange={() => handleGroupChange(group)}
                     className="form-checkbox h-5 w-5 text-indigo-600"
                   />
-                  <span className="ml-2 text-gray-700">{group}</span>
+                  <span className="ml-2 text-gray-700" style={{color: colorScale(group)}}>{group}</span>
                 </label>
               </div>
             ))}
