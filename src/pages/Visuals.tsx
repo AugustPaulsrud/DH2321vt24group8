@@ -1,5 +1,5 @@
 import React, { useState , useEffect, useRef} from "react";
-import { ScatterplotSimple } from "../components/ScatterplotSimple";
+import { VelocityChart } from "../components/VelocityPlot";
 import Plot3D from "../components/Plot3D";
 import MultiRangeSlider, { ChangeResult } from "multi-range-slider-react";
 import { ScatterXY } from "../components/ScatterXY";
@@ -212,11 +212,13 @@ const Visuals = () => {
                         {/* <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile2} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />  */}
                         <ScatterXY width={600} height={600} csv_file={selectedCsvFile2} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> 
                         <ScatterXZ width={600} height={600} csv_file={selectedCsvFile2} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> 
-                        <ScatterYZ width={600} height={600} csv_file={selectedCsvFile2} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> 
+                        <ScatterYZ width={600} height={600} csv_file={selectedCsvFile2} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />
                     </div>
                 </div>
-                
             )}
+            <div className="justify-center items-center">
+                <VelocityChart csvFile1={selectedCsvFile1} csvFile2={selectedCsvFile2} /> 
+            </div>
         </div>
     );
 };
