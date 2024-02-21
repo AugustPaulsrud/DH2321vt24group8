@@ -2,12 +2,17 @@ import React, { useState , useEffect, useRef} from "react";
 import { ScatterplotSimple } from "../components/ScatterplotSimple";
 import Plot3D from "../components/Plot3D";
 import MultiRangeSlider, { ChangeResult } from "multi-range-slider-react";
+import { ScatterXY } from "../components/ScatterXY";
+import { ScatterXZ } from "../components/ScatterXZ";
+import { ScatterYZ } from "../components/ScatterYZ";
 
 const Visuals = () => {
     const [upperX, setUpperX] = useState<number>(1000);
    const [lowerX, setLowerX] = useState<number>(0);
    const [upperY, setUpperY] = useState<number>(1000);
    const [lowerY, setLowerY] = useState<number>(0);
+   const [upperZ, setUpperZ] = useState<number>(1000);
+   const [lowerZ, setLowerZ] = useState<number>(0);
 
    const [timeStart, setTimeStart] = useState<number>(0);
    const [timeEnd, setTimeEnd] = useState<number>(60);
@@ -166,7 +171,10 @@ const Visuals = () => {
                                 ))}
                             </select>
                         </div>
-                        <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile1} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> 
+                        {/* <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile1} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> */}
+                        <ScatterXY width={600} height={600} csv_file={selectedCsvFile1} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />
+                        <ScatterXZ width={600} height={600} csv_file={selectedCsvFile1} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />
+                        <ScatterYZ width={600} height={600} csv_file={selectedCsvFile1} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> 
                     </div>
                     <div className="[&>*]:ml-5">
                         <div className="pt-20 relative inline-block top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
@@ -181,7 +189,10 @@ const Visuals = () => {
                                 ))}
                             </select>
                         </div>
-                        <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile2} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> 
+                        {/* <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile2} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />  */}
+                        <ScatterXY width={600} height={600} csv_file={selectedCsvFile2} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> 
+                        <ScatterXZ width={600} height={600} csv_file={selectedCsvFile2} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> 
+                        <ScatterYZ width={600} height={600} csv_file={selectedCsvFile2} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> 
                     </div>
                 </div>
                 
