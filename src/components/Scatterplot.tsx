@@ -106,6 +106,9 @@ export const Scatterplot = ({ width, height, csv_file }: ScatterplotProps) => {
           setHovered({
             xPos: xScale(d.x),
             yPos: yScale(d.y),
+            xRaw: 0,
+            yRaw: 0,
+            zRaw: 0,
             name: d.group,
             time: 0,
           })
@@ -140,6 +143,9 @@ export const Scatterplot = ({ width, height, csv_file }: ScatterplotProps) => {
                 setHovered({
                   xPos: xScale(d.x),
                   yPos: yScale(d.y),
+                  xRaw: 0,
+                  yRaw: 0,
+                  zRaw: 0,
                   name: d.group,
                   time: 0,
                 })
