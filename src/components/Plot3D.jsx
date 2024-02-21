@@ -8,22 +8,30 @@ Plotly.register(require('plotly.js/lib/scatter3d'));
 
 const Plot = createPlotlyComponent(Plotly);
 
-const Plot3D = ({ width, height, csv_file }) => {
+const Plot3D = (props) => {
   const [data, setData] = useState([]);
-
+  const [filteredData, setFilteredData] = useState([]);
+  
   useEffect(() => {
-    if (!csv_file) {
+    if (!props.csv_file) {
       // If csv_file is empty or undefined, set data to an empty array
       setData([]);
       return;
     }
     // Using d3 to fetch and parse CSV data
-    d3.csv(`${process.env.PUBLIC_URL}/data/csv/${csv_file}.csv`).then((csvData) => {
+    d3.csv(`${process.env.PUBLIC_URL}/data/csv/${props.csv_file}.csv`).then((csvData) => {
       // Process the CSV data to extract X, Y, Z, and MARKER_NR columns
       const processedData = processCSVData(csvData);
       setData(processedData);
+      setFilteredData(processedData);
     });
-  }, [csv_file]);
+  }, [props.csv_file]);
+
+  useEffect(() => {
+    const syncData = data
+    .filter((d) => d.TIME >= props.timeStart && d.TIME <= props.timeEnd);
+    setFilteredData(syncData);
+  }, [props.timeStart, props.timeEnd]);
 
   const processCSVData = (csvData) => {
     // Implement logic to extract X, Y, Z, and MARKER_NR columns
@@ -32,13 +40,14 @@ const Plot3D = ({ width, height, csv_file }) => {
       X: parseFloat(row.X),
       Y: parseFloat(row.Y),
       Z: parseFloat(row.Z),
+      TIME: parseFloat(row.TIME),
       MARKER_NR: row.MARKER_NR.toString(),
     }));
   };
 
   const plotLayout = {
-    width: width,
-    height: height,
+    width: props.width,
+    height: props.height,
     scene: {
       xaxis: { title: 'X' },
       yaxis: { title: 'Y' },
@@ -49,7 +58,7 @@ const Plot3D = ({ width, height, csv_file }) => {
 
   return (
     <Plot
-      data={generateScatterData(data)}
+      data={generateScatterData(filteredData)}
       layout={plotLayout}
     />
   );
