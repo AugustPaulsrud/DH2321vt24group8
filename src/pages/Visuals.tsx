@@ -6,7 +6,7 @@ import { ScatterXY } from "../components/ScatterXY";
 import { ScatterXZ } from "../components/ScatterXZ";
 import { ScatterYZ } from "../components/ScatterYZ";
 
-const Visuals = () => {
+const Visualisation = () => {
     const [upperX, setUpperX] = useState<number>(1000);
    const [lowerX, setLowerX] = useState<number>(0);
    const [upperY, setUpperY] = useState<number>(1000);
@@ -223,4 +223,4 @@ const Visuals = () => {
     );
 };
 
-export default Visuals;
+export default Visualisation;

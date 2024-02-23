@@ -4,7 +4,7 @@ import { Route, Routes} from 'react-router-dom';
 
 // Pages
 import Home from './pages/Home';
-import Visuals from './pages/Visuals';
+import Visualisation from './pages/Visuals';
 import Miscellaneous from './pages/Miscellaneous';
 
 const App = () => {
@@ -16,7 +16,7 @@ const App = () => {
               <Routes>
                 <Route path="/" element={<Home/>}/>
                   <Route path="Home" element={<Home/>}/>
-                  <Route path="Visuals" element={<Visuals/>}/>
+                  <Route path="Visualisation" element={<Visualisation/>}/>
                   <Route path="Miscellaneous" element={<Miscellaneous/>}/>
               </Routes>
           </div>

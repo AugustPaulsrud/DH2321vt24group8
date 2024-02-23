@@ -12,7 +12,7 @@ import { Bars3BottomRightIcon, XMarkIcon } from '@heroicons/react/24/solid'
 const Navbar = () => {
     const Links =[
         {name:"Home",link:"/"},
-        {name:"Visuals",link:"/"},
+        {name:"Visualisation",link:"/"},
         {name:"Miscellaneous",link:"/"},
       ];
 
