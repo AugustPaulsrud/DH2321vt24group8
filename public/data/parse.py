@@ -11,6 +11,7 @@
 import csv
 import numpy as np
 import pandas as pd
+import traceback
 
 class parser:
     def __init__(self, input_tsv_file, output_csv_file=-1):
@@ -202,6 +203,60 @@ class parser:
                 print(f"Frame {d[0]}/ {self.NO_OF_FRAMES} done.")
         
         print("Done.")
+    
+    def LTTB(self, data: pd.DataFrame, threshold: int, bins=-1) -> pd.DataFrame:
+        """
+        Reduce the number of points in a dataset by using the Largest Triangle Three Buckets algorithm.
+        """
+        if bins == -1:
+            bins = []
+            for d in data.groupby("MARKER_NR"):
+                slice = d[1].reset_index().set_index("FRAME")
+                interval = pd.interval_range(start=slice.index[0], end=slice.index[-2], periods=threshold-2, closed="right")
+                bins.append(interval)
+        
+        final = pd.Index([])
+        for i, d in enumerate(data.groupby("MARKER_NR")):
+            if d[0] == "midpoint":
+                continue
+            slice = d[1].reset_index().set_index("FRAME")
+            bin = bins[i]
+            n = len(bin)
+            cut = pd.cut(slice.index, bin)
+            slice["bins"] = cut
+            
+            
+            
+            selected = []
+            selected.append(slice.index[0])
+            
+            binGroups = slice.groupby("bins", observed=False)
+            
+            prev = slice.iloc[0, :].loc[["X", "Y", "Z"]]
+            for i in range(len(bin)):
+
+                if i == len(bin) - 1:
+                    avg = slice.iloc[-1, :].loc[["X", "Y", "Z"]]
+                else:
+                    avg = binGroups.get_group(bin[i+1]).loc[:, ["X", "Y", "Z"]].mean()
+                AB = binGroups.get_group(bin[i]).loc[:, ["X", "Y", "Z"]] - prev
+                AC = avg - prev
+                
+                area = pd.DataFrame(np.linalg.norm(np.cross(AB, AC).astype("float"), axis=1) / 2, index=binGroups.get_group(bin[i]).index, columns=["area"])
+                maxIndex = area.idxmax()
+                selected.append(maxIndex.values[0])
+                prev = slice.loc[maxIndex, ["X", "Y", "Z"]].values.reshape(3)
+
+            selected.append(slice.index[-1])
+            downsampled = slice.loc[selected, :].reset_index().set_index("index")
+            final = final.union(downsampled.index)
+            
+        return data.loc[final, :]
+        
+    def downSample(self, threshold: int):
+        print("Downsampling...")
+        self.data = self.LTTB(self.data, threshold)
+        print("Done.")
         
             
     def outputCSV(self):
@@ -216,7 +271,7 @@ def main():
     start = time.time()
 
     try:
-        assert len(sys.argv) > 1 and len(sys.argv) <= 3
+        assert len(sys.argv) > 1 and len(sys.argv) <= 4
     except AssertionError:
         print("Usage: python parse.py <input_tsv_file> <output_csv_file> in command line.")
         sys.exit(1)
@@ -228,7 +283,7 @@ def main():
         sys.exit(1)
 
     try:
-        if len(sys.argv) == 2:
+        if len(sys.argv) == 2 or (len(sys.argv) == 3 and sys.argv[2] == "-t"):
             p = parser(sys.argv[1])
         else:
             p = parser(sys.argv[1], sys.argv[2])
@@ -237,15 +292,21 @@ def main():
         sys.exit(1)
 
     try:
+        THRESHOLD = 500
+        
         p.parse()
         p.initData()
         p.getVelocities()
         p.getCenter()
         p.getNormalized()
+        if (len(sys.argv) == 4 and sys.argv[3] == "-t") or (len(sys.argv) == 3 and sys.argv[2] == "-t"):
+            p.downSample(THRESHOLD)
+            p.output_csv_file = "csv/" + p.output_csv_file.rsplit('.', 1)[0].rsplit("/", 1)[1] + f'_downsampled_{THRESHOLD}.csv'
         p.outputCSV()
         print(f"Time taken: {round(time.time() - start, 3)}s")
     except Exception as e:
         print("Parsing failed: ", e)
+        print(traceback.format_exc())
         sys.exit(1)
 
 
