@@ -37,11 +37,12 @@ const Visuals = () => {
                 ]; 
 
     type dataFormat = {
+        time: number;
         x: number; 
         y: number;
         z: number;
+        velocity: number;
         group: string;
-        time: number;
     };
 
     /**
@@ -81,7 +82,7 @@ const Visuals = () => {
         fetchData();
     }, [selectedCsvFile2]);
     
-    const parsedData1 = useMemo(() => {
+    const parsedData1: dataFormat[] = useMemo(() => {
         return rawData1.map((d: any) => ({
             x: +d.X,
             y: +d.Y,
@@ -91,20 +92,21 @@ const Visuals = () => {
         }));
     }, [rawData1]);
 
-    const parsedData2 = useMemo(() => {
+    const parsedData2: dataFormat[] = useMemo(() => {
         return rawData2.map((d: any) => ({
+            time: +d.TIME,
             x: +d.X,
             y: +d.Y,
             z: +d.Z,
-            group: d.MARKER_NR,
-            time: +d.TIME,
+            velocity: +d.VELOCITY,
+            group: d.MARKER_NR
         }));
     }, [rawData2]);
 
-    const allGroups = useMemo(() => {
-        const groups1 = parsedData1.map((d: any) => String(d.group));
-        const groups2 = parsedData2.map((d: any) => String(d.group));
-        return groups1.concat(groups2);
+    const allGroups: string[] = useMemo(() => {
+        const groups1 = Array.from(new Set(parsedData1.map((d: any) => d.group)));
+        const groups2 = Array.from(new Set(parsedData2.map((d: any) => d.group)));
+        return Array.from(new Set(groups1.concat(groups2)));
     }, [parsedData1, parsedData2]);
 
     const colorScale = useMemo(() => {

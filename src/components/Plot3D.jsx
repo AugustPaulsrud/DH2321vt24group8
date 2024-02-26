@@ -68,9 +68,9 @@ const generateScatterData = (data, colorScale) => {
   // Group data by MARKER_NR
   const groupedData = groupByMarker(data);
   //TODO: Debugging
-  console.dir(groupedData);
-  console.table(groupedData);
-  console.log(groupedData);
+  // console.dir(groupedData);
+  // console.table(groupedData);
+  // console.log(groupedData);
 
   // Generate scatter data for each group
   const scatterData = Object.keys(groupedData).map((markerNr, index) => {
