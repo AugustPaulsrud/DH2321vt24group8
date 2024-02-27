@@ -3,25 +3,31 @@ import { InteractionData, Tooltip } from "./Tooltip";
 import * as d3 from 'd3';
 
 
-interface VelocityChartProps {
-  csvFile1: string;
-  csvFile2: string;
-  timeStart: number;
-  timeEnd: number;
-}
-
 type dataFormat = {
     time: number;
+    x: number; 
+    y: number;
+    z: number;
     velocity: number;
     group: string;
+};
+
+interface VelocityChartProps {
+  data1: dataFormat[];
+  data2: dataFormat[];
+  colorScale: d3.ScaleOrdinal<string, string>;
+  selectedMarkers: string[];
+  allMarkerGroups: string[];
+  timeStart: number;
+  timeEnd: number;
 }
 
 const x_label = "TIME";
 const y_label = "VELOCITY";
 
 export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
-    const [fetchedCSVData1, setFetchedCSVData1] = useState<dataFormat[]>([]);
-    const [fetchedCSVData2, setFetchedCSVData2] = useState<dataFormat[]>([]);
+    //const [fetchedCSVData1, setFetchedCSVData1] = useState<dataFormat[]>([]);
+    //const [fetchedCSVData2, setFetchedCSVData2] = useState<dataFormat[]>([]);
     const [hovered, setHovered] = useState<InteractionData | null>(null);
 
     const [timeStart, setTimeStart] = useState<number>(0);
@@ -41,34 +47,34 @@ export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
           props.timeStart,
           props.timeEnd,]);
 
-    useEffect(() => {
-        // Load data from CSV files
-        Promise.all([
-            d3.csv(`${process.env.PUBLIC_URL}/data/csv/${props.csvFile1}.csv`),
-            d3.csv(`${process.env.PUBLIC_URL}/data/csv/${props.csvFile2}.csv`)
-        ]).then(([data1, data2]) => {
-            const processedData1 = data1.map((d: any) => ({
-                time: +d.TIME,
-                velocity: +d.VELOCITY,
-                group: d.MARKER_NR,
-            }));
-            const processedData2 = data2.map((d: any) => ({
-                time: +d.TIME,
-                velocity: +d.VELOCITY,
-                group: d.MARKER_NR,
-            }));
-            setFetchedCSVData1(processedData1);
-            setFetchedCSVData2(processedData2);
-        });
-        console.log("Fetched Data 1:", fetchedCSVData1);
-        console.log("Fetched Data 2:", fetchedCSVData2);
-    }, [props.csvFile1, props.csvFile2]);
+    // useEffect(() => {
+    //     // Load data from CSV files
+    //     Promise.all([
+    //         d3.csv(`${process.env.PUBLIC_URL}/data/csv/${props.csvFile1}.csv`),
+    //         d3.csv(`${process.env.PUBLIC_URL}/data/csv/${props.csvFile2}.csv`)
+    //     ]).then(([data1, data2]) => {
+    //         const processedData1 = data1.map((d: any) => ({
+    //             time: +d.TIME,
+    //             velocity: +d.VELOCITY,
+    //             group: d.MARKER_NR,
+    //         }));
+    //         const processedData2 = data2.map((d: any) => ({
+    //             time: +d.TIME,
+    //             velocity: +d.VELOCITY,
+    //             group: d.MARKER_NR,
+    //         }));
+    //         setFetchedCSVData1(processedData1);
+    //         setFetchedCSVData2(processedData2);
+    //     });
+    //     console.log("Fetched Data 1:", fetchedCSVData1);
+    //     console.log("Fetched Data 2:", fetchedCSVData2);
+    // }, [props.csvFile1, props.csvFile2]);
 
     useEffect(() => {
-        if (!fetchedCSVData1.length || !fetchedCSVData2.length || !svgRef.current) return;
+        if (!props.data1.length || !props.data2.length || !svgRef.current) return;
 
         // Combine data from both CSV files
-        const combinedData = [...fetchedCSVData1, ...fetchedCSVData2].filter((d) => d.time >= timeStart && d.time <= timeEnd);;
+        const combinedData = [...props.data1, ...props.data2].filter((d) => d.time >= timeStart && d.time <= timeEnd);;
         
 
         // Create scales for x and y axes
@@ -100,7 +106,7 @@ export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
 
         // Append lines for the data
         svg.selectAll(".line")
-            .data([fetchedCSVData1, fetchedCSVData2])
+            .data([props.data1, props.data2])
             .join("path")
             .attr("class", "line")
             .attr("d", line)
@@ -151,7 +157,7 @@ export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
             .attr("y", 40)
             .text("Study #2");
 
-    }, [fetchedCSVData1, fetchedCSVData2, margin, width, height]);
+    }, [props.data1, props.data2, margin, width, height]);
 
     return (
         <div className="justify-center items-center">

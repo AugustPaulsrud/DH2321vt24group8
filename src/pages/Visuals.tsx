@@ -1,10 +1,11 @@
-import React, { useState , useEffect, useRef} from "react";
+import React, { useState , useEffect, useRef, useMemo} from "react";
 import { VelocityChart } from "../components/VelocityPlot";
 import Plot3D from "../components/Plot3D";
 import MultiRangeSlider, { ChangeResult } from "multi-range-slider-react";
 import { ScatterXY } from "../components/ScatterXY";
 import { ScatterXZ } from "../components/ScatterXZ";
 import { ScatterYZ } from "../components/ScatterYZ";
+import * as d3 from 'd3';
 
 const Visualisation = () => {
     const [upperX, setUpperX] = useState<number>(1000);
@@ -34,6 +35,99 @@ const Visualisation = () => {
                     "EVDb_SimCaPlus_Mario0006", 
                     "EVDb_SimCaPlus_Mario0007"
                 ]; 
+
+    type dataFormat = {
+        time: number;
+        x: number; 
+        y: number;
+        z: number;
+        velocity: number;
+        group: string;
+    };
+
+    /**
+     * Sync data loading and marker selection
+     */
+    const [selectedMarkers, setSelectedMarkers] = useState<string[]>([]);
+    const [rawData1, setRawData1] = useState<any>([]);
+    const [rawData2, setRawData2] = useState<any>([]);
+    
+    useEffect(() => {
+        const fetchData = async () => {
+            if (selectedCsvFile1 !== "") {
+                try {
+                    const response = await d3.csv(`${process.env.PUBLIC_URL}/data/csv/${selectedCsvFile1}.csv`);
+                    setRawData1(response);
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
+            }
+        };
+    
+        fetchData();
+    }, [selectedCsvFile1]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            if (selectedCsvFile2 !== "") {
+                try {
+                    const response = await d3.csv(`${process.env.PUBLIC_URL}/data/csv/${selectedCsvFile2}.csv`);
+                    setRawData2(response);
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
+            }
+        };
+    
+        fetchData();
+    }, [selectedCsvFile2]);
+    
+    const parsedData1: dataFormat[] = useMemo(() => {
+        return rawData1.map((d: any) => ({
+            time: +d.TIME,
+            x: +d.X,
+            y: +d.Y,
+            z: +d.Z,
+            velocity: +d.VELOCITY,
+            group: d.MARKER_NR
+        }));
+    }, [rawData1]);
+
+    const parsedData2: dataFormat[] = useMemo(() => {
+        return rawData2.map((d: any) => ({
+            time: +d.TIME,
+            x: +d.X,
+            y: +d.Y,
+            z: +d.Z,
+            velocity: +d.VELOCITY,
+            group: d.MARKER_NR
+        }));
+    }, [rawData2]);
+
+    const allGroups: string[] = useMemo(() => {
+        const groups1 = Array.from(new Set(parsedData1.map((d: any) => d.group)));
+        const groups2 = Array.from(new Set(parsedData2.map((d: any) => d.group)));
+        return Array.from(new Set(groups1.concat(groups2)));
+    }, [parsedData1, parsedData2]);
+
+    const colorScale = useMemo(() => {
+        return d3
+        .scaleOrdinal<string>()
+        .domain(allGroups)
+        .range(["#e0ac2b", "#e85252", "#6689c6", "#9a6fb0", "#a53253"]);    
+    }, [allGroups]);
+
+    const handleGroupChange = (selectedMarker: string) => {
+        // Check if the group is already selected
+        if (selectedMarkers.includes(selectedMarker)) {
+          // If yes, remove it from the selected groups
+          setSelectedMarkers(selectedMarkers.filter(group => group !== selectedMarker));
+        } else {
+          // If no, add it to the selected groups
+          setSelectedMarkers([...selectedMarkers, selectedMarker]);
+        }
+    };
+                  
     
     // Placeholder Code for dynamically retrieving CSV files from server
     // useEffect(() => {
@@ -136,6 +230,26 @@ const Visualisation = () => {
 			  }}
 		  />
       <br />
+
+      <div className="mb-4 pt-20">
+        <label className="p-4">Select Markers:</label>
+        <div className="grid grid-cols-3 gap-2">
+            {allGroups.map((group: any) => (
+                <div key={group} className="flex items-center">
+                <label className="flex items-center">
+                    <input 
+                    type="checkbox"
+                    checked={selectedMarkers.includes(group)}
+                    onChange={() => handleGroupChange(group)}
+                    className="form-checkbox h-5 w-5 text-indigo-600"
+                    />
+                    <span className="ml-2 text-gray-700" style={{color: colorScale(group)}}>{group}</span>
+                </label>
+                </div>
+            ))}
+        </div>
+    </div>
+
       </div>
             { is3D ? 
             ( // 3D Graph
@@ -154,7 +268,8 @@ const Visualisation = () => {
                                 ))}
                             </select>
                         </div>
-                        <Plot3D width={600} height={700} csv_file={selectedCsvFile1} timeStart={timeStart} timeEnd={timeEnd} /> 
+
+                        <Plot3D data={parsedData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} width={600} height={700} csv_file={selectedCsvFile1} timeStart={timeStart} timeEnd={timeEnd} /> 
                     </div>
                     <div className="md:ml-5 relative">
                         <div className="pt-20">
@@ -170,7 +285,7 @@ const Visualisation = () => {
                                 ))}
                             </select>
                         </div>
-                        <Plot3D width={600} height={700} csv_file={selectedCsvFile2} timeStart={timeStart} timeEnd={timeEnd} /> 
+                        <Plot3D data={parsedData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} width={600} height={700} csv_file={selectedCsvFile2} timeStart={timeStart} timeEnd={timeEnd} /> 
                     </div>
                 </div>
             ) : 
@@ -190,10 +305,11 @@ const Visualisation = () => {
                                 ))}
                             </select>
                         </div>
+
                         {/* <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile1} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> */}
-                        <ScatterXY width={600} height={600} csv_file={selectedCsvFile1} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />
-                        <ScatterXZ width={600} height={600} csv_file={selectedCsvFile1} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />
-                        <ScatterYZ width={600} height={600} csv_file={selectedCsvFile1} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> 
+                        <ScatterXY width={600} height={600} data={parsedData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />
+                        <ScatterXZ width={600} height={600} data={parsedData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />
+                        <ScatterYZ width={600} height={600} data={parsedData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />
                     </div>
                     <div className="md:ml-5 relative">
                         <div className="pt-20 mb-4">
@@ -210,14 +326,21 @@ const Visualisation = () => {
                             </select>
                         </div>
                         {/* <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile2} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />  */}
-                        <ScatterXY width={600} height={600} csv_file={selectedCsvFile2} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> 
-                        <ScatterXZ width={600} height={600} csv_file={selectedCsvFile2} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> 
-                        <ScatterYZ width={600} height={600} csv_file={selectedCsvFile2} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />
+                        <ScatterXY width={600} height={600} data={parsedData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> 
+                        <ScatterXZ width={600} height={600} data={parsedData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> 
+                        <ScatterYZ width={600} height={600} data={parsedData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />
                     </div>
                 </div>
             )}
             <div className="justify-center items-center">
-                <VelocityChart csvFile1={selectedCsvFile1} csvFile2={selectedCsvFile2} timeStart={timeStart} timeEnd={timeEnd} /> 
+                <VelocityChart 
+                 data1={parsedData1} 
+                 data2={parsedData2} 
+                 colorScale={colorScale} 
+                 selectedMarkers={selectedMarkers} 
+                 allMarkerGroups={allGroups}
+                 timeStart={timeStart} 
+                 timeEnd={timeEnd} /> 
             </div>
         </div>
     );

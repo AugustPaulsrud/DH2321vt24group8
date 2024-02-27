@@ -15,7 +15,7 @@ const MARGIN = { top: 60, right: 60, bottom: 60, left: 60 };
 type ScatterplotProps = {
   width: number;
   height: number;
-  csv_file: string;
+  //csv_file: string;
   upperX: number;
   lowerX: number;
   upperY: number;
@@ -25,7 +25,10 @@ type ScatterplotProps = {
   timeStart: number;
   timeEnd: number;
   timeMax: number;
-  //data: { x: number; y: number }[];
+  data: dataFormat[];
+  colorScale: d3.ScaleOrdinal<string, string>; 
+  selectedMarkers: string[];
+  allMarkerGroups: string[];
 };
 
 type dataFormat = {
@@ -40,8 +43,8 @@ const x_label = "X";
 const y_label = "Z";
 
 export const ScatterXZ = (props: ScatterplotProps) => {
-  const [fetchedCSVData, setFetchedCSVdata] = useState<dataFormat[]>([]);
-  const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
+  //const [fetchedCSVData, setFetchedCSVdata] = useState<dataFormat[]>([]);
+  //const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
 
   const [hovered, setHovered] = useState<InteractionData | null>(null);
   
@@ -56,59 +59,12 @@ export const ScatterXZ = (props: ScatterplotProps) => {
 
   const svgRef = useRef<SVGSVGElement>(null);
 
-  // Create a zoom behavior
-  // const zoom = d3.zoom()
-  //   .scaleExtent([0.5, 5]) // Set the zoom scale range
-  //   .on('zoom', handleZoom);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (props.csv_file != "") {
-      try {
-        const response = await d3.csv(`${process.env.PUBLIC_URL}/data/csv/${props.csv_file}.csv`);
-        const processedData = response.map((d: any) => ({
-          x: +d.X,
-          y: +d.Y,
-          z: +d.Z,
-          group: d.MARKER_NR,
-          time: d.TIME,
-        }));
-        setFetchedCSVdata(processedData);
-
-        // TODO: Implement this!
-        // const maxX = d3.max(processedData, (d) => d.x) || 500;
-        // const maxY = d3.max(processedData, (d) => d.y) || 500;
-        // const minX = d3.min(processedData, (d) => d.x) || 0;
-        // const minY = d3.min(processedData, (d) => d.y) || 0;
-        // setUpperX(maxX);
-        // setUpperY(maxY);
-        // setLowerX(minX);
-        // setLowerY(minY);
-
-        // const maxTime = d3.max(processedData, (d) => d.time) || 60;
-        // setTimeMax(maxTime);
-        // setTimeEnd(maxTime);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    } else {
-      setFetchedCSVdata([]); // Unselect data (?)
-    }
-    };
-
-    // if (svgRef.current) {
-    //   d3.select(svgRef.current).call(zoom as any); // Use 'as any' to satisfy TypeScript
-    // }
-
-    fetchData();
-  }, [props.csv_file]); //, zoom
-
   // TODO; Implement for Z axis
     useEffect(() => {
       setUpperX(props.upperX);
       setLowerX(props.lowerX);
       setUpperZ(props.upperZ);
-      setLowerZ(props.lowerZ);
+      setLowerZ(props.lowerX);
       setTimeStart(props.timeStart);
       setTimeEnd(props.timeEnd);
       setTimeMax(props.timeMax);
@@ -120,46 +76,10 @@ export const ScatterXZ = (props: ScatterplotProps) => {
         props.timeEnd,
         props.timeMax,]);
   
-    // Zoom event handler
-  // function handleZoom(event: d3.D3ZoomEvent<SVGSVGElement, null>) {
-  //   const { transform } = event;
-
-  //   //const updatedXScale = d3.scaleLinear().domain([-100, 500]).range([0, boundsWidth].map(d => transform.applyX(d)));
-  //   //const updatedYScale = d3.scaleLinear().domain([0, 400]).range([boundsHeight, 0].map(d => transform.applyY(d)));
-
-  //   //setForceRender(prev => prev + 1);
-  //   //const updatedXScale = d3.scaleLinear().domain([-100, upperX]).range([0, boundsWidth].map(d => transform.applyX(d)));
-
-  //   setUpperX(transform.k * upperX);
-  //   setUpperY(transform.k * upperY);
-
-  //   // Update the scales
-  //   //xScale.domain(updatedXScale.domain());
-  //   //yScale.domain(updatedYScale.domain());
-  // }
-  
-
-  const allMarkerGroups = Array.from(new Set(fetchedCSVData.map((d) => d.group)));
-
-  const handleGroupChange = (selectedGroup: string) => {
-    // Check if the group is already selected
-    if (selectedGroups.includes(selectedGroup)) {
-      // If yes, remove it from the selected groups
-      setSelectedGroups(selectedGroups.filter(group => group !== selectedGroup));
-    } else {
-      // If no, add it to the selected groups
-      setSelectedGroups([...selectedGroups, selectedGroup]);
-    }
-  };
-  
   // Layout. The div size is set by the given props.
   // The bounds (=area inside the axis) is calculated by substracting the margins
   const boundsWidth = props.width - MARGIN.right - MARGIN.left;
   const boundsHeight = props.height - MARGIN.top - MARGIN.bottom;
-
-  // // Scales
-  // const yScale = d3.scaleLinear().domain([lowerY, upperY]).range([boundsHeight, 0]);
-  // const xScale = d3.scaleLinear().domain([lowerX, upperX]).range([0, boundsWidth]);
 
   // Scales
   const yScale = d3.scaleLinear().domain([lowerZ, upperZ]).range([boundsHeight, 0]);
@@ -170,32 +90,23 @@ export const ScatterXZ = (props: ScatterplotProps) => {
     xScale.domain([lowerX, upperX]).range([0, boundsWidth]);
   }, [lowerX, upperX, lowerZ, upperZ]);
 
-  const allGroups = fetchedCSVData.map((d) => String(d.group));
-
-  const maxTime = d3.max(fetchedCSVData, (d) => d.time) || 400;
-  //setUpperX(maxX);
-
-  const colorScale = d3
-    .scaleOrdinal<string>()
-    .domain(allGroups)
-    .range(["#e0ac2b", "#e85252", "#6689c6", "#9a6fb0", "#a53253"]);
-
+  //const maxTime = d3.max(props.data, (d) => d.time) || 400;
+  
   // Build the shapes and lines
-const groupedShapesAndLines = allMarkerGroups.map((group) => {
-  const groupData = fetchedCSVData
-    .filter((d) => selectedGroups.includes(d.group) && d.group === group)
+const groupedShapesAndLines = props.allMarkerGroups.map((group) => {
+  const groupData = props.data
+    .filter((d) => props.selectedMarkers.includes(d.group) && d.group === group)
     .filter((d) => d.time >= timeStart && d.time <= timeEnd);
 
     var oldX = 0;
     var oldY = 0;
 
   const shapesAndLines = groupData.map((d, i, array) => {
-    const arrowhead = d3Symbol().type(symbolTriangle).size(20);
+    const markerSymb = d3Symbol().type(d3.symbolCircle).size(20);
     const x = xScale(d.x);
     const y = yScale(d.z);
 
-    const rotation = (270 - (Math.atan2(oldY - y, oldX - x)) * 180 / Math.PI)% 360
-    const transform = `translate(${x},${y}) rotate(${rotation})`;
+    const transform = `translate(${x},${y})`;
 
     oldX = x;
     oldY = y;
@@ -204,10 +115,10 @@ const groupedShapesAndLines = allMarkerGroups.map((group) => {
     const shape = (
       <path
         key={`shape-${i}`}
-        d={arrowhead() || ''}
+        d={markerSymb() || ''}
         transform={transform}
-        fill={colorScale(d.group)}
-        stroke={colorScale(d.group)}
+        fill={props.colorScale(d.group)}
+        stroke={props.colorScale(d.group)}
         fillOpacity={1.0}
         strokeWidth={0.5}
         onMouseEnter={() =>
@@ -240,7 +151,7 @@ const groupedShapesAndLines = allMarkerGroups.map((group) => {
           y1={lineY1}
           x2={lineX2}
           y2={lineY2}
-          stroke={colorScale(d.group)}
+          stroke={props.colorScale(d.group)}
           strokeWidth={0.5}
         />
       );
@@ -259,27 +170,8 @@ const groupedShapesAndLines = allMarkerGroups.map((group) => {
 
   return (
     <div>
-      {fetchedCSVData.length ? (
+      {props.data.length ? (
       <>
-      <div className="flex items-center mt-4">
-        <label className="p-4">Select Groups:</label>
-          <div className="grid grid-cols-3 gap-2">
-            {allMarkerGroups.map((group) => (
-              <div key={group} className="flex items-center">
-                <label className="flex items-center">
-                  <input
-                    type="checkbox"
-                    checked={selectedGroups.includes(group)}
-                    onChange={() => handleGroupChange(group)}
-                    className="form-checkbox h-5 w-5 text-indigo-600"
-                  />
-                  <span className="ml-2 text-gray-700" style={{color: colorScale(group)}}>{group}</span>
-                </label>
-              </div>
-            ))}
-          </div>
-      </div>
-
       <div style={{ position: "relative" }}>
       <svg ref={svgRef} width={props.width} height={props.height}>
       <g
