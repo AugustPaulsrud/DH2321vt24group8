@@ -102,12 +102,11 @@ const groupedShapesAndLines = props.allMarkerGroups.map((group) => {
     var oldY = 0;
 
   const shapesAndLines = groupData.map((d, i, array) => {
-    const arrowhead = d3Symbol().type(symbolTriangle).size(20);
+    const markerSymb = d3Symbol().type(d3.symbolCircle).size(20);
     const x = xScale(d.x);
     const y = yScale(d.y);
 
-    const rotation = (270 - (Math.atan2(oldY - y, oldX - x)) * 180 / Math.PI)% 360
-    const transform = `translate(${x},${y}) rotate(${rotation})`;
+    const transform = `translate(${x},${y})`;
 
     oldX = x;
     oldY = y;
@@ -116,7 +115,7 @@ const groupedShapesAndLines = props.allMarkerGroups.map((group) => {
     const shape = (
       <path
         key={`shape-${i}`}
-        d={arrowhead() || ''}
+        d={markerSymb() || ''}
         transform={transform}
         fill={props.colorScale(d.group)}
         stroke={props.colorScale(d.group)}
@@ -174,7 +173,7 @@ const groupedShapesAndLines = props.allMarkerGroups.map((group) => {
       {props.data.length ? (
       <>
       <div style={{ position: "relative" }}>
-      <svg ref={svgRef} width={boundsWidth} height={boundsHeight}>
+      <svg ref={svgRef} width={props.width} height={props.height}>
       <g
         width={boundsWidth}
         height={boundsHeight}

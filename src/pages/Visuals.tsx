@@ -84,11 +84,12 @@ const Visuals = () => {
     
     const parsedData1: dataFormat[] = useMemo(() => {
         return rawData1.map((d: any) => ({
+            time: +d.TIME,
             x: +d.X,
             y: +d.Y,
             z: +d.Z,
-            group: d.MARKER_NR,
-            time: +d.TIME,
+            velocity: +d.VELOCITY,
+            group: d.MARKER_NR
         }));
     }, [rawData1]);
 
@@ -229,6 +230,26 @@ const Visuals = () => {
 			  }}
 		  />
       <br />
+
+      <div className="mb-4 pt-20">
+        <label className="p-4">Select Markers:</label>
+        <div className="grid grid-cols-3 gap-2">
+            {allGroups.map((group: any) => (
+                <div key={group} className="flex items-center">
+                <label className="flex items-center">
+                    <input 
+                    type="checkbox"
+                    checked={selectedMarkers.includes(group)}
+                    onChange={() => handleGroupChange(group)}
+                    className="form-checkbox h-5 w-5 text-indigo-600"
+                    />
+                    <span className="ml-2 text-gray-700" style={{color: colorScale(group)}}>{group}</span>
+                </label>
+                </div>
+            ))}
+        </div>
+    </div>
+
       </div>
             { is3D ? 
             ( // 3D Graph
@@ -247,7 +268,8 @@ const Visuals = () => {
                                 ))}
                             </select>
                         </div>
-                        <Plot3D data={parsedData1} colorScale={colorScale} width={600} height={700} csv_file={selectedCsvFile1} timeStart={timeStart} timeEnd={timeEnd} /> 
+
+                        <Plot3D data={parsedData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} width={600} height={700} csv_file={selectedCsvFile1} timeStart={timeStart} timeEnd={timeEnd} /> 
                     </div>
                     <div className="md:ml-5 relative">
                         <div className="pt-20">
@@ -263,7 +285,7 @@ const Visuals = () => {
                                 ))}
                             </select>
                         </div>
-                        <Plot3D data={parsedData1} colorScale={colorScale} width={600} height={700} csv_file={selectedCsvFile2} timeStart={timeStart} timeEnd={timeEnd} /> 
+                        <Plot3D data={parsedData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} width={600} height={700} csv_file={selectedCsvFile2} timeStart={timeStart} timeEnd={timeEnd} /> 
                     </div>
                 </div>
             ) : 
@@ -284,29 +306,10 @@ const Visuals = () => {
                             </select>
                         </div>
 
-                        <div className="mb-4 pt-20">
-                            <label className="p-4">Select Markers:</label>
-                            <div className="grid grid-cols-3 gap-2">
-                                {allGroups.map((group: any) => (
-                                    <div key={group} className="flex items-center">
-                                    <label className="flex items-center">
-                                        <input 
-                                        type="checkbox"
-                                        checked={selectedMarkers.includes(group)}
-                                        onChange={() => handleGroupChange(group)}
-                                        className="form-checkbox h-5 w-5 text-indigo-600"
-                                        />
-                                        <span className="ml-2 text-gray-700" style={{color: colorScale(group)}}>{group}</span>
-                                    </label>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
                         {/* <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile1} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> */}
                         <ScatterXY width={600} height={600} data={parsedData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />
-                        <ScatterXZ width={600} height={600} csv_file={selectedCsvFile1} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />
-                        <ScatterYZ width={600} height={600} csv_file={selectedCsvFile1} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> 
+                        <ScatterXZ width={600} height={600} data={parsedData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />
+                        <ScatterYZ width={600} height={600} data={parsedData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />
                     </div>
                     <div className="md:ml-5 relative">
                         <div className="pt-20 mb-4">
@@ -324,13 +327,20 @@ const Visuals = () => {
                         </div>
                         {/* <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile2} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />  */}
                         <ScatterXY width={600} height={600} data={parsedData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> 
-                        <ScatterXZ width={600} height={600} csv_file={selectedCsvFile2} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> 
-                        <ScatterYZ width={600} height={600} csv_file={selectedCsvFile2} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />
+                        <ScatterXZ width={600} height={600} data={parsedData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> 
+                        <ScatterYZ width={600} height={600} data={parsedData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />
                     </div>
                 </div>
             )}
             <div className="justify-center items-center">
-                <VelocityChart csvFile1={selectedCsvFile1} csvFile2={selectedCsvFile2} timeStart={timeStart} timeEnd={timeEnd} /> 
+                <VelocityChart 
+                 data1={parsedData1} 
+                 data2={parsedData2} 
+                 colorScale={colorScale} 
+                 selectedMarkers={selectedMarkers} 
+                 allMarkerGroups={allGroups}
+                 timeStart={timeStart} 
+                 timeEnd={timeEnd} /> 
             </div>
         </div>
     );
