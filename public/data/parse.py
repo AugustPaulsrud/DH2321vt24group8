@@ -213,13 +213,13 @@ class parser:
             bins = []
             for d in data.groupby("MARKER_NR"):
                 slice = d[1].reset_index().set_index("FRAME")
+                maxSeconds = (slice.TIME.max() // 0.5) * 0.5
+                time = np.arange(0, maxSeconds+0.5, 0.5)
                 interval = pd.interval_range(start=slice.index[0], end=slice.index[-2], periods=threshold-2, closed="right")
                 bins.append(interval)
         
         final = pd.Index([])
         for i, d in enumerate(data.groupby("MARKER_NR")):
-            if d[0] == "midpoint":
-                continue
             slice = d[1].reset_index().set_index("FRAME")
             bin = bins[i]
             n = len(bin)
@@ -234,16 +234,23 @@ class parser:
             binGroups = slice.groupby("bins", observed=False)
             
             prev = slice.iloc[0, :].loc[["X", "Y", "Z"]]
-            for i in range(len(bin)):
+            for j in range(len(bin)):
 
-                if i == len(bin) - 1:
+                flag = binGroups.get_group(bin[j]).TIME.isin(time)
+                intSec = binGroups.get_group(bin[j]).loc[flag].index.values
+                for s in intSec:
+                    if s not in selected:
+                        selected.append(int(s))
+                        continue
+                
+                if j == len(bin) - 1:
                     avg = slice.iloc[-1, :].loc[["X", "Y", "Z"]]
                 else:
-                    avg = binGroups.get_group(bin[i+1]).loc[:, ["X", "Y", "Z"]].mean()
-                AB = binGroups.get_group(bin[i]).loc[:, ["X", "Y", "Z"]] - prev
+                    avg = binGroups.get_group(bin[j+1]).loc[:, ["X", "Y", "Z"]].mean()
+                AB = binGroups.get_group(bin[j]).loc[:, ["X", "Y", "Z"]] - prev
                 AC = avg - prev
                 
-                area = pd.DataFrame(np.linalg.norm(np.cross(AB, AC).astype("float"), axis=1) / 2, index=binGroups.get_group(bin[i]).index, columns=["area"])
+                area = pd.DataFrame(np.linalg.norm(np.cross(AB, AC).astype("float"), axis=1) / 2, index=binGroups.get_group(bin[j]).index, columns=["area"])
                 maxIndex = area.idxmax()
                 selected.append(maxIndex.values[0])
                 prev = slice.loc[maxIndex, ["X", "Y", "Z"]].values.reshape(3)
