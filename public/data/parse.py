@@ -5,6 +5,7 @@
 # Usage: python parse.py <input_tsv_file>
 # Usage: python parse.py <name_of_tsv_file> <name_of_csv_file>
 # Usage: python parse.py <name_of_tsv_file>
+# Usage: python parse.py <input_tsv_file> -t (for downsampling)
 
 # TODO: Implement check for deficient columns in the parsed CSV
 
@@ -301,7 +302,7 @@ def main():
         p.getNormalized()
         if (len(sys.argv) == 4 and sys.argv[3] == "-t") or (len(sys.argv) == 3 and sys.argv[2] == "-t"):
             p.downSample(THRESHOLD)
-            p.output_csv_file = "csv/" + p.output_csv_file.rsplit('.', 1)[0].rsplit("/", 1)[1] + f'_downsampled_{THRESHOLD}.csv'
+            p.output_csv_file = "csv_downsampled/" + p.output_csv_file.rsplit('.', 1)[0].rsplit("/", 1)[1] + f'_downsampled_{THRESHOLD}.csv'
         p.outputCSV()
         print(f"Time taken: {round(time.time() - start, 3)}s")
     except Exception as e:
