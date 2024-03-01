@@ -13,6 +13,8 @@ import csv
 import numpy as np
 import pandas as pd
 import traceback
+import warnings
+warnings.simplefilter(action='ignore', category=RuntimeWarning)
 
 class parser:
     def __init__(self, input_tsv_file, output_csv_file=-1):
@@ -202,7 +204,6 @@ class parser:
             
             if d[0] % 1000 == 0:
                 print(f"Frame {d[0]}/ {self.NO_OF_FRAMES} done.")
-        
         print("Done.")
     
     def LTTB(self, data: pd.DataFrame, threshold: int, bins=-1) -> pd.DataFrame:
@@ -252,7 +253,8 @@ class parser:
                 
                 area = pd.DataFrame(np.linalg.norm(np.cross(AB, AC).astype("float"), axis=1) / 2, index=binGroups.get_group(bin[j]).index, columns=["area"])
                 maxIndex = area.idxmax()
-                selected.append(maxIndex.values[0])
+                if maxIndex.values[0] not in selected:
+                    selected.append(maxIndex.values[0])
                 prev = slice.loc[maxIndex, ["X", "Y", "Z"]].values.reshape(3)
 
             selected.append(slice.index[-1])
@@ -265,7 +267,22 @@ class parser:
         print("Downsampling...")
         self.data = self.LTTB(self.data, threshold)
         print("Done.")
-        
+    
+    def getArrowheadAngle(self):
+        self.data["ANGLEXY"] = np.nan
+        self.data["ANGLEXZ"] = np.nan
+        self.data["ANGLEYZ"] = np.nan
+        for d in self.data.groupby("MARKER_NR"):
+            
+            diff = d[1].loc[:, ["X", "Y", "Z"]].shift(-1) - d[1].loc[:, ["X", "Y", "Z"]]
+            
+            xy = (270 - np.tan(diff.Y / diff.X) * 180 / np.pi) % 360
+            xz = (270 - np.tan(diff.Z / diff.X) * 180 / np.pi) % 360
+            yz = (270 - np.tan(diff.Z / diff.Y) * 180 / np.pi) % 360
+            
+            results = pd.DataFrame(pd.concat([xy, xz, yz], axis=1).values, columns=["ANGLEXY", "ANGLEXZ", "ANGLEYZ"], index = diff.index)
+            results.loc[results.index != results.index[-1]] = results.loc[results.index != results.index[-1]].fillna(180)
+            self.data.loc[results.index, ["ANGLEXY", "ANGLEXZ", "ANGLEYZ"]] = np.round(results, 3)
             
     def outputCSV(self):
         self.data.to_csv(self.output_csv_file, index=False)
@@ -310,6 +327,7 @@ def main():
         if (len(sys.argv) == 4 and sys.argv[3] == "-t") or (len(sys.argv) == 3 and sys.argv[2] == "-t"):
             p.downSample(THRESHOLD)
             p.output_csv_file = "csv_downsampled/" + p.output_csv_file.rsplit('.', 1)[0].rsplit("/", 1)[1] + f'_downsampled_{THRESHOLD}.csv'
+        p.getArrowheadAngle()
         p.outputCSV()
         print(f"Time taken: {round(time.time() - start, 3)}s")
     except Exception as e:
