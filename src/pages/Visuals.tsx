@@ -127,6 +127,16 @@ const Visualisation = () => {
           setSelectedMarkers([...selectedMarkers, selectedMarker]);
         }
     };
+
+    const selectAllMarkers = () => {
+        //setIs3D(!is3D); // Toggle between 2D and 3D graphs
+        setSelectedMarkers(allGroups);
+        
+    };
+    const deselectAllMarkers = () => {
+        //setIs3D(!is3D); // Toggle between 2D and 3D graphs
+        setSelectedMarkers([]);
+    };
                   
     
     // Placeholder Code for dynamically retrieving CSV files from server
@@ -233,6 +243,12 @@ const Visualisation = () => {
 
       <div className="mb-4 pt-20">
         <label className="p-4">Select Markers:</label>
+        <button className="px-4 py-2 rounded-md bg-blue-500 text-white" onClick={() => selectAllMarkers()}>
+            Select all
+        </button>
+        <button className="px-4 py-2 rounded-md bg-gray-300 text-black}" onClick={() => deselectAllMarkers()}>
+            Deselect all
+        </button>
         <div className="grid grid-cols-3 gap-2">
             {allGroups.map((group: any) => (
                 <div key={group} className="flex items-center">
