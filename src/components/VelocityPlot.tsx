@@ -30,51 +30,20 @@ export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
     //const [fetchedCSVData2, setFetchedCSVData2] = useState<dataFormat[]>([]);
     const [hovered, setHovered] = useState<InteractionData | null>(null);
 
-    const [timeStart, setTimeStart] = useState<number>(0);
-    const [timeEnd, setTimeEnd] = useState<number>(60);
-
     const svgRef = useRef<SVGSVGElement | null>(null);
 
     // Set the dimensions and margins of the graph
     const margin = { top: 60, right: 60, bottom: 60, left: 60 };
     const width = 1300 - margin.left - margin.right;
     const height = 400 - margin.top - margin.bottom;
-
-    useEffect(() => {
-        setTimeStart(props.timeStart);
-        setTimeEnd(props.timeEnd);
-      }, [
-          props.timeStart,
-          props.timeEnd,]);
-
-    // useEffect(() => {
-    //     // Load data from CSV files
-    //     Promise.all([
-    //         d3.csv(`${process.env.PUBLIC_URL}/data/csv/${props.csvFile1}.csv`),
-    //         d3.csv(`${process.env.PUBLIC_URL}/data/csv/${props.csvFile2}.csv`)
-    //     ]).then(([data1, data2]) => {
-    //         const processedData1 = data1.map((d: any) => ({
-    //             time: +d.TIME,
-    //             velocity: +d.VELOCITY,
-    //             group: d.MARKER_NR,
-    //         }));
-    //         const processedData2 = data2.map((d: any) => ({
-    //             time: +d.TIME,
-    //             velocity: +d.VELOCITY,
-    //             group: d.MARKER_NR,
-    //         }));
-    //         setFetchedCSVData1(processedData1);
-    //         setFetchedCSVData2(processedData2);
-    //     });
-    //     console.log("Fetched Data 1:", fetchedCSVData1);
-    //     console.log("Fetched Data 2:", fetchedCSVData2);
-    // }, [props.csvFile1, props.csvFile2]);
-
+    
     useEffect(() => {
         if (!props.data1.length || !props.data2.length || !svgRef.current) return;
 
         // Combine data from both CSV files
-        const combinedData = [...props.data1, ...props.data2].filter((d) => d.time >= timeStart && d.time <= timeEnd && props.selectedMarkers.includes(d.group));
+        const filteredData1 = props.data1.filter((d) => d.time >= props.timeStart && d.time <= props.timeEnd && props.selectedMarkers.includes(d.group) && !isNaN(d.velocity));
+        const filteredData2 = props.data2.filter((d) => d.time >= props.timeStart && d.time <= props.timeEnd && props.selectedMarkers.includes(d.group) && !isNaN(d.velocity));
+        const combinedData = [...filteredData1, ...filteredData2];
         
 
         // Create scales for x and y axes
@@ -106,7 +75,7 @@ export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
 
         // Append lines for the data
         svg.selectAll(".line")
-            .data([props.data1, props.data2])
+            .data([filteredData1, filteredData2])
             .join("path")
             .attr("class", "line")
             .attr("d", line)
@@ -157,7 +126,7 @@ export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
             .attr("y", 40)
             .text("Study #2");
 
-    }, [props.data1, props.data2, props.selectedMarkers, margin, width, height]);
+    }, [props.data1, props.data2, props.timeStart, props.timeEnd, props.selectedMarkers, margin, width, height]);
 
     return (
         <div className="justify-center items-center">
