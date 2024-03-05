@@ -42,7 +42,7 @@ const Plot3D = (props) => {
  */
 const generateScatterData = (data, colorScale, timeStart, timeEnd, selectedMarkers) => {
   // Group data by MARKER_NR
-  const groupedData = groupByMarker(data, selectedMarkers);
+  const groupedData = groupByMarker(data, selectedMarkers, timeStart, timeEnd);
 
   // Generate scatter data for each group
   const scatterData = Object.keys(groupedData).map((markerNr, index) => {
@@ -72,11 +72,13 @@ const generateScatterData = (data, colorScale, timeStart, timeEnd, selectedMarke
   return scatterData;
 };
 
-const groupByMarker = (data, selectedMarkers) => {
+const groupByMarker = (data, selectedMarkers, timeStart, timeEnd) => {
   // Group data by MARKER_NR
   return data.reduce((groupedData, item) => {
     const markerNr = item.group;
-    if (selectedMarkers.includes(markerNr)) {
+    if (selectedMarkers.includes(markerNr) &&
+        item.time >= timeStart &&
+        item.time <= timeEnd) {
       if (!groupedData[markerNr]) {
         groupedData[markerNr] = [];
       }
