@@ -74,7 +74,7 @@ export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
         if (!props.data1.length || !props.data2.length || !svgRef.current) return;
 
         // Combine data from both CSV files
-        const combinedData = [...props.data1, ...props.data2].filter((d) => d.time >= timeStart && d.time <= timeEnd);;
+        const combinedData = [...props.data1, ...props.data2].filter((d) => d.time >= timeStart && d.time <= timeEnd && props.selectedMarkers.includes(d.group));
         
 
         // Create scales for x and y axes
@@ -157,7 +157,7 @@ export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
             .attr("y", 40)
             .text("Study #2");
 
-    }, [props.data1, props.data2, margin, width, height]);
+    }, [props.data1, props.data2, props.selectedMarkers, margin, width, height]);
 
     return (
         <div className="justify-center items-center">
