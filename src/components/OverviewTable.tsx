@@ -229,7 +229,6 @@ const OverviewTable: React.FC = () => {
                                 {trial.TRIAL_NAME}
                             </div>
                         </td>
-                        <td className="px-4 py-4 whitespace-nowrap text-center">{trial.TRIAL_NAME}</td>
                         <td className="px-4 py-4 whitespace-nowrap text-center">{trial.NO_OF_FRAMES}</td>
                         <td className="px-4 py-4 whitespace-nowrap text-center">{trial.NO_OF_MARKERS}</td>
                         <td className="px-4 py-4 whitespace-nowrap text-center">{trial.NO_OF_CAMERAS}</td>
