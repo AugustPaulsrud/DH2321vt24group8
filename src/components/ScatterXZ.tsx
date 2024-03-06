@@ -21,6 +21,8 @@ type ScatterplotProps = {
   minX: number;
   minY: number;
   minZ: number;
+  timeMax: number;
+  timeMin: number;
   data: dataFormat[];
   colorScale: d3.ScaleOrdinal<string, string>; 
   selectedMarkers: string[];
@@ -54,6 +56,7 @@ export const ScatterXZ = (props: ScatterplotProps) => {
   // Scales
   const yScale = d3.scaleLinear().domain([props.minZ, props.maxZ]).range([boundsHeight, 0]);
   const xScale = d3.scaleLinear().domain([props.minX, props.maxX]).range([0, boundsWidth]);
+  const timeScale = d3.scaleLinear().domain([props.timeMin, props.timeMax]).range([0.1, 1.0]);
 
   //const maxTime = d3.max(props.data, (d) => d.time) || 400;
   
@@ -83,7 +86,7 @@ const groupedShapesAndLines = props.allMarkerGroups.map((group) => {
         transform={transform}
         fill={props.colorScale(d.group)}
         stroke={props.colorScale(d.group)}
-        fillOpacity={1.0}
+        fillOpacity={timeScale(d.time)}
         strokeWidth={0.5}
         onMouseEnter={() =>
           setHovered({
@@ -116,6 +119,7 @@ const groupedShapesAndLines = props.allMarkerGroups.map((group) => {
           x2={lineX2}
           y2={lineY2}
           stroke={props.colorScale(d.group)}
+          fillOpacity={timeScale(d.time)}
           strokeWidth={0.5}
         />
       );

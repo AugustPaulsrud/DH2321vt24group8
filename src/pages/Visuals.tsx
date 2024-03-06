@@ -46,11 +46,11 @@ const Visualisation = () => {
     // const [csvFiles, setCsvFiles] = useState<string[]>([]);
 
     // Manually provided list of CSV file names for demonstration
-    const csvFiles = ["EVDa_SimCaTip_Ale0003", 
-                    "EVDb_SimCaPlus_Ale0004", 
-                    "EVDb_SimCaPlus_Ale0005", 
-                    "EVDb_SimCaPlus_Mario0006", 
-                    "EVDb_SimCaPlus_Mario0007"
+    const csvFiles = ["EVDa_SimCaTip_Ale0003_downsampled_500", 
+                    "EVDb_SimCaPlus_Ale0004_downsampled_500", 
+                    "EVDb_SimCaPlus_Ale0005_downsampled_500", 
+                    "EVDb_SimCaPlus_Mario0006_downsampled_500", 
+                    "EVDb_SimCaPlus_Mario0007_downsampled_500"
                 ]; 
 
     type dataFormat = {
@@ -73,7 +73,7 @@ const Visualisation = () => {
         const fetchData = async () => {
             if (selectedCsvFile1 !== "") {
                 try {
-                    const response = await d3.csv(`${process.env.PUBLIC_URL}/data/csv/${selectedCsvFile1}.csv`);
+                    const response = await d3.csv(`${process.env.PUBLIC_URL}/data/csv_downsampled/${selectedCsvFile1}.csv`);
                     setRawData1(response);
                 } catch (error) {
                     console.error('Error fetching data:', error);
@@ -411,9 +411,9 @@ const Visualisation = () => {
                         </div>
 
                         {/* <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile1} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> */}
-                        <ScatterXY width={600} height={600} data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups}  maxX={maxX1} minX={minX1} maxY={maxY1} minY={minY1} maxZ={maxZ1} minZ={minZ1} />
-                        <ScatterXZ width={600} height={600} data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups}  maxX={maxX1} minX={minX1} maxY={maxY1} minY={minY1} maxZ={maxZ1} minZ={minZ1} />
-                        <ScatterYZ width={600} height={600} data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups}  maxX={maxX1} minX={minX1} maxY={maxY1} minY={minY1} maxZ={maxZ1} minZ={minZ1} />
+                        <ScatterXY width={600} height={600} data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups}  maxX={maxX1} minX={minX1} maxY={maxY1} minY={minY1} maxZ={maxZ1} minZ={minZ1} timeMax={timeMax1} timeMin={timeMin1} />
+                        <ScatterXZ width={600} height={600} data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups}  maxX={maxX1} minX={minX1} maxY={maxY1} minY={minY1} maxZ={maxZ1} minZ={minZ1} timeMax={timeMax1} timeMin={timeMin1} />
+                        <ScatterYZ width={600} height={600} data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups}  maxX={maxX1} minX={minX1} maxY={maxY1} minY={minY1} maxZ={maxZ1} minZ={minZ1} timeMax={timeMax1} timeMin={timeMin1} />
                     </div>
                     <div className="md:ml-5 relative">
                         <div className="pt-20 mb-4">
@@ -430,9 +430,9 @@ const Visualisation = () => {
                             </select>
                         </div>
                         {/* <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile2} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />  */}
-                        <ScatterXY width={600} height={600} data={filteredData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} maxX={maxX2} minX={minX2} maxY={maxY2} minY={minY2} maxZ={maxZ2} minZ={minZ2} /> 
-                        <ScatterXZ width={600} height={600} data={filteredData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} maxX={maxX2} minX={minX2} maxY={maxY2} minY={minY2} maxZ={maxZ2} minZ={minZ2} /> 
-                        <ScatterYZ width={600} height={600} data={filteredData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} maxX={maxX2} minX={minX2} maxY={maxY2} minY={minY2} maxZ={maxZ2} minZ={minZ2} />
+                        <ScatterXY width={600} height={600} data={filteredData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} maxX={maxX2} minX={minX2} maxY={maxY2} minY={minY2} maxZ={maxZ2} minZ={minZ2} timeMax={timeMax2} timeMin={timeMin2} /> 
+                        <ScatterXZ width={600} height={600} data={filteredData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} maxX={maxX2} minX={minX2} maxY={maxY2} minY={minY2} maxZ={maxZ2} minZ={minZ2} timeMax={timeMax2} timeMin={timeMin2} /> 
+                        <ScatterYZ width={600} height={600} data={filteredData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} maxX={maxX2} minX={minX2} maxY={maxY2} minY={minY2} maxZ={maxZ2} minZ={minZ2} timeMax={timeMax2} timeMin={timeMin2} />
                     </div>
                 </div>
             )}
