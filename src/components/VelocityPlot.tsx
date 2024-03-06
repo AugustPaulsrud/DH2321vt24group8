@@ -41,8 +41,8 @@ export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
         if (!props.data1.length || !props.data2.length || !svgRef.current) return;
 
         // Combine data from both CSV files
-        const filteredData1 = props.data1.filter((d) => d.time >= props.timeStart && d.time <= props.timeEnd && props.selectedMarkers.includes(d.group) && !isNaN(d.velocity));
-        const filteredData2 = props.data2.filter((d) => d.time >= props.timeStart && d.time <= props.timeEnd && props.selectedMarkers.includes(d.group) && !isNaN(d.velocity));
+        const filteredData1 = props.data1.filter((d) => !isNaN(d.velocity));
+        const filteredData2 = props.data2.filter((d) => !isNaN(d.velocity));
         const combinedData = [...filteredData1, ...filteredData2];
         
 

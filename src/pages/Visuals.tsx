@@ -104,6 +104,30 @@ const Visualisation = () => {
         }));
     }, [rawData2]);
 
+    const filteredData1: dataFormat[] = useMemo(() => {
+        return parsedData1.filter((d) => selectedMarkers.includes(d.group))
+        .filter((d) => d.time >= timeStart && d.time <= timeEnd)
+        .filter((d) => d.x >= lowerX && d.x <= upperX)
+        .filter((d) => d.y >= lowerY && d.y <= upperY)
+        .filter((d) => d.z >= lowerZ && d.z <= upperZ);
+    }, [parsedData1,
+        upperX, upperY, upperZ, 
+        lowerX, lowerY, lowerZ, 
+        timeStart, timeEnd, 
+        selectedMarkers]);
+    
+    const filteredData2: dataFormat[] = useMemo(() => {
+        return parsedData2.filter((d) => selectedMarkers.includes(d.group))
+        .filter((d) => d.time >= timeStart && d.time <= timeEnd)
+        .filter((d) => d.x >= lowerX && d.x <= upperX)
+        .filter((d) => d.y >= lowerY && d.y <= upperY)
+        .filter((d) => d.z >= lowerZ && d.z <= upperZ);
+    }, [parsedData2,
+        upperX, upperY, upperZ, 
+        lowerX, lowerY, lowerZ, 
+        timeStart, timeEnd, 
+        selectedMarkers]);
+
     const allGroups: string[] = useMemo(() => {
         const groups1 = Array.from(new Set(parsedData1.map((d: any) => d.group)));
         const groups2 = Array.from(new Set(parsedData2.map((d: any) => d.group)));
@@ -285,7 +309,7 @@ const Visualisation = () => {
                             </select>
                         </div>
 
-                        <Plot3D data={parsedData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} width={600} height={700} csv_file={selectedCsvFile1} timeStart={timeStart} timeEnd={timeEnd} /> 
+                        <Plot3D data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} width={600} height={700} csv_file={selectedCsvFile1} timeStart={timeStart} timeEnd={timeEnd} /> 
                     </div>
                     <div className="md:ml-5 relative">
                         <div className="pt-20">
@@ -301,7 +325,7 @@ const Visualisation = () => {
                                 ))}
                             </select>
                         </div>
-                        <Plot3D data={parsedData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} width={600} height={700} csv_file={selectedCsvFile2} timeStart={timeStart} timeEnd={timeEnd} /> 
+                        <Plot3D data={filteredData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} width={600} height={700} csv_file={selectedCsvFile2} timeStart={timeStart} timeEnd={timeEnd} /> 
                     </div>
                 </div>
             ) : 
@@ -323,9 +347,9 @@ const Visualisation = () => {
                         </div>
 
                         {/* <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile1} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> */}
-                        <ScatterXY width={600} height={600} data={parsedData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />
-                        <ScatterXZ width={600} height={600} data={parsedData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />
-                        <ScatterYZ width={600} height={600} data={parsedData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />
+                        <ScatterXY width={600} height={600} data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />
+                        <ScatterXZ width={600} height={600} data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />
+                        <ScatterYZ width={600} height={600} data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />
                     </div>
                     <div className="md:ml-5 relative">
                         <div className="pt-20 mb-4">
@@ -342,16 +366,16 @@ const Visualisation = () => {
                             </select>
                         </div>
                         {/* <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile2} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />  */}
-                        <ScatterXY width={600} height={600} data={parsedData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> 
-                        <ScatterXZ width={600} height={600} data={parsedData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> 
-                        <ScatterYZ width={600} height={600} data={parsedData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />
+                        <ScatterXY width={600} height={600} data={filteredData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> 
+                        <ScatterXZ width={600} height={600} data={filteredData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> 
+                        <ScatterYZ width={600} height={600} data={filteredData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />
                     </div>
                 </div>
             )}
             <div className="justify-center items-center">
                 <VelocityChart 
-                 data1={parsedData1} 
-                 data2={parsedData2} 
+                 data1={filteredData1} 
+                 data2={filteredData2} 
                  colorScale={colorScale} 
                  selectedMarkers={selectedMarkers} 
                  allMarkerGroups={allGroups}

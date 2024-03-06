@@ -95,8 +95,7 @@ export const ScatterXZ = (props: ScatterplotProps) => {
   // Build the shapes and lines
 const groupedShapesAndLines = props.allMarkerGroups.map((group) => {
   const groupData = props.data
-    .filter((d) => props.selectedMarkers.includes(d.group) && d.group === group)
-    .filter((d) => d.time >= timeStart && d.time <= timeEnd);
+    .filter((d) => d.group === group);
 
     var oldX = 0;
     var oldY = 0;
