@@ -132,16 +132,16 @@ const OverviewTable: React.FC = () => {
     }, [sortedData, filterText]);
 
     // Render the Sort Button and Filter Input for each column
-    const renderSortFilter = (column: keyof TrialData, buttonText: string) => {
+    const renderSortFilter = (column: keyof TrialData, buttonText: string, tooltipText: string) => {
         let arrowClass = 'transform rotate-0'; // Default arrow direction
-    
-        // Check if this column is the current sorting column, rotate accordingly
+
+        // Check if this column is the current sorting column
         if (sortConfig && sortConfig.key === column) {
             arrowClass = sortConfig.direction === 'asc' ? 'transform rotate-180' : 'transform rotate-0';
         }
-    
+
         return (
-            <div className="flex flex-col items-start">
+            <div className="flex flex-col items-center" title={tooltipText}>
                 <button onClick={() => handleSort(column)} className="flex items-center font-medium text-gray-500 uppercase tracking-wider">
                     {buttonText}
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={`w-4 h-4 ml-1 ${arrowClass}`}>
@@ -151,7 +151,7 @@ const OverviewTable: React.FC = () => {
                 <input 
                     type="text" 
                     placeholder={`Filter ${buttonText}`} 
-                    className="mt-1 px-2 py-1 border border-gray-200 rounded-md"
+                    className="mt-1 px-2 py-1 border border-gray-300 rounded-md"
                     value={filterText[column]}
                     onChange={(e) => handleFilterChange(column, e.target.value)}
                 />
@@ -164,29 +164,29 @@ const OverviewTable: React.FC = () => {
             <thead className="bg-gray-50">
                 {/* Column Header Elements*/}
                 <tr>
-                    <th scope="col" className="px-5 py-3 text-left text-xs tracking-wider">
-                        {renderSortFilter('TRIAL_NAME', 'Trial Name')}
+                    <th scope="col" className="px-5 py-3 text-xs tracking-wider">
+                        {renderSortFilter('TRIAL_NAME', 'Trial Name', 'Name of Trial with Person')}
                     </th>
-                    <th scope="col" className="px-5 py-3 text-left text-xs tracking-wider">
-                        {renderSortFilter('NO_OF_FRAMES', 'No. of Frames')}
+                    <th scope="col" className="px-5 py-3 text-xs tracking-wider">
+                        {renderSortFilter('NO_OF_FRAMES', 'No. of Frames', 'The Number of Frames Captured in the Trial, 200 Frames per Second')}
                     </th>
-                    <th scope="col" className="px-5 py-3 text-left text-xs tracking-wider">
-                        {renderSortFilter('NO_OF_MARKERS', 'No. of Markers')}
+                    <th scope="col" className="px-5 py-3 text-xs tracking-wider">
+                        {renderSortFilter('NO_OF_MARKERS', 'No. of Markers', 'Number of Markers includes Phantom and Catheter Tip Markers')}
                     </th>
-                    <th scope="col" className="px-5 py-3 text-left text-xs tracking-wider">
-                        {renderSortFilter('NO_OF_CAMERAS', 'No. of Cameras')}
+                    <th scope="col" className="px-5 py-3 text-xs tracking-wider">
+                        {renderSortFilter('NO_OF_CAMERAS', 'No. of Cameras', 'Number of Cameras used in the Trial')}
                     </th>
-                    <th scope="col" className="px-5 py-3 text-left text-xs tracking-wider">
-                        {renderSortFilter('TIME_STAMP', 'Time Stamp')}
+                    <th scope="col" className="px-5 py-3 text-xs tracking-wider">
+                        {renderSortFilter('TIME_STAMP', 'Time Stamp', 'Time and Date of when the Trial was Captured')}
                     </th>
-                    <th scope="col" className="px-5 py-3 text-left text-xs tracking-wider">
-                        {renderSortFilter('DATA_INCLUDED', 'Data Included')}
+                    <th scope="col" className="px-5 py-3 text-xs tracking-wider">
+                        {renderSortFilter('DATA_INCLUDED', 'Data Included', 'What Data was Included in the Trial')}
                     </th>
-                    <th scope="col" className="px-5 py-3 text-left text-xs tracking-wider">
-                        {renderSortFilter('rating', 'Rating')}
+                    <th scope="col" className="px-5 py-3 text-xs tracking-wider">
+                        {renderSortFilter('rating', 'Rating', 'User-defined Rating of the Trial')}
                     </th>
-                    <th scope="col" className="px-5 py-3 text-left text-xs tracking-wider">
-                        {renderSortFilter('comment', 'Notes')}
+                    <th scope="col" className="px-5 py-3 text-xs tracking-wider">
+                        {renderSortFilter('comment', 'Notes', 'User-defined Notes on the Trial')}
                     </th>
                 </tr>
             </thead>
