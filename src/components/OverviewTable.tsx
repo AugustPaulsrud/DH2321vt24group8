@@ -164,7 +164,7 @@ const OverviewTable: React.FC = () => {
             <div className="flex flex-col items-center" title={tooltipText}>
                 <button onClick={() => handleSort(column)} className="flex items-center font-medium text-gray-500 uppercase tracking-wider">
                     {buttonText}
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={`w-4 h-4 ml-1 ${arrowClass}`}>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className={`w-4 h-4 ml-1 ${arrowClass} transition-transform`}>
                         <path fillRule="evenodd" d="M5.293 7.293a1 1 0 0 1 1.414-1.414L10 8.586l3.293-3.293a1 1 0 1 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z" clipRule="evenodd" />
                     </svg>
                 </button>
@@ -193,15 +193,15 @@ const OverviewTable: React.FC = () => {
                     <th scope="col" className="px-5 py-3 text-xs tracking-wider">
                         {renderSortFilter('NO_OF_MARKERS', 'No. of Markers', 'Number of Markers includes Phantom and Catheter Tip Markers')}
                     </th>
-                    <th scope="col" className="px-5 py-3 text-xs tracking-wider">
+                    {/*<th scope="col" className="px-5 py-3 text-xs tracking-wider">
                         {renderSortFilter('NO_OF_CAMERAS', 'No. of Cameras', 'Number of Cameras used in the Trial')}
-                    </th>
+                    </th>*/}        
                     <th scope="col" className="px-5 py-3 text-xs tracking-wider">
                         {renderSortFilter('TIME_STAMP', 'Time Stamp', 'Time and Date of when the Trial was Captured')}
                     </th>
-                    <th scope="col" className="px-5 py-3 text-xs tracking-wider">
+                    {/*<th scope="col" className="px-5 py-3 text-xs tracking-wider">
                         {renderSortFilter('DATA_INCLUDED', 'Data Included', 'What Data was Included in the Trial')}
-                    </th>
+                    </th>*/}    
                     <th scope="col" className="px-5 py-3 text-xs tracking-wider">
                         {renderSortFilter('rating', 'Rating', 'User-defined Rating of the Trial')}
                     </th>
@@ -217,23 +217,25 @@ const OverviewTable: React.FC = () => {
                     <tr onClick={() => handleSelectEntry(trial)} className={selectedEntry && selectedEntry.TRIAL_NAME === trial.TRIAL_NAME ? 'bg-gray-100' : ''}>
                         <td className="px-6 py-4 whitespace-nowrap text-center">
                             <div className="flex items-center justify-center">
-                                {expandedEntries[trial.TRIAL_NAME] ? (
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 mr-2 transform rotate-180">
-                                        <path fillRule="evenodd" d="M5.293 7.293a1 1 0 0 1 1.414-1.414L10 8.586l3.293-3.293a1 1 0 1 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z" clipRule="evenodd" />
-                                    </svg>
-                                ) : (
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 mr-2">
-                                        <path fillRule="evenodd" d="M5.293 7.293a1 1 0 0 1 1.414-1.414L10 8.586l3.293-3.293a1 1 0 1 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z" clipRule="evenodd" />
-                                    </svg>
-                                )}
-                                {trial.TRIAL_NAME}
+                                <button onClick={() => handleSelectEntry(trial)} className="flex items-center">
+                                    {expandedEntries[trial.TRIAL_NAME] ? (
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 mr-2 transform rotate-180 transition-transform">
+                                            <path fillRule="evenodd" d="M5.293 7.293a1 1 0 0 1 1.414-1.414L10 8.586l3.293-3.293a1 1 0 1 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z" clipRule="evenodd" />
+                                        </svg>
+                                    ) : (
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 mr-2 transition-transform">
+                                            <path fillRule="evenodd" d="M5.293 7.293a1 1 0 0 1 1.414-1.414L10 8.586l3.293-3.293a1 1 0 1 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z" clipRule="evenodd" />
+                                        </svg>
+                                    )}
+                                    {trial.TRIAL_NAME}
+                                </button>
                             </div>
                         </td>
                         <td className="px-4 py-4 whitespace-nowrap text-center">{trial.NO_OF_FRAMES}</td>
                         <td className="px-4 py-4 whitespace-nowrap text-center">{trial.NO_OF_MARKERS}</td>
-                        <td className="px-4 py-4 whitespace-nowrap text-center">{trial.NO_OF_CAMERAS}</td>
+                        {/*<td className="px-4 py-4 whitespace-nowrap text-center">{trial.NO_OF_CAMERAS}</td>*/}
                         <td className="px-4 py-4 whitespace-nowrap text-center">{trial.TIME_STAMP}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center">{trial.DATA_INCLUDED}</td>
+                        {/*<td className="px-6 py-4 whitespace-nowrap text-center">{trial.DATA_INCLUDED}</td>*/}
                         <td className="px-4 py-4 whitespace-nowrap text-center">
                         <input
                             type="number"
@@ -260,9 +262,10 @@ const OverviewTable: React.FC = () => {
                     </tr>
                     {selectedEntry && selectedEntry.TRIAL_NAME === trial.TRIAL_NAME && (
                         <tr key={`${trial.TRIAL_NAME}-details`}>
-                            <td colSpan={8} className="px-6 py-4 whitespace-nowrap text-center bg-gray-200">
+                            <td colSpan={8} className="px-6 py-4 whitespace-nowrap text-center bg-gray-200 ">
                                 <p><strong>Trial Name:</strong> {selectedEntry.TRIAL_NAME}</p>
-                                Additional Information will be added later on
+                                <p><strong>Number of Cameras Used:</strong> {selectedEntry.NO_OF_CAMERAS}</p>
+                                <p><strong>Data Included:</strong> {selectedEntry.DATA_INCLUDED}</p>
                             </td>
                         </tr>
                     )}
