@@ -2,6 +2,8 @@ import React from 'react';
 import * as d3 from 'd3';
 import { useEffect, useState, useMemo } from 'react';
 
+// Reference: https://www.youtube.com/watch?v=yQfK4sBz1Q8
+
 type TrialData = {
     TRIAL_NAME: string;
     NO_OF_FRAMES: number;
@@ -25,6 +27,7 @@ const OverviewTable: React.FC = () => {
     const [trialsData, setTrialsData] = useState<TrialData[]>([]);
     const [sortConfig, setSortConfig] = useState<{key: keyof TrialData, direction: 'asc' | 'desc'} | null>(null);
     const [selectedEntry, setSelectedEntry] = useState<TrialData | null>(null);
+    const [expandedEntries, setExpandedEntries] = useState<Record<string, boolean>>({});
     const [filterText, setFilterText] = useState<Record<keyof TrialData, string>>({
         TRIAL_NAME: '',
         NO_OF_FRAMES: '',
@@ -135,8 +138,16 @@ const OverviewTable: React.FC = () => {
     const handleSelectEntry = (entry: TrialData) => {
         if (selectedEntry && selectedEntry.TRIAL_NAME === entry.TRIAL_NAME) {
             setSelectedEntry(null); // Deselect if already selected
+            setExpandedEntries({
+                ...expandedEntries,
+                [entry.TRIAL_NAME]: !expandedEntries[entry.TRIAL_NAME] // Toggle the expanded state
+            });
         } else {
             setSelectedEntry(entry); // Select the entry
+            setExpandedEntries({
+                ...expandedEntries,
+                [entry.TRIAL_NAME]: true // Expand the entry
+            });
         }
     };
 
@@ -204,6 +215,20 @@ const OverviewTable: React.FC = () => {
                     // Table Row Elements
                     <React.Fragment key={index}>
                     <tr onClick={() => handleSelectEntry(trial)} className={selectedEntry && selectedEntry.TRIAL_NAME === trial.TRIAL_NAME ? 'bg-gray-100' : ''}>
+                        <td className="px-6 py-4 whitespace-nowrap text-center">
+                            <div className="flex items-center justify-center">
+                                {expandedEntries[trial.TRIAL_NAME] ? (
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 mr-2 transform rotate-180">
+                                        <path fillRule="evenodd" d="M5.293 7.293a1 1 0 0 1 1.414-1.414L10 8.586l3.293-3.293a1 1 0 1 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z" clipRule="evenodd" />
+                                    </svg>
+                                ) : (
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 mr-2">
+                                        <path fillRule="evenodd" d="M5.293 7.293a1 1 0 0 1 1.414-1.414L10 8.586l3.293-3.293a1 1 0 1 1 1.414 1.414l-4 4a1 1 0 0 1-1.414 0l-4-4a1 1 0 0 1 0-1.414z" clipRule="evenodd" />
+                                    </svg>
+                                )}
+                                {trial.TRIAL_NAME}
+                            </div>
+                        </td>
                         <td className="px-4 py-4 whitespace-nowrap text-center">{trial.TRIAL_NAME}</td>
                         <td className="px-4 py-4 whitespace-nowrap text-center">{trial.NO_OF_FRAMES}</td>
                         <td className="px-4 py-4 whitespace-nowrap text-center">{trial.NO_OF_MARKERS}</td>
