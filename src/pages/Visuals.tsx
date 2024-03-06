@@ -138,6 +138,14 @@ const Visualisation = () => {
         
         setTimeMax1(d3.max(parsedData1, (d) => d.time) || 1);
         setTimeMin1(d3.min(parsedData1, (d) => d.time) || 0);
+
+        // Reset sliders when data source is changed
+        setLowerX(-1000);
+        setUpperX(1000);
+        setLowerY(-1000);
+        setUpperY(1000);
+        setLowerZ(-1000);
+        setUpperZ(1000);
     }, [parsedData1]);
 
     useEffect(() => {
@@ -150,6 +158,14 @@ const Visualisation = () => {
 
         setTimeMax2(d3.max(parsedData2, (d) => d.time) || 1);
         setTimeMin2(d3.min(parsedData2, (d) => d.time) || 0);
+
+        // Reset sliders when data source is changed
+        setLowerX(-1000);
+        setUpperX(1000);
+        setLowerY(-1000);
+        setUpperY(1000);
+        setLowerZ(-1000);
+        setUpperZ(1000);
     }, [parsedData2]);
 
     const filteredData1: dataFormat[] = useMemo(() => {
