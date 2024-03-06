@@ -5,6 +5,7 @@ import MultiRangeSlider, { ChangeResult } from "multi-range-slider-react";
 import { ScatterXY } from "../components/ScatterXY";
 import { ScatterXZ } from "../components/ScatterXZ";
 import { ScatterYZ } from "../components/ScatterYZ";
+import OverviewTable from "../components/OverviewTable";
 import * as d3 from 'd3';
 
 const Visualisation = () => {
@@ -29,12 +30,18 @@ const Visualisation = () => {
     // const [csvFiles, setCsvFiles] = useState<string[]>([]);
 
     // Manually provided list of CSV file names for demonstration
-    const csvFiles = ["EVDa_SimCaTip_Ale0003", 
-                    "EVDb_SimCaPlus_Ale0004", 
-                    "EVDb_SimCaPlus_Ale0005", 
-                    "EVDb_SimCaPlus_Mario0006", 
-                    "EVDb_SimCaPlus_Mario0007"
-                ]; 
+    // const csvFiles = ["EVDa_SimCaTip_Ale0003", 
+    //                 "EVDb_SimCaPlus_Ale0004", 
+    //                 "EVDb_SimCaPlus_Ale0005", 
+    //                 "EVDb_SimCaPlus_Mario0006", 
+    //                 "EVDb_SimCaPlus_Mario0007"
+    //             ]; 
+
+    const csvFiles = ["EVDb_SimCaPlus_Ale0004_downsampled_500", 
+                "EVDb_SimCaPlus_Ale0005_downsampled_500", 
+                "EVDb_SimCaPlus_Mario0006_downsampled_500", 
+                "EVDb_SimCaPlus_Mario0007_downsampled_500"
+            ]; 
 
     type dataFormat = {
         time: number;
@@ -56,7 +63,7 @@ const Visualisation = () => {
         const fetchData = async () => {
             if (selectedCsvFile1 !== "") {
                 try {
-                    const response = await d3.csv(`${process.env.PUBLIC_URL}/data/csv/${selectedCsvFile1}.csv`);
+                    const response = await d3.csv(`${process.env.PUBLIC_URL}/data/csv_downsampled/${selectedCsvFile1}.csv`);
                     setRawData1(response);
                 } catch (error) {
                     console.error('Error fetching data:', error);
@@ -71,7 +78,7 @@ const Visualisation = () => {
         const fetchData = async () => {
             if (selectedCsvFile2 !== "") {
                 try {
-                    const response = await d3.csv(`${process.env.PUBLIC_URL}/data/csv/${selectedCsvFile2}.csv`);
+                    const response = await d3.csv(`${process.env.PUBLIC_URL}/data/csv_downsampled/${selectedCsvFile2}.csv`);
                     setRawData2(response);
                 } catch (error) {
                     console.error('Error fetching data:', error);
@@ -176,6 +183,12 @@ const Visualisation = () => {
                 </button>
             </div>
             <div>
+               <div className="w-full mb-4">
+                    <h1 className="flex text-3xl font-bold my-4 mb-8 justify-center items-center">
+                        Overview
+                    </h1>
+                    <OverviewTable/>
+                </div>
       <label>Select time range:</label> 
       <MultiRangeSlider
         style={{width: "90%"}}
