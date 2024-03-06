@@ -24,6 +24,7 @@ const tsvFiles = ["EVDa_SimCaTip_Ale0003",
 const OverviewTable: React.FC = () => {
     const [trialsData, setTrialsData] = useState<TrialData[]>([]);
     const [sortConfig, setSortConfig] = useState<{key: keyof TrialData, direction: 'asc' | 'desc'} | null>(null);
+    const [selectedEntry, setSelectedEntry] = useState<TrialData | null>(null);
     const [filterText, setFilterText] = useState<Record<keyof TrialData, string>>({
         TRIAL_NAME: '',
         NO_OF_FRAMES: '',
@@ -131,6 +132,14 @@ const OverviewTable: React.FC = () => {
         );
     }, [sortedData, filterText]);
 
+    const handleSelectEntry = (entry: TrialData) => {
+        if (selectedEntry && selectedEntry.TRIAL_NAME === entry.TRIAL_NAME) {
+            setSelectedEntry(null); // Deselect if already selected
+        } else {
+            setSelectedEntry(entry); // Select the entry
+        }
+    };
+
     // Render the Sort Button and Filter Input for each column
     const renderSortFilter = (column: keyof TrialData, buttonText: string, tooltipText: string) => {
         let arrowClass = 'transform rotate-0'; // Default arrow direction
@@ -193,7 +202,8 @@ const OverviewTable: React.FC = () => {
             <tbody className="bg-white divide-y divide-gray-200">
                 {filteredData.map((trial, index) => (
                     // Table Row Elements
-                    <tr key={index}>
+                    <React.Fragment key={index}>
+                    <tr onClick={() => handleSelectEntry(trial)} className={selectedEntry && selectedEntry.TRIAL_NAME === trial.TRIAL_NAME ? 'bg-gray-100' : ''}>
                         <td className="px-4 py-4 whitespace-nowrap text-center">{trial.TRIAL_NAME}</td>
                         <td className="px-4 py-4 whitespace-nowrap text-center">{trial.NO_OF_FRAMES}</td>
                         <td className="px-4 py-4 whitespace-nowrap text-center">{trial.NO_OF_MARKERS}</td>
@@ -224,6 +234,15 @@ const OverviewTable: React.FC = () => {
                             />
                         </td>
                     </tr>
+                    {selectedEntry && selectedEntry.TRIAL_NAME === trial.TRIAL_NAME && (
+                        <tr key={`${trial.TRIAL_NAME}-details`}>
+                            <td colSpan={8} className="px-6 py-4 whitespace-nowrap text-center bg-gray-200">
+                                <p><strong>Trial Name:</strong> {selectedEntry.TRIAL_NAME}</p>
+                                Additional Information will be added later on
+                            </td>
+                        </tr>
+                    )}
+                    </React.Fragment>
                 ))}
             </tbody>
         </table>
