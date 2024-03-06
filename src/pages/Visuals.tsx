@@ -9,15 +9,32 @@ import * as d3 from 'd3';
 
 const Visualisation = () => {
     const [upperX, setUpperX] = useState<number>(1000);
-   const [lowerX, setLowerX] = useState<number>(0);
+   const [lowerX, setLowerX] = useState<number>(-1000);
    const [upperY, setUpperY] = useState<number>(1000);
-   const [lowerY, setLowerY] = useState<number>(0);
+   const [lowerY, setLowerY] = useState<number>(-1000);
    const [upperZ, setUpperZ] = useState<number>(1000);
-   const [lowerZ, setLowerZ] = useState<number>(0);
+   const [lowerZ, setLowerZ] = useState<number>(-1000);
 
    const [timeStart, setTimeStart] = useState<number>(0);
-   const [timeEnd, setTimeEnd] = useState<number>(60);
-   const [timeMax, setTimeMax] = useState<number>(60);
+   const [timeEnd, setTimeEnd] = useState<number>(100);
+
+   const [timeMin1, setTimeMin1] = useState<number>(0);
+   const [timeMax1, setTimeMax1] = useState<number>(1);
+   const [maxX1, setMaxX1] = useState<number>(1);
+   const [maxY1, setMaxY1] = useState<number>(1);
+   const [maxZ1, setMaxZ1] = useState<number>(1);
+   const [minX1, setMinX1] = useState<number>(0);
+   const [minY1, setMinY1] = useState<number>(0);
+   const [minZ1, setMinZ1] = useState<number>(0);
+
+   const [timeMin2, setTimeMin2] = useState<number>(0);
+   const [timeMax2, setTimeMax2] = useState<number>(1);
+   const [maxX2, setMaxX2] = useState<number>(1);
+   const [maxY2, setMaxY2] = useState<number>(1);
+   const [maxZ2, setMaxZ2] = useState<number>(1);
+   const [minX2, setMinX2] = useState<number>(0);
+   const [minY2, setMinY2] = useState<number>(0);
+   const [minZ2, setMinZ2] = useState<number>(0);
 
     // State to track whether to render 2D or 3D graph
     const [is3D, setIs3D] = useState(false);
@@ -103,6 +120,37 @@ const Visualisation = () => {
             group: d.MARKER_NR
         }));
     }, [rawData2]);
+
+    /**
+     * Set upper and lower bounds
+     * for sliders
+     */
+    // useEffect(() => {
+    //     d3.max(parsedData1, (d) => d.time) || 400;
+    // }, [parsedData1]);
+    useEffect(() => {
+        setMaxX1(d3.max(parsedData1, (d) => d.x) || 1);
+        setMaxY1(d3.max(parsedData1, (d) => d.y) || 1);
+        setMaxZ1(d3.max(parsedData1, (d) => d.z) || 1);
+        setMinX1(d3.min(parsedData1, (d) => d.x) || 0);
+        setMinY1(d3.min(parsedData1, (d) => d.y) || 0);
+        setMinZ1(d3.min(parsedData1, (d) => d.z) || 0);
+        
+        setTimeMax1(d3.max(parsedData1, (d) => d.time) || 1);
+        setTimeMin1(d3.min(parsedData1, (d) => d.time) || 0);
+    }, [parsedData1]);
+
+    useEffect(() => {
+        setMaxX2(d3.max(parsedData2, (d) => d.x) || 1);
+        setMaxY2(d3.max(parsedData2, (d) => d.y) || 1);
+        setMaxZ2(d3.max(parsedData2, (d) => d.z) || 1);
+        setMinX2(d3.min(parsedData2, (d) => d.x) || 0);
+        setMinY2(d3.min(parsedData2, (d) => d.y) || 0);
+        setMinZ2(d3.min(parsedData2, (d) => d.z) || 0);
+
+        setTimeMax2(d3.max(parsedData2, (d) => d.time) || 1);
+        setTimeMin2(d3.min(parsedData2, (d) => d.time) || 0);
+    }, [parsedData2]);
 
     const filteredData1: dataFormat[] = useMemo(() => {
         return parsedData1.filter((d) => selectedMarkers.includes(d.group))
@@ -204,8 +252,8 @@ const Visualisation = () => {
       <MultiRangeSlider
         style={{width: "90%"}}
         className="m-2"
-			  min={0}
-        max={60}
+	    min={timeMin1 < timeMin2 ? timeMin1 : timeMin2}
+        max={timeMax1 > timeMax2 ? timeMax1 : timeMax2}
         step={1}
         minValue={timeStart}
         maxValue={timeEnd}
@@ -220,8 +268,8 @@ const Visualisation = () => {
       <MultiRangeSlider
         style={{width: "90%"}}
         className="m-2"
-			  min={0}
-        max={1000}
+		min={minX1 < minX2 ? minX1 : minX2}
+        max={maxX1 > maxX2 ? maxX1 : maxX2}
         step={10}
         minValue={lowerX}
         maxValue={upperX}
@@ -236,8 +284,8 @@ const Visualisation = () => {
       <MultiRangeSlider
         style={{width: "90%"}}
         className="m-2"
-			  min={0}
-        max={1000}
+		min={minY1 < minY2 ? minY1 : minY2}
+        max={maxY1 > maxY2 ? maxY1 : maxY2}
         step={10}
         minValue={lowerY}
         maxValue={upperY}
@@ -252,8 +300,8 @@ const Visualisation = () => {
       <MultiRangeSlider
         style={{width: "90%"}}
         className="m-2"
-			  min={0}
-        max={1000}
+		min={minZ1 < minZ2 ? minZ1 : minZ2}
+        max={maxZ1 > maxZ2 ? maxZ1 : maxZ2}
         step={10}
         minValue={lowerZ}
         maxValue={upperZ}
@@ -347,9 +395,9 @@ const Visualisation = () => {
                         </div>
 
                         {/* <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile1} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> */}
-                        <ScatterXY width={600} height={600} data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />
-                        <ScatterXZ width={600} height={600} data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />
-                        <ScatterYZ width={600} height={600} data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />
+                        <ScatterXY width={600} height={600} data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups}  maxX={maxX1} minX={minX1} maxY={maxY1} minY={minY1} maxZ={maxZ1} minZ={minZ1} />
+                        <ScatterXZ width={600} height={600} data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups}  maxX={maxX1} minX={minX1} maxY={maxY1} minY={minY1} maxZ={maxZ1} minZ={minZ1} />
+                        <ScatterYZ width={600} height={600} data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups}  maxX={maxX1} minX={minX1} maxY={maxY1} minY={minY1} maxZ={maxZ1} minZ={minZ1} />
                     </div>
                     <div className="md:ml-5 relative">
                         <div className="pt-20 mb-4">
@@ -366,9 +414,9 @@ const Visualisation = () => {
                             </select>
                         </div>
                         {/* <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile2} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />  */}
-                        <ScatterXY width={600} height={600} data={filteredData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> 
-                        <ScatterXZ width={600} height={600} data={filteredData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> 
-                        <ScatterYZ width={600} height={600} data={filteredData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} upperZ={upperZ} lowerZ={lowerZ} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />
+                        <ScatterXY width={600} height={600} data={filteredData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} maxX={maxX2} minX={minX2} maxY={maxY2} minY={minY2} maxZ={maxZ2} minZ={minZ2} /> 
+                        <ScatterXZ width={600} height={600} data={filteredData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} maxX={maxX2} minX={minX2} maxY={maxY2} minY={minY2} maxZ={maxZ2} minZ={minZ2} /> 
+                        <ScatterYZ width={600} height={600} data={filteredData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} maxX={maxX2} minX={minX2} maxY={maxY2} minY={minY2} maxZ={maxZ2} minZ={minZ2} />
                     </div>
                 </div>
             )}

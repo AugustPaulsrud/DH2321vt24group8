@@ -15,16 +15,12 @@ const MARGIN = { top: 60, right: 60, bottom: 60, left: 60 };
 type ScatterplotProps = {
   width: number;
   height: number;
-  //csv_file: string;
-  upperX: number;
-  lowerX: number;
-  upperY: number;
-  lowerY: number;
-  upperZ: number;
-  lowerZ: number;
-  timeStart: number;
-  timeEnd: number;
-  timeMax: number;
+  maxX: number;
+  maxY: number;
+  maxZ: number;
+  minX: number;
+  minY: number;
+  minZ: number;
   data: dataFormat[];
   colorScale: d3.ScaleOrdinal<string, string>; 
   selectedMarkers: string[];
@@ -47,34 +43,8 @@ export const ScatterYZ = (props: ScatterplotProps) => {
   //const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
 
   const [hovered, setHovered] = useState<InteractionData | null>(null);
-  
-   const [upperZ, setUpperZ] = useState<number>(1000);
-   const [lowerZ, setLowerZ] = useState<number>(0);
-   const [upperY, setUpperY] = useState<number>(1000);
-   const [lowerY, setLowerY] = useState<number>(0);
-
-   const [timeStart, setTimeStart] = useState<number>(0);
-   const [timeEnd, setTimeEnd] = useState<number>(60);
-   const [timeMax, setTimeMax] = useState<number>(60);
 
   const svgRef = useRef<SVGSVGElement>(null);
-
-  // TODO; Implement for Z axis
-    useEffect(() => {
-      setUpperZ(props.upperZ);
-      setLowerZ(props.lowerZ);
-      setUpperY(props.upperY);
-      setLowerY(props.lowerY);
-      setTimeStart(props.timeStart);
-      setTimeEnd(props.timeEnd);
-      setTimeMax(props.timeMax);
-    }, [props.upperZ,
-        props.lowerZ,
-        props.upperY,
-        props.lowerY,
-        props.timeStart,
-        props.timeEnd,
-        props.timeMax,]);
   
   // Layout. The div size is set by the given props.
   // The bounds (=area inside the axis) is calculated by substracting the margins
@@ -82,13 +52,8 @@ export const ScatterYZ = (props: ScatterplotProps) => {
   const boundsHeight = props.height - MARGIN.top - MARGIN.bottom;
 
   // Scales
-  const yScale = d3.scaleLinear().domain([lowerZ, upperZ]).range([boundsHeight, 0]);
-  const xScale = d3.scaleLinear().domain([lowerY, upperY]).range([0, boundsWidth]);
-
-  useEffect(() => {
-    yScale.domain([lowerZ, upperZ]).range([boundsHeight, 0]);
-    xScale.domain([lowerY, upperY]).range([0, boundsWidth]);
-  }, [lowerZ, upperZ, lowerY, upperY]);
+  const yScale = d3.scaleLinear().domain([props.minZ, props.maxZ]).range([boundsHeight, 0]);
+  const xScale = d3.scaleLinear().domain([props.minY, props.maxY]).range([0, boundsWidth]);
 
   //const maxTime = d3.max(props.data, (d) => d.time) || 400;
   
