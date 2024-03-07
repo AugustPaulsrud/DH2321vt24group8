@@ -135,6 +135,7 @@ const OverviewTable: React.FC = () => {
         );
     }, [sortedData, filterText]);
 
+    // Expand or collapse the entry when the user clicks on it
     const handleSelectEntry = (entry: TrialData) => {
         if (selectedEntry && selectedEntry.TRIAL_NAME === entry.TRIAL_NAME) {
             setSelectedEntry(null); // Deselect if already selected
@@ -214,7 +215,7 @@ const OverviewTable: React.FC = () => {
                 {filteredData.map((trial, index) => (
                     // Table Row Elements
                     <React.Fragment key={index}>
-                    <tr onClick={() => handleSelectEntry(trial)} className={selectedEntry && selectedEntry.TRIAL_NAME === trial.TRIAL_NAME ? 'bg-gray-100' : ''}>
+                    <tr className={selectedEntry && selectedEntry.TRIAL_NAME === trial.TRIAL_NAME ? 'bg-gray-100' : ''}>
                         <td className="px-6 py-4 whitespace-nowrap text-center">
                             <div className="flex items-center justify-center">
                                 <button onClick={() => handleSelectEntry(trial)} className="flex items-center">
