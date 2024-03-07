@@ -7,8 +7,34 @@ import { ScatterXZ } from "../components/ScatterXZ";
 import { ScatterYZ } from "../components/ScatterYZ";
 import OverviewTable from "../components/OverviewTable";
 import * as d3 from 'd3';
+import { Plot2D } from "../components/Plot2D";
+
+// For changing perspecitves
+const X_DIM = 0;
+const Y_DIM = 1;
+const Z_DIM = 2;
+const TIME_DIM = 3;
+const NO_DIM = -1;
 
 const Visualisation = () => {
+    const [dim1_3D_1, setDim1_3D_1] = useState<number>(X_DIM);
+    const [dim2_3D_1, setDim2_3D_1] = useState<number>(Y_DIM);
+    const [dim3_3D_1, setDim3_3D_1] = useState<number>(Z_DIM);
+    const [dim4_3D_1, setDim4_3D_1] = useState<number>(TIME_DIM);
+
+    const [dim1_3D_2, setDim1_3D_2] = useState<number>(X_DIM);
+    const [dim2_3D_2, setDim2_3D_2] = useState<number>(Y_DIM);
+    const [dim3_3D_2, setDim3_3D_2] = useState<number>(Z_DIM);
+    const [dim4_3D_2, setDim4_3D_2] = useState<number>(TIME_DIM);
+
+    const [dim1_2D_1, setDim1_2D_1] = useState<number>(X_DIM);
+    const [dim2_2D_1, setDim2_2D_1] = useState<number>(Y_DIM);
+    const [dim3_2D_1, setDim3_2D_1] = useState<number>(TIME_DIM);
+
+    const [dim1_2D_2, setDim1_2D_2] = useState<number>(X_DIM);
+    const [dim2_2D_2, setDim2_2D_2] = useState<number>(Y_DIM);
+    const [dim3_2D_2, setDim3_2D_2] = useState<number>(TIME_DIM);
+
     const [upperX, setUpperX] = useState<number>(1000);
    const [lowerX, setLowerX] = useState<number>(-1000);
    const [upperY, setUpperY] = useState<number>(1000);
@@ -277,22 +303,6 @@ const Visualisation = () => {
                     </h1>
                     <OverviewTable/>
                 </div>
-      <label>Select time range:</label> 
-      <MultiRangeSlider
-        style={{width: "90%"}}
-        className="m-2"
-	    min={timeMin1 < timeMin2 ? timeMin1 : timeMin2}
-        max={timeMax1 > timeMax2 ? timeMax1 : timeMax2}
-        step={1}
-        minValue={timeStart}
-        maxValue={timeEnd}
-        onChange={(e: ChangeResult) => {
-          setTimeStart(e.minValue);
-          setTimeEnd(e.maxValue);
-          //console.log(e);
-			  }}
-		  />
-      <br />
       <label>Select X range:</label>
       <MultiRangeSlider
         style={{width: "90%"}}
@@ -386,7 +396,57 @@ const Visualisation = () => {
                             </select>
                         </div>
 
-                        <Plot3D data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} width={600} height={700} csv_file={selectedCsvFile1} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax1} timeMin={timeMin1} /> 
+                        {/* This can probably be done in a cleaner way */}
+                        {/* Start of Change perspective */}
+                        <div className="flex w-full pt-4">
+                            <p className="text-s font-bold mb-4">Axis 1: </p>
+                            <select
+                                className="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+                                onChange={(e) => setDim1_3D_1(Number(e.target.value))}
+                                value={dim1_3D_1}
+                            >
+                                <option key={0} value={X_DIM}>X</option>
+                                <option key={1} value={Y_DIM}>Y</option>
+                                <option key={2} value={Z_DIM}>Z</option>
+                                <option key={3} value={TIME_DIM}>TIME</option>
+                            </select>
+
+                            <p className="text-s font-bold mb-4">Axis 2: </p>
+                            <select
+                                className="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+                                onChange={(e) => setDim2_3D_1(Number(e.target.value))}
+                                value={dim2_3D_1}
+                            >
+                                <option key={0} value={X_DIM}>X</option>
+                                <option key={1} value={Y_DIM}>Y</option>
+                                <option key={2} value={Z_DIM}>Z</option>
+                                <option key={3} value={TIME_DIM}>TIME</option>
+                            </select>
+
+                            <p className="text-s font-bold mb-4">Axis 3: </p>
+                            <select
+                                className="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+                                onChange={(e) => setDim3_3D_1(Number(e.target.value))}
+                                value={dim3_3D_1}
+                            >
+                                <option key={0} value={X_DIM}>X</option>
+                                <option key={1} value={Y_DIM}>Y</option>
+                                <option key={2} value={Z_DIM}>Z</option>
+                                <option key={3} value={TIME_DIM}>TIME</option>
+                            </select>
+
+                            <p className="text-s font-bold mb-4">Color: </p>
+                            <select
+                                className="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+                                onChange={(e) => setDim4_3D_1(Number(e.target.value))}
+                                value={dim4_3D_1}
+                            >
+                                <option key={0} value={TIME_DIM}>TIME</option>
+                                <option key={1} value={NO_DIM}>SOLID</option>
+                            </select>
+                        </div>
+                        {/* End of Change perspective */}
+                        <Plot3D data={filteredData1} axis1={dim1_3D_1} axis2={dim2_3D_1} axis3={dim3_3D_1} colorAxis={dim4_3D_1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} width={600} height={700} csv_file={selectedCsvFile1} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax1} timeMin={timeMin1} /> 
                     </div>
                     <div className="md:ml-5 relative">
                         <div className="pt-20">
@@ -402,7 +462,58 @@ const Visualisation = () => {
                                 ))}
                             </select>
                         </div>
-                        <Plot3D data={filteredData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} width={600} height={700} csv_file={selectedCsvFile2} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax1} timeMin={timeMin1} /> 
+
+                        {/* This can probably be done in a cleaner way */}
+                        {/* Start of Change perspective */}
+                        <div className="flex w-full pt-4">
+                            <p className="text-s font-bold mb-4">Axis 1: </p>
+                            <select
+                                className="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+                                onChange={(e) => setDim1_3D_2(Number(e.target.value))}
+                                value={dim1_3D_2}
+                            >
+                                <option key={0} value={X_DIM}>X</option>
+                                <option key={1} value={Y_DIM}>Y</option>
+                                <option key={2} value={Z_DIM}>Z</option>
+                                <option key={3} value={TIME_DIM}>TIME</option>
+                            </select>
+
+                            <p className="text-s font-bold mb-4">Axis 2: </p>
+                            <select
+                                className="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+                                onChange={(e) => setDim2_3D_2(Number(e.target.value))}
+                                value={dim2_3D_2}
+                            >
+                                <option key={0} value={X_DIM}>X</option>
+                                <option key={1} value={Y_DIM}>Y</option>
+                                <option key={2} value={Z_DIM}>Z</option>
+                                <option key={3} value={TIME_DIM}>TIME</option>
+                            </select>
+
+                            <p className="text-s font-bold mb-4">Axis 3: </p>
+                            <select
+                                className="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+                                onChange={(e) => setDim3_3D_2(Number(e.target.value))}
+                                value={dim3_3D_2}
+                            >
+                                <option key={0} value={X_DIM}>X</option>
+                                <option key={1} value={Y_DIM}>Y</option>
+                                <option key={2} value={Z_DIM}>Z</option>
+                                <option key={3} value={TIME_DIM}>TIME</option>
+                            </select>
+
+                            <p className="text-s font-bold mb-4">Color: </p>
+                            <select
+                                className="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+                                onChange={(e) => setDim4_3D_2(Number(e.target.value))}
+                                value={dim4_3D_2}
+                            >
+                                <option key={0} value={TIME_DIM}>TIME</option>
+                                <option key={1} value={NO_DIM}>SOLID</option>
+                            </select>
+                        </div>
+                        {/* End of Change perspective */}
+                        <Plot3D data={filteredData2} axis1={dim1_3D_2} axis2={dim2_3D_2} axis3={dim3_3D_2} colorAxis={dim4_3D_2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} width={600} height={700} csv_file={selectedCsvFile2} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax1} timeMin={timeMin1} /> 
                     </div>
                 </div>
             ) : 
@@ -424,9 +535,50 @@ const Visualisation = () => {
                         </div>
 
                         {/* <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile1} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> */}
-                        <ScatterXY width={600} height={600} data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups}  maxX={maxX1} minX={minX1} maxY={maxY1} minY={minY1} maxZ={maxZ1} minZ={minZ1} timeMax={timeMax1} timeMin={timeMin1} />
+
+                        {/* This can probably be done in a cleaner way */}
+                        {/* Start of Change perspective */}
+                        <div className="flex w-full pt-4">
+                            <p className="text-s font-bold mb-4">Axis 1: </p>
+                            <select
+                                className="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+                                onChange={(e) => setDim1_2D_1(Number(e.target.value))}
+                                value={dim1_2D_1}
+                            >
+                                <option key={0} value={X_DIM}>X</option>
+                                <option key={1} value={Y_DIM}>Y</option>
+                                <option key={2} value={Z_DIM}>Z</option>
+                                <option key={3} value={TIME_DIM}>TIME</option>
+                            </select>
+
+                            <p className="text-s font-bold mb-4">Axis 2: </p>
+                            <select
+                                className="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+                                onChange={(e) => setDim2_2D_1(Number(e.target.value))}
+                                value={dim2_2D_1}
+                            >
+                                <option key={0} value={X_DIM}>X</option>
+                                <option key={1} value={Y_DIM}>Y</option>
+                                <option key={2} value={Z_DIM}>Z</option>
+                                <option key={3} value={TIME_DIM}>TIME</option>
+                            </select>
+
+                            <p className="text-s font-bold mb-4">Color: </p>
+                            <select
+                                className="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+                                onChange={(e) => setDim3_2D_1(Number(e.target.value))}
+                                value={dim3_2D_1}
+                            >
+                                <option key={0} value={TIME_DIM}>TIME</option>
+                                <option key={1} value={NO_DIM}>SOLID</option>
+                            </select>
+                        </div>
+                        {/* End of Change perspective */}
+                        <Plot2D width={600} height={600} data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} maxX={maxX1} minX={minX1} maxY={maxY1} minY={minY1} maxZ={maxZ1} minZ={minZ1} timeMax={timeMax1} timeMin={timeMin1} axis1={dim1_2D_1} axis2={dim2_2D_1} colorAxis={dim3_2D_1} />
+
+                        {/* <ScatterXY width={600} height={600} data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups}  maxX={maxX1} minX={minX1} maxY={maxY1} minY={minY1} maxZ={maxZ1} minZ={minZ1} timeMax={timeMax1} timeMin={timeMin1} />
                         <ScatterXZ width={600} height={600} data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups}  maxX={maxX1} minX={minX1} maxY={maxY1} minY={minY1} maxZ={maxZ1} minZ={minZ1} timeMax={timeMax1} timeMin={timeMin1} />
-                        <ScatterYZ width={600} height={600} data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups}  maxX={maxX1} minX={minX1} maxY={maxY1} minY={minY1} maxZ={maxZ1} minZ={minZ1} timeMax={timeMax1} timeMin={timeMin1} />
+                        <ScatterYZ width={600} height={600} data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups}  maxX={maxX1} minX={minX1} maxY={maxY1} minY={minY1} maxZ={maxZ1} minZ={minZ1} timeMax={timeMax1} timeMin={timeMin1} /> */}
                     </div>
                     <div className="md:ml-5 relative">
                         <div className="pt-20 mb-4">
@@ -443,13 +595,70 @@ const Visualisation = () => {
                             </select>
                         </div>
                         {/* <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile2} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />  */}
-                        <ScatterXY width={600} height={600} data={filteredData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} maxX={maxX2} minX={minX2} maxY={maxY2} minY={minY2} maxZ={maxZ2} minZ={minZ2} timeMax={timeMax2} timeMin={timeMin2} /> 
+
+                        {/* This can probably be done in a cleaner way */}
+                        {/* Start of Change perspective */}
+                        <div className="flex w-full pt-4">
+                            <p className="text-s font-bold mb-4">Axis 1: </p>
+                            <select
+                                className="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+                                onChange={(e) => setDim1_2D_2(Number(e.target.value))}
+                                value={dim1_2D_1}
+                            >
+                                <option key={0} value={X_DIM}>X</option>
+                                <option key={1} value={Y_DIM}>Y</option>
+                                <option key={2} value={Z_DIM}>Z</option>
+                                <option key={3} value={TIME_DIM}>TIME</option>
+                            </select>
+
+                            <p className="text-s font-bold mb-4">Axis 2: </p>
+                            <select
+                                className="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+                                onChange={(e) => setDim2_2D_2(Number(e.target.value))}
+                                value={dim2_2D_2}
+                            >
+                                <option key={0} value={X_DIM}>X</option>
+                                <option key={1} value={Y_DIM}>Y</option>
+                                <option key={2} value={Z_DIM}>Z</option>
+                                <option key={3} value={TIME_DIM}>TIME</option>
+                            </select>
+
+                            <p className="text-s font-bold mb-4">Color: </p>
+                            <select
+                                className="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+                                onChange={(e) => setDim3_2D_2(Number(e.target.value))}
+                                value={dim3_2D_2}
+                            >
+                                <option key={0} value={TIME_DIM}>TIME</option>
+                                <option key={1} value={NO_DIM}>SOLID</option>
+                            </select>
+                        </div>
+                        {/* End of Change perspective */}
+                        <Plot2D width={600} height={600} data={filteredData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} maxX={maxX2} minX={minX2} maxY={maxY2} minY={minY2} maxZ={maxZ2} minZ={minZ2} timeMax={timeMax2} timeMin={timeMin2} axis1={dim1_2D_2} axis2={dim2_2D_2} colorAxis={dim3_2D_2} />
+
+                        {/* <ScatterXY width={600} height={600} data={filteredData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} maxX={maxX2} minX={minX2} maxY={maxY2} minY={minY2} maxZ={maxZ2} minZ={minZ2} timeMax={timeMax2} timeMin={timeMin2} /> 
                         <ScatterXZ width={600} height={600} data={filteredData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} maxX={maxX2} minX={minX2} maxY={maxY2} minY={minY2} maxZ={maxZ2} minZ={minZ2} timeMax={timeMax2} timeMin={timeMin2} /> 
-                        <ScatterYZ width={600} height={600} data={filteredData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} maxX={maxX2} minX={minX2} maxY={maxY2} minY={minY2} maxZ={maxZ2} minZ={minZ2} timeMax={timeMax2} timeMin={timeMin2} />
+                        <ScatterYZ width={600} height={600} data={filteredData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} maxX={maxX2} minX={minX2} maxY={maxY2} minY={minY2} maxZ={maxZ2} minZ={minZ2} timeMax={timeMax2} timeMin={timeMin2} /> */}
                     </div>
                 </div>
             )}
             <div className="justify-center items-center">
+                <label>Select time range:</label> 
+                <MultiRangeSlider
+                  style={{width: "90%"}}
+                  className="m-2"
+	              min={timeMin1 < timeMin2 ? timeMin1 : timeMin2}
+                  max={timeMax1 > timeMax2 ? timeMax1 : timeMax2}
+                  step={1}
+                  minValue={timeStart}
+                  maxValue={timeEnd}
+                  onChange={(e: ChangeResult) => {
+                    setTimeStart(e.minValue);
+                    setTimeEnd(e.maxValue);
+                    //console.log(e);
+	            		  }}
+	            	  />
+                <br />
                 <VelocityChart 
                  data1={filteredData1} 
                  data2={filteredData2} 
