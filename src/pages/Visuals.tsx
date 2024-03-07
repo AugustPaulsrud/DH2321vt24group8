@@ -451,6 +451,8 @@ const Visualisation = () => {
             )}
             <div className="justify-center items-center">
                 <VelocityChart 
+                 study1={selectedCsvFile1}
+                 study2={selectedCsvFile2}
                  data1={filteredData1} 
                  data2={filteredData2} 
                  colorScale={colorScale} 

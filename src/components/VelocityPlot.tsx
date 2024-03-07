@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { InteractionData, Tooltip } from "./Tooltip";
 import * as d3 from 'd3';
-
 
 type dataFormat = {
     time: number;
@@ -13,42 +11,77 @@ type dataFormat = {
 };
 
 interface VelocityChartProps {
-  data1: dataFormat[];
-  data2: dataFormat[];
-  colorScale: d3.ScaleOrdinal<string, string>;
-  selectedMarkers: string[];
-  allMarkerGroups: string[];
-  timeStart: number;
-  timeEnd: number;
+    study1: string;
+    study2: string;
+    data1: dataFormat[];
+    data2: dataFormat[];
+    colorScale: d3.ScaleOrdinal<string, string>;
+    selectedMarkers: string[];
+    allMarkerGroups: string[];
+    timeStart: number;
+    timeEnd: number;
 }
 
-const x_label = "TIME";
-const y_label = "VELOCITY";
+const x_label = "TIME (s)";
+const y_label = "VELOCITY (mm/s)";
 
 export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
-    //const [fetchedCSVData1, setFetchedCSVData1] = useState<dataFormat[]>([]);
-    //const [fetchedCSVData2, setFetchedCSVData2] = useState<dataFormat[]>([]);
-    const [hovered, setHovered] = useState<InteractionData | null>(null);
+    const [currentTime, setCurrentTime] = useState<number>(0);
+    const [pausedTime, setPausedTime] = useState<number | null>(null);
+    const [isPlaying, setIsPlaying] = useState<boolean>(false);
+    const [timeRange, setTimeRange] = useState<{ min: number; max: number }>({ min: 0, max: 0 });
 
     const svgRef = useRef<SVGSVGElement | null>(null);
+    const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-    // Set the dimensions and margins of the graph
     const margin = { top: 60, right: 60, bottom: 60, left: 60 };
     const width = 1300 - margin.left - margin.right;
     const height = 400 - margin.top - margin.bottom;
-    
+
+    // Hook to handle the initial setup of the play/pause functionality
     useEffect(() => {
         if (!props.data1.length || !props.data2.length || !svgRef.current) return;
 
+        const allData = [...props.data1, ...props.data2];
+        const minTime = d3.min(allData, d => d.time)!;
+        const maxTime = d3.max(allData, d => d.time)!;
+        setTimeRange({ min: minTime, max: maxTime });
+
+        if (!isPlaying && pausedTime !== null) setCurrentTime(pausedTime);
+    }, [props.data1, props.data2, isPlaying, pausedTime]);
+
+    // Hook to handle the play/pause functionality
+    useEffect(() => {
+        if (!isPlaying) return;
+
+        intervalRef.current = setInterval(() => {
+            setCurrentTime(prevTime => {
+                const nextTime = prevTime + 0.1; // Adjust speed as needed
+                return nextTime > timeRange.max ? timeRange.min : nextTime;
+            });
+        }, 100); // Adjust interval as needed
+
+        return () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+                intervalRef.current = null;
+            }
+        };
+    }, [isPlaying, timeRange]);
+
+    // Hook to handle the cleanup of the interval when the component is unmounted
+    // Hook to handle the rendering of the chart
+    useEffect(() => {
+        if (!svgRef.current) return;
+
         // Combine data from both CSV files
-        const filteredData1 = props.data1.filter((d) => !isNaN(d.velocity));
-        const filteredData2 = props.data2.filter((d) => !isNaN(d.velocity));
+        const filteredData1 = props.data1.filter((d) => !isNaN(d.velocity) && d.time >= timeRange.min && d.time <= currentTime);
+        const filteredData2 = props.data2.filter((d) => !isNaN(d.velocity) && d.time >= timeRange.min && d.time <= currentTime);
         const combinedData = [...filteredData1, ...filteredData2];
-        
 
         // Create scales for x and y axes
         const xScale = d3.scaleLinear()
-            .domain([0, d3.max(combinedData, d => d.time)!])
+            .domain([timeRange.min, currentTime]) // Update the x-scale domain to [timeRange.min, currentTime]
             .range([margin.left, width + margin.left]);
 
         const yScale = d3.scaleLinear()
@@ -65,9 +98,11 @@ export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
 
         svg.selectAll("*").remove(); // Clear previous content
 
+        // Append x-axis
+        const xAxis = d3.axisBottom(xScale).ticks(10).tickFormat(d3.format(".1f")); // Adjust ticks as needed
         svg.append("g")
             .attr("transform", `translate(0, ${height + margin.top})`)
-            .call(d3.axisBottom(xScale));
+            .call(xAxis);
 
         svg.append("g")
             .attr("transform", `translate(${margin.left}, 0)`)
@@ -82,13 +117,13 @@ export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
             .style("stroke", (d, i) => i === 0 ? "blue" : "red")
             .style("fill", "none")
             .style("stroke-width", 2);
-        
+
         // Append labels for the x-axis
         svg.append("text")
             .attr("transform", `translate(${width / 2 + margin.left}, ${height + margin.top + 40})`)
             .style("text-anchor", "middle")
             .text(x_label);
-        
+
         // Append label for the y-axis
         svg.append("text")
             .attr("transform", "rotate(-90)")
@@ -97,7 +132,7 @@ export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
             .attr("dy", "1em")
             .style("text-anchor", "middle")
             .text(y_label);
-        
+
         // Add legend
         const legend = svg.append("g")
             .attr("transform", `translate(${width + margin.left - 100}, ${margin.top})`);
@@ -112,26 +147,56 @@ export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
         legend.append("text")
             .attr("x", 20)
             .attr("y", 10)
-            .text("Study #1");
-            
+            .text(`${props.study1}`);
+
         legend.append("rect")
             .attr("x", 0)
             .attr("y", 30)
             .attr("width", 10)
             .attr("height", 10)
             .style("fill", "red");
-        
+
         legend.append("text")
             .attr("x", 20)
             .attr("y", 40)
-            .text("Study #2");
+            .text(`${props.study2}`);
 
-    }, [props.data1, props.data2, props.timeStart, props.timeEnd, props.selectedMarkers, margin, width, height]);
+    }, [props.data1, props.data2, timeRange, currentTime, width, height]);
 
+    const handlePlayPause = () => {
+        setIsPlaying(prev => {
+            if (!prev) {
+                setPausedTime(currentTime); // Store current time before pausing
+            } else {
+                setPausedTime(null);
+            }
+            return !prev;
+        });
+    };
+
+    const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setCurrentTime(Number(e.target.value));
+    };
     return (
-        <div className="justify-center items-center">
+        <div className="flex flex-col justify-center items-center mt-4">
             <h1>Velocity-Time Chart</h1>
             <svg ref={svgRef} width={width + margin.left + margin.right} height={height + margin.top + margin.bottom}></svg>
+            <div className="flex justify-center rounded-md p-2 w-4/5 border border-gray-300">
+                <button onClick={handlePlayPause} className={`px-6 py-2 rounded-md ${isPlaying ? 'bg-gray-300' : 'bg-blue-500 text-white'}`}>
+                    {isPlaying ? 'Pause' : 'Play'}
+                </button>
+                <span className="my-2 mx-4">Min: {timeRange.min}</span>
+                <input
+                    type="range"
+                    min={timeRange.min}
+                    max={timeRange.max}
+                    value={isPlaying ? currentTime : pausedTime !== null ? pausedTime : currentTime}
+                    onChange={handleTimeChange}
+                    step={0.01}
+                    className="w-3/4"
+                />
+                <span className="my-2 ml-4">Max: {timeRange.max}</span>
+            </div>
         </div>
-    );
+    );    
 };
