@@ -13,7 +13,7 @@ const AXIS_LABEL = {
   1: 'Y',
   2: 'Z',
   3: 'TIME'
-}
+};
 
 const Plot3D = (props) => {
 
