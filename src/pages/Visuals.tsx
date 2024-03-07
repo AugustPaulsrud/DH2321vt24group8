@@ -8,6 +8,7 @@ import { ScatterYZ } from "../components/ScatterYZ";
 import OverviewTable from "../components/OverviewTable";
 import * as d3 from 'd3';
 import { Plot2D } from "../components/Plot2D";
+import catimg from "./catraw3.png";
 
 // For changing perspecitves
 const X_DIM = 0;
@@ -375,6 +376,7 @@ const Visualisation = () => {
                 </div>
             ))}
         </div>
+        <img src={catimg} alt="Catheder with markers"/>
     </div>
 
       </div>
