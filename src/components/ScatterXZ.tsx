@@ -15,16 +15,14 @@ const MARGIN = { top: 60, right: 60, bottom: 60, left: 60 };
 type ScatterplotProps = {
   width: number;
   height: number;
-  //csv_file: string;
-  upperX: number;
-  lowerX: number;
-  upperY: number;
-  lowerY: number;
-  upperZ: number;
-  lowerZ: number;
-  timeStart: number;
-  timeEnd: number;
+  maxX: number;
+  maxY: number;
+  maxZ: number;
+  minX: number;
+  minY: number;
+  minZ: number;
   timeMax: number;
+  timeMin: number;
   data: dataFormat[];
   colorScale: d3.ScaleOrdinal<string, string>; 
   selectedMarkers: string[];
@@ -47,34 +45,8 @@ export const ScatterXZ = (props: ScatterplotProps) => {
   //const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
 
   const [hovered, setHovered] = useState<InteractionData | null>(null);
-  
-   const [upperX, setUpperX] = useState<number>(1000);
-   const [lowerX, setLowerX] = useState<number>(0);
-   const [upperZ, setUpperZ] = useState<number>(1000);
-   const [lowerZ, setLowerZ] = useState<number>(0);
-
-   const [timeStart, setTimeStart] = useState<number>(0);
-   const [timeEnd, setTimeEnd] = useState<number>(60);
-   const [timeMax, setTimeMax] = useState<number>(60);
 
   const svgRef = useRef<SVGSVGElement>(null);
-
-  // TODO; Implement for Z axis
-    useEffect(() => {
-      setUpperX(props.upperX);
-      setLowerX(props.lowerX);
-      setUpperZ(props.upperZ);
-      setLowerZ(props.lowerX);
-      setTimeStart(props.timeStart);
-      setTimeEnd(props.timeEnd);
-      setTimeMax(props.timeMax);
-    }, [props.upperX,
-        props.lowerX,
-        props.upperZ,
-        props.lowerZ,
-        props.timeStart,
-        props.timeEnd,
-        props.timeMax,]);
   
   // Layout. The div size is set by the given props.
   // The bounds (=area inside the axis) is calculated by substracting the margins
@@ -82,21 +54,16 @@ export const ScatterXZ = (props: ScatterplotProps) => {
   const boundsHeight = props.height - MARGIN.top - MARGIN.bottom;
 
   // Scales
-  const yScale = d3.scaleLinear().domain([lowerZ, upperZ]).range([boundsHeight, 0]);
-  const xScale = d3.scaleLinear().domain([lowerX, upperX]).range([0, boundsWidth]);
-
-  useEffect(() => {
-    yScale.domain([lowerZ, upperZ]).range([boundsHeight, 0]);
-    xScale.domain([lowerX, upperX]).range([0, boundsWidth]);
-  }, [lowerX, upperX, lowerZ, upperZ]);
+  const yScale = d3.scaleLinear().domain([props.minZ, props.maxZ]).range([boundsHeight, 0]);
+  const xScale = d3.scaleLinear().domain([props.minX, props.maxX]).range([0, boundsWidth]);
+  const timeScale = d3.scaleLinear().domain([props.timeMin, props.timeMax]).range([0.1, 1.0]);
 
   //const maxTime = d3.max(props.data, (d) => d.time) || 400;
   
   // Build the shapes and lines
 const groupedShapesAndLines = props.allMarkerGroups.map((group) => {
   const groupData = props.data
-    .filter((d) => props.selectedMarkers.includes(d.group) && d.group === group)
-    .filter((d) => d.time >= timeStart && d.time <= timeEnd);
+    .filter((d) => d.group === group);
 
     var oldX = 0;
     var oldY = 0;
@@ -119,7 +86,7 @@ const groupedShapesAndLines = props.allMarkerGroups.map((group) => {
         transform={transform}
         fill={props.colorScale(d.group)}
         stroke={props.colorScale(d.group)}
-        fillOpacity={1.0}
+        fillOpacity={timeScale(d.time)}
         strokeWidth={0.5}
         onMouseEnter={() =>
           setHovered({
@@ -152,6 +119,7 @@ const groupedShapesAndLines = props.allMarkerGroups.map((group) => {
           x2={lineX2}
           y2={lineY2}
           stroke={props.colorScale(d.group)}
+          fillOpacity={timeScale(d.time)}
           strokeWidth={0.5}
         />
       );

@@ -12,9 +12,19 @@ import { InteractionData, Tooltip } from "./Tooltip";
 
 const MARGIN = { top: 60, right: 60, bottom: 60, left: 60 };
 
+const AXIS_LABEL: any = {
+  0: 'X',
+  1: 'Y',
+  2: 'Z',
+  3: 'TIME'
+};
+
 type ScatterplotProps = {
   width: number;
   height: number;
+  axis1: number;
+  axis2: number;
+  colorAxis: number;
   maxX: number;
   maxY: number;
   maxZ: number;
@@ -37,16 +47,15 @@ type dataFormat = {
   time: number;
 };
 
-const x_label = "X";
-const y_label = "Y";
-
-export const ScatterXY = (props: ScatterplotProps) => {
+export const Plot2D = (props: ScatterplotProps) => {
   //const [fetchedCSVData, setFetchedCSVdata] = useState<dataFormat[]>([]);
   //const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
-
   const [hovered, setHovered] = useState<InteractionData | null>(null);
   
   const svgRef = useRef<SVGSVGElement>(null);
+
+  const x_label = AXIS_LABEL[props.axis1];
+  const y_label = AXIS_LABEL[props.axis2];
   
   // Layout. The div size is set by the given props.
   // The bounds (=area inside the axis) is calculated by substracting the margins
@@ -54,29 +63,100 @@ export const ScatterXY = (props: ScatterplotProps) => {
   const boundsHeight = props.height - MARGIN.top - MARGIN.bottom;
 
   // Scales
-  const yScale = d3.scaleLinear().domain([props.minY, props.maxY]).range([boundsHeight, 0]);
-  const xScale = d3.scaleLinear().domain([props.minX, props.maxX]).range([0, boundsWidth]);
-  const timeScale = d3.scaleLinear().domain([props.timeMin, props.timeMax]).range([0.1, 1.0]);
+  var yScale = d3.scaleLinear().domain([props.minY, props.maxY]).range([boundsHeight, 0]);
+  var xScale = d3.scaleLinear().domain([props.minX, props.maxX]).range([0, boundsWidth]); 
+  //var timeScale: d3.ScaleLinear<number, number>;
+  
+  switch (props.axis1) {
+    case 0: //x
+        xScale = d3.scaleLinear().domain([props.minX, props.maxX]).range([0, boundsWidth]);
+        break;
+    case 1: //y
+        xScale = d3.scaleLinear().domain([props.minY, props.maxY]).range([0, boundsWidth]);
+        break;
+    case 2: //z
+        xScale = d3.scaleLinear().domain([props.minZ, props.maxZ]).range([0, boundsWidth]);
+        break;
+    case 3: //time
+        xScale = d3.scaleLinear().domain([props.timeMin, props.timeMax]).range([0, boundsWidth]);
+        break;
+    default:
+        break;
+  }
 
-  //const maxTime = d3.max(props.data, (d) => d.time) || 400;
+  switch (props.axis2) {
+    case 0: //x
+        yScale = d3.scaleLinear().domain([props.minX, props.maxX]).range([boundsHeight, 0]);
+        break;
+    case 1: //y
+        yScale = d3.scaleLinear().domain([props.minY, props.maxY]).range([boundsHeight, 0]);
+        break;
+    case 2: //z
+        yScale = d3.scaleLinear().domain([props.minZ, props.maxZ]).range([boundsHeight, 0]);
+        break;
+    case 3: //time
+        yScale = d3.scaleLinear().domain([props.timeMin, props.timeMax]).range([boundsHeight, 0]);
+        break;
+    default:
+        break;
+  }
+
+  var timeScale = d3.scaleLinear().domain([props.timeMin, props.timeMax]).range([0.1, 1.0]);
+
+  switch (props.colorAxis) {
+    case 3: //time
+        timeScale = d3.scaleLinear().domain([props.timeMin, props.timeMax]).range([0.1, 1.0]);
+        break;
+    default:
+        timeScale = d3.scaleLinear().domain([props.timeMin, props.timeMax]).range([1.0, 1.0]);
+        break;
+  }
   
   // Build the shapes and lines
 const groupedShapesAndLines = props.allMarkerGroups.map((group) => {
   const groupData = props.data
     .filter((d) => d.group === group);
 
-    var oldX = 0;
-    var oldY = 0;
-
   const shapesAndLines = groupData.map((d, i, array) => {
     const markerSymb = d3Symbol().type(d3.symbolCircle).size(20);
-    const x = xScale(d.x);
-    const y = yScale(d.y);
+    var x = 0;
+    var y = 0;
+
+    switch (props.axis1) {
+        case 0://x
+            x = xScale(d.x);
+            break;
+        case 1://y
+            x = xScale(d.y);
+            break;
+        case 2://z
+            x = xScale(d.z);
+            break;
+        case 3://time
+            x = xScale(d.time);
+            break;
+        default:
+            break;
+    }
+
+    switch (props.axis2) {
+        case 0://x
+            y = yScale(d.x);
+            break;
+        case 1://y
+            y = yScale(d.y);
+            break;
+        case 2://z
+            y = yScale(d.z);
+            break;
+        case 3://time
+            y = yScale(d.time);
+            break;
+        default:
+            break;
+    }
 
     const transform = `translate(${x},${y})`;
-
-    oldX = x;
-    oldY = y;
 
     // Render the arrowhead as a <path> element
     const shape = (
@@ -90,8 +170,8 @@ const groupedShapesAndLines = props.allMarkerGroups.map((group) => {
         strokeWidth={0.5}
         onMouseEnter={() =>
           setHovered({
-            xPos: xScale(d.x),
-            yPos: yScale(d.y),
+            xPos: x,
+            yPos: y,
             xRaw: d.x,
             yRaw: d.y,
             zRaw: d.z,
@@ -106,12 +186,47 @@ const groupedShapesAndLines = props.allMarkerGroups.map((group) => {
     // Connect data points with lines
     if (i > 0) {
       const prevData = array[i - 1];
-      const lineX1 = xScale(prevData.x);
-      const lineY1 = yScale(prevData.y);
-      const lineX2 = xScale(d.x);
-      const lineY2 = yScale(d.y);
+      var lineX1 = 0;
+      var lineY1 = 0;
 
-      const line = (
+      switch (props.axis1) {
+        case 0://x
+            lineX1 = xScale(prevData.x);
+            break;
+        case 1://y
+            lineX1 = xScale(prevData.y);
+            break;
+        case 2://z
+            lineX1 = xScale(prevData.z);
+            break;
+        case 3://time
+            lineX1 = xScale(prevData.time);
+            break;
+        default:
+            break;
+    }
+
+    switch (props.axis2) {
+        case 0://x
+            lineY1 = yScale(prevData.x);
+            break;
+        case 1://y
+            lineY1 = yScale(prevData.y);
+            break;
+        case 2://z
+            lineY1 = yScale(prevData.z);
+            break;
+        case 3://time
+            lineY1 = yScale(prevData.time);
+            break;
+        default:
+            break;
+    }
+
+    const lineX2 = x;
+    const lineY2 = y;
+
+    const line = (
         <line
           key={`line-${i}`}
           x1={lineX1}
