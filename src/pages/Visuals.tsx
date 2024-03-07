@@ -303,22 +303,6 @@ const Visualisation = () => {
                     </h1>
                     <OverviewTable/>
                 </div>
-      <label>Select time range:</label> 
-      <MultiRangeSlider
-        style={{width: "90%"}}
-        className="m-2"
-	    min={timeMin1 < timeMin2 ? timeMin1 : timeMin2}
-        max={timeMax1 > timeMax2 ? timeMax1 : timeMax2}
-        step={1}
-        minValue={timeStart}
-        maxValue={timeEnd}
-        onChange={(e: ChangeResult) => {
-          setTimeStart(e.minValue);
-          setTimeEnd(e.maxValue);
-          //console.log(e);
-			  }}
-		  />
-      <br />
       <label>Select X range:</label>
       <MultiRangeSlider
         style={{width: "90%"}}
@@ -659,6 +643,22 @@ const Visualisation = () => {
                 </div>
             )}
             <div className="justify-center items-center">
+                <label>Select time range:</label> 
+                <MultiRangeSlider
+                  style={{width: "90%"}}
+                  className="m-2"
+	              min={timeMin1 < timeMin2 ? timeMin1 : timeMin2}
+                  max={timeMax1 > timeMax2 ? timeMax1 : timeMax2}
+                  step={1}
+                  minValue={timeStart}
+                  maxValue={timeEnd}
+                  onChange={(e: ChangeResult) => {
+                    setTimeStart(e.minValue);
+                    setTimeEnd(e.maxValue);
+                    //console.log(e);
+	            		  }}
+	            	  />
+                <br />
                 <VelocityChart 
                  data1={filteredData1} 
                  data2={filteredData2} 
