@@ -133,34 +133,6 @@ export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
             .style("text-anchor", "middle")
             .text(y_label);
 
-        // Add legend
-        const legend = svg.append("g")
-            .attr("transform", `translate(${width + margin.left - 100}, ${margin.top})`);
-
-        legend.append("rect")
-            .attr("x", 0)
-            .attr("y", 0)
-            .attr("width", 10)
-            .attr("height", 10)
-            .style("fill", "blue");
-
-        legend.append("text")
-            .attr("x", 20)
-            .attr("y", 10)
-            .text(`${props.study1}`);
-
-        legend.append("rect")
-            .attr("x", 0)
-            .attr("y", 30)
-            .attr("width", 10)
-            .attr("height", 10)
-            .style("fill", "red");
-
-        legend.append("text")
-            .attr("x", 20)
-            .attr("y", 40)
-            .text(`${props.study2}`);
-
     }, [props.data1, props.data2, timeRange, currentTime, width, height]);
 
     const handlePlayPause = () => {
@@ -180,6 +152,16 @@ export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
     return (
         <div className="flex flex-col justify-center items-center mt-4">
             <h1>Velocity-Time Chart</h1>
+            <div className="flex mt-4">
+                <div className="flex mr-4">
+                    <div className="w-4 h-4 mt-1 mr-2 bg-blue-600 rounded-full"></div>
+                    <span>{props.study1}</span>
+                </div>
+                <div className="flex ml-4">
+                    <div className="w-4 h-4 mt-1 mr-2 bg-red-500 rounded-full"></div>
+                    <span>{props.study2}</span>
+                </div>
+            </div>
             <svg ref={svgRef} width={width + margin.left + margin.right} height={height + margin.top + margin.bottom}></svg>
             <div className="flex justify-center rounded-md p-2 w-4/5 border border-gray-300">
                 <button onClick={handlePlayPause} className={`px-6 py-2 rounded-md ${isPlaying ? 'bg-gray-300' : 'bg-blue-500 text-white'}`}>
