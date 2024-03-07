@@ -88,7 +88,7 @@ const Visualisation = () => {
         const fetchData = async () => {
             if (selectedCsvFile2 !== "") {
                 try {
-                    const response = await d3.csv(`${process.env.PUBLIC_URL}/data/csv/${selectedCsvFile2}.csv`);
+                    const response = await d3.csv(`${process.env.PUBLIC_URL}/data/csv_downsampled/${selectedCsvFile2}.csv`);
                     setRawData2(response);
                 } catch (error) {
                     console.error('Error fetching data:', error);
@@ -373,7 +373,7 @@ const Visualisation = () => {
                             </select>
                         </div>
 
-                        <Plot3D data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} width={600} height={700} csv_file={selectedCsvFile1} timeStart={timeStart} timeEnd={timeEnd} /> 
+                        <Plot3D data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} width={600} height={700} csv_file={selectedCsvFile1} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax1} timeMin={timeMin1} /> 
                     </div>
                     <div className="md:ml-5 relative">
                         <div className="pt-20">
@@ -389,7 +389,7 @@ const Visualisation = () => {
                                 ))}
                             </select>
                         </div>
-                        <Plot3D data={filteredData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} width={600} height={700} csv_file={selectedCsvFile2} timeStart={timeStart} timeEnd={timeEnd} /> 
+                        <Plot3D data={filteredData2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} width={600} height={700} csv_file={selectedCsvFile2} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax1} timeMin={timeMin1} /> 
                     </div>
                 </div>
             ) : 

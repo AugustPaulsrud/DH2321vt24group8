@@ -9,6 +9,8 @@ Plotly.register(require('plotly.js/lib/scatter3d'));
 const Plot = createPlotlyComponent(Plotly);
 
 const Plot3D = (props) => {
+
+  const timeScale = d3.scaleLinear().domain([props.timeMin, props.timeMax]).range([0.6, 1.0]);
   
   const plotLayout = {
     width: props.width,
@@ -28,7 +30,8 @@ const Plot3D = (props) => {
         props.colorScale,
         props.timeStart,
         props.timeEnd,
-        props.selectedMarkers
+        props.selectedMarkers,
+        timeScale
       )}
       layout={plotLayout}
     />
@@ -40,7 +43,7 @@ const Plot3D = (props) => {
  * Synchronize marker selection
  * Synchronize time slider
  */
-const generateScatterData = (data, colorScale, timeStart, timeEnd, selectedMarkers) => {
+const generateScatterData = (data, colorScale, timeStart, timeEnd, selectedMarkers, timeScale) => {
   // Group data by MARKER_NR
   const groupedData = groupByMarker(data);
 
@@ -48,6 +51,8 @@ const generateScatterData = (data, colorScale, timeStart, timeEnd, selectedMarke
   const scatterData = Object.keys(groupedData).map((markerNr, index) => {
     const groupData = groupedData[markerNr];
     const markerColor = colorScale(markerNr);
+    const markerColorRGB = d3.rgb(markerColor); // Fix for opacity
+    const markerColorOpacity = groupData.map((item) => `rgba(${markerColorRGB.r}, ${markerColorRGB.g}, ${markerColorRGB.b}, ${timeScale(item.time)})`);
 
     return {
       type: 'scatter3d',
@@ -58,8 +63,8 @@ const generateScatterData = (data, colorScale, timeStart, timeEnd, selectedMarke
       y: groupData.map((item) => item.y),
       z: groupData.map((item) => item.z),
       text: groupData.map((item) => item.time),
-      marker: { color: markerColor, size: 6 },
-      line: { color: markerColor, width: 2 },
+      marker: { color: markerColorOpacity, size: 6 },
+      line: { color: markerColorOpacity, width: 2 },
       hovertemplate: `<b>%{meta[0]}</b><br>` + 
       `X: %{x} mm<br>` + 
       `Y: %{x} mm<br>` + 
