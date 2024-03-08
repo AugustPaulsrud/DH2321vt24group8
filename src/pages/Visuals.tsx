@@ -8,6 +8,7 @@ import { ScatterYZ } from "../components/ScatterYZ";
 import OverviewTable from "../components/OverviewTable";
 import * as d3 from 'd3';
 import { Plot2D } from "../components/Plot2D";
+import catimg from "./catraw3marked.png";
 
 // For changing perspecitves
 const X_DIM = 0;
@@ -353,6 +354,9 @@ const Visualisation = () => {
       <br />
 
       <div className="mb-4 pt-20">
+      <div className="flex justify-center m-4">
+            <img src={catimg} alt="Catheder with markers" className="object-scale-down h-96"/>
+        </div>
         <label className="p-4">Select Markers:</label>
         <button className="px-4 py-2 rounded-md bg-blue-500 text-white" onClick={() => selectAllMarkers()}>
             Select all
@@ -375,6 +379,7 @@ const Visualisation = () => {
                 </div>
             ))}
         </div>
+       
     </div>
 
       </div>
