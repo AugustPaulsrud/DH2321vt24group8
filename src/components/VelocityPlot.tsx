@@ -69,7 +69,6 @@ export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
         };
     }, [isPlaying, timeRange]);
 
-    // Hook to handle the cleanup of the interval when the component is unmounted
     // Hook to handle the rendering of the chart
     useEffect(() => {
         if (!svgRef.current) return;
@@ -167,7 +166,19 @@ export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
                 <button onClick={handlePlayPause} className={`px-6 py-2 rounded-md ${isPlaying ? 'bg-gray-300' : 'bg-blue-500 text-white'}`}>
                     {isPlaying ? 'Pause' : 'Play'}
                 </button>
-                <span className="my-2 mx-4">Min: {timeRange.min}</span>
+                <span className="my-2 mx-4">Min:</span>
+                <input
+                    type="number"
+                    min={timeRange.min}
+                    max={timeRange.max}
+                    value={timeRange.min}
+                    onChange={(e) => {
+                        const newValue = Math.min(Number(e.target.value), timeRange.max);
+                        setTimeRange(prev => ({ ...prev, min: newValue }));
+                        setCurrentTime(prev => Math.max(newValue, prev));
+                    }}
+                    className="w-1/5 mr-4"
+                />
                 <input
                     type="range"
                     min={timeRange.min}
@@ -177,7 +188,19 @@ export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
                     step={0.01}
                     className="w-3/4"
                 />
-                <span className="my-2 ml-4">Max: {timeRange.max}</span>
+                <span className="my-2 ml-4">Max:</span>
+                <input
+                    type="number"
+                    min={timeRange.min}
+                    max={timeRange.max}
+                    value={timeRange.max}
+                    onChange={(e) => {
+                        const newValue = Math.max(Number(e.target.value), timeRange.min);
+                        setTimeRange(prev => ({ ...prev, max: newValue }));
+                        setCurrentTime(prev => Math.min(newValue, prev));
+                    }}
+                    className="w-1/5 ml-4"
+                />
             </div>
         </div>
     );    
