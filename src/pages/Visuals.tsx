@@ -319,7 +319,7 @@ const Visualisation = () => {
     };
 
     return (
-        <div className="flex flex-col p-4 w-full">
+        <div className="flex flex-col w-full">
             <div className="flex space-x-4 w-full mb-4 ml-4">
                 <button
                     className={`px-4 py-2 rounded-md ${is3D ? 'bg-gray-300' : 'bg-blue-500 text-white'}`}
@@ -336,7 +336,7 @@ const Visualisation = () => {
             </div>
             <div>
                <div className="w-full mb-4">
-                    <h1 className="flex text-3xl font-bold my-4 mb-8 justify-center items-center">
+                    <h1 className="flex text-3xl font-bold mb-8 justify-center items-center">
                         Overview
                     </h1>
                     <OverviewTable 
@@ -346,10 +346,10 @@ const Visualisation = () => {
                         selectedStudies2={selectedStudies2}
                     />
                 </div>
-      <label>Select time range:</label> 
+      <label className="ml-4">Select time range:</label> 
       <MultiRangeSlider
         style={{width: "90%"}}
-        className="m-2"
+        className="m-2 ml-4"
 	    min={timeMin1 < timeMin2 ? timeMin1 : timeMin2}
         max={timeMax1 > timeMax2 ? timeMax1 : timeMax2}
         step={1}
@@ -362,10 +362,10 @@ const Visualisation = () => {
 			  }}
 		  />
       <br />
-      <label>Select X range:</label>
+      <label className="ml-4">Select X range:</label>
       <MultiRangeSlider
         style={{width: "90%"}}
-        className="m-2"
+        className="m-2 ml-4"
 		min={minX1 < minX2 ? minX1 : minX2}
         max={maxX1 > maxX2 ? maxX1 : maxX2}
         step={10}
@@ -378,10 +378,10 @@ const Visualisation = () => {
 			  }}
 		  />
       <br />
-      <label>Select Y range:</label>
+      <label className="ml-4">Select Y range:</label>
       <MultiRangeSlider
         style={{width: "90%"}}
-        className="m-2"
+        className="m-2 ml-4"
 		min={minY1 < minY2 ? minY1 : minY2}
         max={maxY1 > maxY2 ? maxY1 : maxY2}
         step={10}
@@ -394,10 +394,10 @@ const Visualisation = () => {
 			  }}
 		  />
       <br />
-      <label>Select Z range:</label>
+      <label className="ml-4">Select Z range:</label>
       <MultiRangeSlider
         style={{width: "90%"}}
-        className="m-2"
+        className="m-2 ml-4"
 		min={minZ1 < minZ2 ? minZ1 : minZ2}
         max={maxZ1 > maxZ2 ? maxZ1 : maxZ2}
         step={10}
