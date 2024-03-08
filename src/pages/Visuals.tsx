@@ -54,11 +54,11 @@ const Visualisation = () => {
     //                 "EVDb_SimCaPlus_Mario0007"
     //             ]; 
 
-    const csvFiles = ["EVDb_SimCaPlus_Ale0004_downsampled_500", 
-                "EVDb_SimCaPlus_Ale0005_downsampled_500", 
-                "EVDb_SimCaPlus_Mario0006_downsampled_500", 
-                "EVDb_SimCaPlus_Mario0007_downsampled_500"
-            ]; 
+    // const csvFiles = ["EVDb_SimCaPlus_Ale0004_downsampled_500", 
+    //             "EVDb_SimCaPlus_Ale0005_downsampled_500", 
+    //             "EVDb_SimCaPlus_Mario0006_downsampled_500", 
+    //             "EVDb_SimCaPlus_Mario0007_downsampled_500"
+    //         ]; 
 
     type dataFormat = {
         time: number;

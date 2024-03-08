@@ -23,7 +23,7 @@ interface OverviewTableProps {
 }
 
 // Currently, the TSV files are hardcoded, future work could include a way to dynamically fetch the TSV files
-const tsvFiles = ["EVDa_SimCaTip_Ale0003", 
+const tsvFiles = [  "EVDa_SimCaTip_Ale0003", 
                     "EVDb_SimCaPlus_Ale0004", 
                     "EVDb_SimCaPlus_Ale0005", 
                     "EVDb_SimCaPlus_Mario0006", 
@@ -91,10 +91,9 @@ const OverviewTable: React.FC<OverviewTableProps> = ({ onSelectStudies1, selecte
         if (selectedEntries1.includes(trialName)) {
             // Deselect the button
             setSelectedEntries1([]);
-            onSelectStudies1('Study 1', ''); // Deselect
+            onSelectStudies1('Study 1', '');
         } else {
             // Deselect previously selected entry for Study 1
-            const previousSelection = selectedEntries1[0];
             setSelectedEntries1([trialName]);
             onSelectStudies1('Study 1', trialName);
         }
@@ -108,7 +107,6 @@ const OverviewTable: React.FC<OverviewTableProps> = ({ onSelectStudies1, selecte
             onSelectStudies2('Study 2', ''); // Deselect
         } else {
             // Deselect previously selected entry for Study 2
-            const previousSelection = selectedEntries2[0];
             setSelectedEntries2([trialName]);
             onSelectStudies2('Study 2', trialName);
         }
@@ -139,7 +137,6 @@ const OverviewTable: React.FC<OverviewTableProps> = ({ onSelectStudies1, selecte
         setTrialsData(updatedTrialsData);
         localStorage.setItem('trialsData', JSON.stringify(updatedTrialsData));
     };
-    
 
     // Sort the data based on the column header clicked
     const handleSort = (key: keyof TrialData) => {
@@ -228,10 +225,10 @@ const OverviewTable: React.FC<OverviewTableProps> = ({ onSelectStudies1, selecte
             </div>
         );
     };
+
     return (
         <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
-                {/* Column Header Elements*/}
                 <tr>
                     <th scope="col" className="px-5 py-3 text-xs tracking-wider">
                         {renderSortFilter('TRIAL_NAME', 'Trial Name', 'Name of Trial with Person')}
@@ -261,7 +258,6 @@ const OverviewTable: React.FC<OverviewTableProps> = ({ onSelectStudies1, selecte
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
                 {filteredData.map((trial, index) => (
-                    // Table Row Elements
                     <React.Fragment key={index}>
                     {/*<tr className={selectedEntry && selectedEntry.TRIAL_NAME === trial.TRIAL_NAME ? 'bg-gray-100' : ''}>*/}
                     <tr className={`${selectedEntry && selectedEntry.TRIAL_NAME === trial.TRIAL_NAME ? 'bg-gray-100' : ''} ${selectedEntries1.includes(trial.TRIAL_NAME) ? 'bg-blue-100' : selectedEntries2.includes(trial.TRIAL_NAME) ? 'bg-red-100' : ''}`}>
@@ -316,19 +312,20 @@ const OverviewTable: React.FC<OverviewTableProps> = ({ onSelectStudies1, selecte
                                 <p><strong>Trial Name:</strong> {selectedEntry.TRIAL_NAME}</p>
                                 <p><strong>Number of Cameras Used:</strong> {selectedEntry.NO_OF_CAMERAS}</p>
                                 <p><strong>Data Included:</strong> {selectedEntry.DATA_INCLUDED}</p>
+                                {/* Disable Button if it has already been selected as another study */}
                                 <button
                                     onClick={() => handleStudySelectionStudy1(trial.TRIAL_NAME)}
                                     disabled={selectedEntries2.includes(trial.TRIAL_NAME)}
                                     className={`px-6 py-2 rounded-md mr-2 mt-2 ${selectedEntries1.includes(trial.TRIAL_NAME) ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
                                 >
-                                    Select as Study 1
+                                    Select as Study #1
                                 </button>
                                 <button
                                     onClick={() => handleStudySelectionStudy2(trial.TRIAL_NAME)}
                                     disabled={selectedEntries1.includes(trial.TRIAL_NAME)}
-                                    className={`px-6 py-2 rounded-md mr-2 mt-2 ${selectedEntries2.includes(trial.TRIAL_NAME) ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
+                                    className={`px-6 py-2 rounded-md mr-2 mt-2 ${selectedEntries2.includes(trial.TRIAL_NAME) ? 'bg-red-500 text-white' : 'bg-gray-300'}`}
                                 >
-                                    Select as Study 2
+                                    Select as Study #2
                                 </button>
                             </td>
                         </tr>
