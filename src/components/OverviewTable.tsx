@@ -302,7 +302,7 @@ const OverviewTable: React.FC<OverviewTableProps> = ({ onSelectStudies1, selecte
                                 onChange={(e) => handleCommentChange(trial.TRIAL_NAME, e.target.value)}
                                 className="w-full px-2 py-1 border border-gray-200 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-200"
                                 placeholder='Add notes...'
-                                rows={4} // Set the number of visible rows when the textarea is not focused
+                                rows={2} // Set the number of visible rows when the textarea is not focused
                             />
                         </td>
                     </tr>
