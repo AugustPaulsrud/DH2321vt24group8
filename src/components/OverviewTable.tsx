@@ -15,15 +15,22 @@ type TrialData = {
     comment: string;
 };
 
+interface OverviewTableProps {
+    onSelectStudies1: (study: string, trialName: string) => void;
+    onSelectStudies2: (study: string, trialName: string) => void;
+    selectedStudies1: Record<string, string>;
+    selectedStudies2: Record<string, string>;
+}
+
 // Currently, the TSV files are hardcoded, future work could include a way to dynamically fetch the TSV files
-const tsvFiles = ["EVDa_SimCaTip_Ale0003", 
+const tsvFiles = [  "EVDa_SimCaTip_Ale0003", 
                     "EVDb_SimCaPlus_Ale0004", 
                     "EVDb_SimCaPlus_Ale0005", 
                     "EVDb_SimCaPlus_Mario0006", 
                     "EVDb_SimCaPlus_Mario0007"
                 ]; 
 
-const OverviewTable: React.FC = () => {
+const OverviewTable: React.FC<OverviewTableProps> = ({ onSelectStudies1, selectedStudies1, onSelectStudies2, selectedStudies2 }) => {
     const [trialsData, setTrialsData] = useState<TrialData[]>([]);
     const [sortConfig, setSortConfig] = useState<{key: keyof TrialData, direction: 'asc' | 'desc'} | null>(null);
     const [selectedEntry, setSelectedEntry] = useState<TrialData | null>(null);
@@ -38,6 +45,8 @@ const OverviewTable: React.FC = () => {
         rating: '',
         comment: ''
     });
+    const [selectedEntries1, setSelectedEntries1] = useState<string[]>([]);
+    const [selectedEntries2, setSelectedEntries2] = useState<string[]>([]);
 
     useEffect(() => {
         // Fetch the trial data from the TSV files
@@ -77,19 +86,56 @@ const OverviewTable: React.FC = () => {
         fetchDataFromTSV();
     }, []);
 
-    // Allows users to edit Rating and Comments, and save them to local storage
-    const handleRatingChange = (index: number, value: number) => {
-        const newTrialsData = [...trialsData];
-        newTrialsData[index].rating = value;
-        setTrialsData(newTrialsData);
-        localStorage.setItem('trialsData', JSON.stringify(newTrialsData));
+    const handleStudySelectionStudy1 = (trialName: string) => {
+        // Check if the clicked button is already selected
+        if (selectedEntries1.includes(trialName)) {
+            // Deselect the button
+            setSelectedEntries1([]);
+            onSelectStudies1('Study 1', '');
+        } else {
+            // Deselect previously selected entry for Study 1
+            setSelectedEntries1([trialName]);
+            onSelectStudies1('Study 1', trialName);
+        }
     };
     
-    const handleCommentChange = (index: number, value: string) => {
-        const newTrialsData = [...trialsData];
-        newTrialsData[index].comment = value;
-        setTrialsData(newTrialsData);
-        localStorage.setItem('trialsData', JSON.stringify(newTrialsData));
+    const handleStudySelectionStudy2 = (trialName: string) => {
+        // Check if the clicked button is already selected
+        if (selectedEntries2.includes(trialName)) {
+            // Deselect the button
+            setSelectedEntries2([]);
+            onSelectStudies2('Study 2', ''); // Deselect
+        } else {
+            // Deselect previously selected entry for Study 2
+            setSelectedEntries2([trialName]);
+            onSelectStudies2('Study 2', trialName);
+        }
+    };    
+
+    // Allows users to edit Rating and Comments, and save them to local storage
+    const handleRatingChange = (trialName: string, value: number) => {
+        // Ensure the rating value is within the range of 0 to 10
+        value = Math.max(0, Math.min(value, 10));
+
+        const updatedTrialsData = trialsData.map(trial => {
+            if (trial.TRIAL_NAME === trialName) {
+                return { ...trial, rating: value };
+            }
+            return trial;
+        });
+        setTrialsData(updatedTrialsData);
+        localStorage.setItem('trialsData', JSON.stringify(updatedTrialsData));
+    };
+    
+    const handleCommentChange = (trialName: string, value: string) => {
+        const updatedTrialsData = trialsData.map(trial => {
+            if (trial.TRIAL_NAME === trialName) {
+                return { ...trial, comment: value };
+            }
+            return trial;
+        });
+        setTrialsData(updatedTrialsData);
+        localStorage.setItem('trialsData', JSON.stringify(updatedTrialsData));
     };
 
     // Sort the data based on the column header clicked
@@ -179,11 +225,10 @@ const OverviewTable: React.FC = () => {
             </div>
         );
     };
-    
+
     return (
         <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
-                {/* Column Header Elements*/}
                 <tr>
                     <th scope="col" className="px-5 py-3 text-xs tracking-wider">
                         {renderSortFilter('TRIAL_NAME', 'Trial Name', 'Name of Trial with Person')}
@@ -213,9 +258,9 @@ const OverviewTable: React.FC = () => {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
                 {filteredData.map((trial, index) => (
-                    // Table Row Elements
                     <React.Fragment key={index}>
-                    <tr className={selectedEntry && selectedEntry.TRIAL_NAME === trial.TRIAL_NAME ? 'bg-gray-100' : ''}>
+                    {/*<tr className={selectedEntry && selectedEntry.TRIAL_NAME === trial.TRIAL_NAME ? 'bg-gray-100' : ''}>*/}
+                    <tr className={`${selectedEntry && selectedEntry.TRIAL_NAME === trial.TRIAL_NAME ? 'bg-gray-100' : ''} ${selectedEntries1.includes(trial.TRIAL_NAME) ? 'bg-blue-100' : selectedEntries2.includes(trial.TRIAL_NAME) ? 'bg-red-100' : ''}`}>
                         <td className="px-6 py-4 whitespace-nowrap text-center">
                             <div className="flex items-center justify-center">
                                 <button onClick={() => handleSelectEntry(trial)} className="flex items-center">
@@ -243,7 +288,7 @@ const OverviewTable: React.FC = () => {
                             min={0}
                             max={10}
                             value={trial.rating}
-                            onChange={(e) => handleRatingChange(index, parseInt(e.target.value))}
+                            onChange={(e) => handleRatingChange(trial.TRIAL_NAME, parseInt(e.target.value))}
                             className={`w-14 h-8 text-center ${
                                 trial.rating >= 8 ? 'bg-green-200' :
                                 trial.rating >= 5 ? 'bg-orange-200' :
@@ -254,7 +299,7 @@ const OverviewTable: React.FC = () => {
                         <td className="px-6 py-4 whitespace-nowrap">
                             <textarea
                                 value={trial.comment}
-                                onChange={(e) => handleCommentChange(index, e.target.value)}
+                                onChange={(e) => handleCommentChange(trial.TRIAL_NAME, e.target.value)}
                                 className="w-full px-2 py-1 border border-gray-200 rounded-md focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-200"
                                 placeholder='Add notes...'
                                 rows={4} // Set the number of visible rows when the textarea is not focused
@@ -267,6 +312,21 @@ const OverviewTable: React.FC = () => {
                                 <p><strong>Trial Name:</strong> {selectedEntry.TRIAL_NAME}</p>
                                 <p><strong>Number of Cameras Used:</strong> {selectedEntry.NO_OF_CAMERAS}</p>
                                 <p><strong>Data Included:</strong> {selectedEntry.DATA_INCLUDED}</p>
+                                {/* Disable Button if it has already been selected as another study */}
+                                <button
+                                    onClick={() => handleStudySelectionStudy1(trial.TRIAL_NAME)}
+                                    disabled={selectedEntries2.includes(trial.TRIAL_NAME)}
+                                    className={`px-6 py-2 rounded-md mr-2 mt-2 ${selectedEntries1.includes(trial.TRIAL_NAME) ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
+                                >
+                                    Select as Study #1
+                                </button>
+                                <button
+                                    onClick={() => handleStudySelectionStudy2(trial.TRIAL_NAME)}
+                                    disabled={selectedEntries1.includes(trial.TRIAL_NAME)}
+                                    className={`px-6 py-2 rounded-md mr-2 mt-2 ${selectedEntries2.includes(trial.TRIAL_NAME) ? 'bg-red-500 text-white' : 'bg-gray-300'}`}
+                                >
+                                    Select as Study #2
+                                </button>
                             </td>
                         </tr>
                     )}

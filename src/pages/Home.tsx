@@ -2,6 +2,7 @@ import React from "react";
 import research_image1 from "./research_image1.png";
 import research_image2 from "./research_image2.png";
 import research_image3 from "./research_image3.png";
+import OverviewTable from "../components/OverviewTable";
 
 const Home = () => {
     return (
@@ -31,6 +32,7 @@ const Home = () => {
                 <li>Make the application mobile responsive to be portable</li>
                 <li>Continue meeting with Alessandro to refine our project and ideas</li>
             </ul>
+            <h1 className="text-3xl font-bold my-4">Overview</h1>
         </div>
     );
 };

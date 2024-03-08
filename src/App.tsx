@@ -14,7 +14,7 @@ const App = () => {
           <Navbar/>
           <div className="w-full h-screen pt-20">
               <Routes>
-                <Route path="/" element={<Home/>}/>
+                  <Route path="/" element={<Visualisation/>}/> {/* Default page */}
                   <Route path="Home" element={<Home/>}/>
                   <Route path="Visualisation" element={<Visualisation/>}/>
                   <Route path="Miscellaneous" element={<Miscellaneous/>}/>

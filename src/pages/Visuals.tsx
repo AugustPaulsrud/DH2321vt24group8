@@ -81,11 +81,11 @@ const Visualisation = () => {
     //                 "EVDb_SimCaPlus_Mario0007"
     //             ]; 
 
-    const csvFiles = ["EVDb_SimCaPlus_Ale0004_downsampled_500", 
-                "EVDb_SimCaPlus_Ale0005_downsampled_500", 
-                "EVDb_SimCaPlus_Mario0006_downsampled_500", 
-                "EVDb_SimCaPlus_Mario0007_downsampled_500"
-            ]; 
+    // const csvFiles = ["EVDb_SimCaPlus_Ale0004_downsampled_500", 
+    //             "EVDb_SimCaPlus_Ale0005_downsampled_500", 
+    //             "EVDb_SimCaPlus_Mario0006_downsampled_500", 
+    //             "EVDb_SimCaPlus_Mario0007_downsampled_500"
+    //         ]; 
 
     type dataFormat = {
         time: number;
@@ -100,6 +100,8 @@ const Visualisation = () => {
      * Sync data loading and marker selection
      */
     const [selectedMarkers, setSelectedMarkers] = useState<string[]>([]);
+    const [selectedStudies1, setSelectedStudies1] = useState<Record<string, string>>({});
+    const [selectedStudies2, setSelectedStudies2] = useState<Record<string, string>>({});
     const [rawData1, setRawData1] = useState<any>([]);
     const [rawData2, setRawData2] = useState<any>([]);
     
@@ -259,7 +261,6 @@ const Visualisation = () => {
         //setIs3D(!is3D); // Toggle between 2D and 3D graphs
         setSelectedMarkers([]);
     };
-                  
     
     // Placeholder Code for dynamically retrieving CSV files from server
     // useEffect(() => {
@@ -277,12 +278,75 @@ const Visualisation = () => {
     //     fetchData();
     // }, []);
 
+    // Add setSelectedStudies function
+    const handleSelectStudies1 = (study: string, trialName: string) => {
+        trialName = `${trialName}_downsampled_500`;
+        const updatedSelectedStudies1 = { ...selectedStudies1 };
+
+        // Check if the selected study is already selected in Study 2
+        const study2Trials = selectedStudies2[trialName];
+        if (study2Trials === 'Study 2') {
+            return;
+        }
+    
+        // Update selected studies for Study 1
+        if (updatedSelectedStudies1[trialName] === study) {
+            delete updatedSelectedStudies1[trialName];
+        } else {
+            updatedSelectedStudies1[trialName] = study;
+            // Deselect the initial Study 1 if another Study 1 is selected
+            for (const key in updatedSelectedStudies1) {
+                if (updatedSelectedStudies1.hasOwnProperty(key) && updatedSelectedStudies1[key] === 'Study 1' && key !== trialName) {
+                    delete updatedSelectedStudies1[key];
+                    break; // Stop after deselecting the first occurrence of Study 1
+                }
+            }
+        }
+        setSelectedStudies1(updatedSelectedStudies1);
+    
+        // Update selected CSV file for Study 1
+        if (study === 'Study 1') {
+            setSelectedCsvFile1(trialName);
+        }
+    };
+    
+    const handleSelectStudiesStudy2 = (study: string, trialName: string) => {
+        trialName = `${trialName}_downsampled_500`;
+        const updatedSelectedStudies2 = { ...selectedStudies2 };
+
+        // Check if the selected study is already selected in Study 1
+        const study1Trials = selectedStudies1[trialName];
+        if (study1Trials === 'Study 1') {
+            return;
+        }
+    
+        // Update selected studies for Study 2
+        if (updatedSelectedStudies2[trialName] === study) {
+            delete updatedSelectedStudies2[trialName];
+        } else {
+            updatedSelectedStudies2[trialName] = study;
+            // Deselect the initial Study 2 if another Study 2 is selected
+            for (const key in updatedSelectedStudies2) {
+                if (updatedSelectedStudies2.hasOwnProperty(key) && updatedSelectedStudies2[key] === 'Study 2' && key !== trialName) {
+                    delete updatedSelectedStudies2[key];
+                    break; // Stop after deselecting the first occurrence of Study 2
+                }
+            }
+        }
+        setSelectedStudies2(updatedSelectedStudies2);
+    
+        // Update selected CSV file for Study 2
+        if (study === 'Study 2') {
+            setSelectedCsvFile2(trialName);
+        }
+    };
+    
     const toggleGraph = () => {
         setIs3D(!is3D); // Toggle between 2D and 3D graphs
     };
 
     return (
-        <div className="flex flex-col p-4 w-full">
+        <div className="flex flex-col w-full">
             <div className="flex space-x-4 w-full mb-4 ml-4">
                 <button
                     className={`px-4 py-2 rounded-md ${is3D ? 'bg-gray-300' : 'bg-blue-500 text-white'}`}
@@ -299,15 +363,36 @@ const Visualisation = () => {
             </div>
             <div>
                <div className="w-full mb-4">
-                    <h1 className="flex text-3xl font-bold my-4 mb-8 justify-center items-center">
+                    <h1 className="flex text-3xl font-bold mb-8 justify-center items-center">
                         Overview
                     </h1>
-                    <OverviewTable/>
+                    <OverviewTable 
+                        onSelectStudies1={handleSelectStudies1} 
+                        selectedStudies1={selectedStudies1} 
+                        onSelectStudies2={handleSelectStudiesStudy2}
+                        selectedStudies2={selectedStudies2}
+                    />
                 </div>
-      <label>Select X range:</label>
+      <label className="ml-4">Select time range:</label> 
       <MultiRangeSlider
         style={{width: "90%"}}
-        className="m-2"
+        className="m-2 ml-4"
+	    min={timeMin1 < timeMin2 ? timeMin1 : timeMin2}
+        max={timeMax1 > timeMax2 ? timeMax1 : timeMax2}
+        step={1}
+        minValue={timeStart}
+        maxValue={timeEnd}
+        onChange={(e: ChangeResult) => {
+          setTimeStart(e.minValue);
+          setTimeEnd(e.maxValue);
+          //console.log(e);
+			  }}
+		  />
+      <br />
+      <label className="ml-4">Select X range:</label>
+      <MultiRangeSlider
+        style={{width: "90%"}}
+        className="m-2 ml-4"
 		min={minX1 < minX2 ? minX1 : minX2}
         max={maxX1 > maxX2 ? maxX1 : maxX2}
         step={10}
@@ -320,10 +405,10 @@ const Visualisation = () => {
 			  }}
 		  />
       <br />
-      <label>Select Y range:</label>
+      <label className="ml-4">Select Y range:</label>
       <MultiRangeSlider
         style={{width: "90%"}}
-        className="m-2"
+        className="m-2 ml-4"
 		min={minY1 < minY2 ? minY1 : minY2}
         max={maxY1 > maxY2 ? maxY1 : maxY2}
         step={10}
@@ -336,10 +421,10 @@ const Visualisation = () => {
 			  }}
 		  />
       <br />
-      <label>Select Z range:</label>
+      <label className="ml-4">Select Z range:</label>
       <MultiRangeSlider
         style={{width: "90%"}}
-        className="m-2"
+        className="m-2 ml-4"
 		min={minZ1 < minZ2 ? minZ1 : minZ2}
         max={maxZ1 > maxZ2 ? maxZ1 : maxZ2}
         step={10}
@@ -388,8 +473,8 @@ const Visualisation = () => {
                 <div className="flex flex-col md:flex-row w-full justify-center items-center">
                     <div className="md:mr-5">
                         <div className="pt-20">
-                            <h2 className="text-xl font-bold mb-4">Study #1</h2>
-                            <select
+                            <h2 className="text-xl font-bold mb-4">{`Study #1: ${selectedCsvFile1}`}</h2>
+                            {/*<select
                                 className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
                                 onChange={(e) => setSelectedCsvFile1(e.target.value)}
                                 value={selectedCsvFile1}
@@ -398,7 +483,7 @@ const Visualisation = () => {
                                 {csvFiles.map((file, index) => (
                                     <option key={index} value={file}>{file}</option>
                                 ))}
-                            </select>
+                                </select>*/}
                         </div>
 
                         {/* This can probably be done in a cleaner way */}
@@ -455,8 +540,8 @@ const Visualisation = () => {
                     </div>
                     <div className="md:ml-5 relative">
                         <div className="pt-20">
-                            <h2 className="text-xl font-bold mb-4">Study #2</h2>
-                            <select
+                            <h2 className="text-xl font-bold mb-4">{`Study #2: ${selectedCsvFile2}`}</h2>
+                            {/*<select
                                 className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
                                 onChange={(e) => setSelectedCsvFile2(e.target.value)}
                                 value={selectedCsvFile2}
@@ -465,7 +550,7 @@ const Visualisation = () => {
                                 {csvFiles.map((file, index) => (
                                     <option key={index} value={file}>{file}</option>
                                 ))}
-                            </select>
+                                </select>*/}
                         </div>
 
                         {/* This can probably be done in a cleaner way */}
@@ -526,8 +611,8 @@ const Visualisation = () => {
                 <div className="flex flex-col md:flex-row w-full justify-center items-center">
                     <div className="md:mr-5 relative">
                         <div className="mb-4 pt-20">
-                            <h2 className="text-xl font-bold mb-4">Study #1</h2>
-                            <select
+                            <h2 className="text-xl font-bold mb-4">{`Study #2: ${selectedCsvFile1}`}</h2>
+                            {/*<select
                                 className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
                                 onChange={(e) => setSelectedCsvFile1(e.target.value)}
                                 value={selectedCsvFile1}
@@ -536,7 +621,7 @@ const Visualisation = () => {
                                 {csvFiles.map((file, index) => (
                                     <option key={index} value={file}>{file}</option>
                                 ))}
-                            </select>
+                                </select>*/}
                         </div>
 
                         {/* <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile1} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> */}
@@ -587,8 +672,8 @@ const Visualisation = () => {
                     </div>
                     <div className="md:ml-5 relative">
                         <div className="pt-20 mb-4">
-                            <h2 className="text-xl font-bold mb-4">Study #2</h2>
-                            <select
+                            <h2 className="text-xl font-bold mb-4">{`Study #2: ${selectedCsvFile2}`}</h2>
+                            {/*<select
                                 className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
                                 onChange={(e) => setSelectedCsvFile2(e.target.value)}
                                 value={selectedCsvFile2}
@@ -597,7 +682,7 @@ const Visualisation = () => {
                                 {csvFiles.map((file, index) => (
                                     <option key={index} value={file}>{file}</option>
                                 ))}
-                            </select>
+                                </select>*/}
                         </div>
                         {/* <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile2} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />  */}
 
@@ -665,6 +750,8 @@ const Visualisation = () => {
 	            	  />
                 <br />
                 <VelocityChart 
+                 study1={selectedCsvFile1}
+                 study2={selectedCsvFile2}
                  data1={filteredData1} 
                  data2={filteredData2} 
                  colorScale={colorScale} 
