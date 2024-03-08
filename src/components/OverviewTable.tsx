@@ -97,11 +97,6 @@ const OverviewTable: React.FC<OverviewTableProps> = ({ onSelectStudies1, selecte
             const previousSelection = selectedEntries1[0];
             setSelectedEntries1([trialName]);
             onSelectStudies1('Study 1', trialName);
-    
-            // Deselect the Study 1 button in the previous selection
-            if (previousSelection) {
-                onSelectStudies1('Study 1', ''); // Deselect the previously selected entry
-            }
         }
     };
     
@@ -116,11 +111,6 @@ const OverviewTable: React.FC<OverviewTableProps> = ({ onSelectStudies1, selecte
             const previousSelection = selectedEntries2[0];
             setSelectedEntries2([trialName]);
             onSelectStudies2('Study 2', trialName);
-    
-            // Deselect the Study 2 button in the previous selection
-            if (previousSelection) {
-                onSelectStudies2('Study 2', ''); // Deselect the previously selected entry
-            }
         }
     };    
 
