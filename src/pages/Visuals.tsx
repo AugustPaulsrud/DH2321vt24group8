@@ -349,9 +349,13 @@ const Visualisation = () => {
         <div className="flex flex-col w-full">
             <div>
                <div className="w-full mb-4">
-                    <h1 className="flex text-3xl font-bold mb-8 justify-center items-center">
+                    <h1 className="flex text-3xl font-bold mb-2 justify-center items-center">
                         Overview
                     </h1>
+                    <p className="flex mb-4 justify-center items-center">
+                        Select two studies for comparison to render the data on the graphs below. 
+                        Table can be sorted in ascending/descending order by clicking on the column headers.
+                    </p>
                     <OverviewTable 
                         onSelectStudies1={handleSelectStudies1} 
                         selectedStudies1={selectedStudies1} 

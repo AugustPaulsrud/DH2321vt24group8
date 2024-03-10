@@ -86,6 +86,18 @@ const OverviewTable: React.FC<OverviewTableProps> = ({ onSelectStudies1, selecte
         fetchDataFromTSV();
     }, []);
 
+    useEffect(() => {
+        // Load selected entries from localStorage
+        const storedEntries1 = localStorage.getItem('selectedEntries1');
+        const storedEntries2 = localStorage.getItem('selectedEntries2');
+        if (storedEntries1) {
+            setSelectedEntries1(JSON.parse(storedEntries1));
+        }
+        if (storedEntries2) {
+            setSelectedEntries2(JSON.parse(storedEntries2));
+        }
+    }, []);
+
     const handleStudySelectionStudy1 = (trialName: string) => {
         // Check if the clicked button is already selected
         if (selectedEntries1.includes(trialName)) {
@@ -97,6 +109,8 @@ const OverviewTable: React.FC<OverviewTableProps> = ({ onSelectStudies1, selecte
             setSelectedEntries1([trialName]);
             onSelectStudies1('Study 1', trialName);
         }
+        // Save selected entries to localStorage
+        localStorage.setItem('selectedEntries1', JSON.stringify(selectedEntries1));
     };
     
     const handleStudySelectionStudy2 = (trialName: string) => {
@@ -110,7 +124,14 @@ const OverviewTable: React.FC<OverviewTableProps> = ({ onSelectStudies1, selecte
             setSelectedEntries2([trialName]);
             onSelectStudies2('Study 2', trialName);
         }
-    };    
+        localStorage.setItem('selectedEntries2', JSON.stringify(selectedEntries2));
+    };
+    
+    useEffect(() => {
+        // Pass selected studies back to the parent component when they change
+        onSelectStudies1('Study 1', selectedEntries1[0] || '');
+        onSelectStudies2('Study 2', selectedEntries2[0] || '');
+    }, [selectedEntries1, selectedEntries2, onSelectStudies1, onSelectStudies2]);
 
     // Allows users to edit Rating and Comments, and save them to local storage
     const handleRatingChange = (trialName: string, value: number) => {
