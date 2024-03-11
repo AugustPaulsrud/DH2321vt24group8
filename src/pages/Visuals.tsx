@@ -448,7 +448,23 @@ const Visualisation = () => {
                             </select>
                         </div>
                         {/* End of Change perspective */}
-                        <Plot3D data={filteredData1} axis1={dim1_3D_1} axis2={dim2_3D_1} axis3={dim3_3D_1} colorAxis={dim4_3D_1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} width={600} height={700} csv_file={selectedCsvFile1} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax1} timeMin={timeMin1} /> 
+                        <Plot3D 
+                            data={filteredData1} 
+                            axis1={dim1_3D_1} 
+                            axis2={dim2_3D_1} 
+                            axis3={dim3_3D_1} 
+                            colorAxis={dim4_3D_1} 
+                            colorScale={colorScale} 
+                            selectedMarkers={selectedMarkers} 
+                            allMarkerGroups={allGroups} 
+                            width={600} 
+                            height={750} 
+                            csv_file={selectedCsvFile1} 
+                            timeStart={timeStart} 
+                            timeEnd={timeEnd} 
+                            timeMax={timeMax1} 
+                            timeMin={timeMin1} 
+                        /> 
                     </div>
                     <div className="md:ml-5 relative">
                         <div className="pt-10">
@@ -514,7 +530,23 @@ const Visualisation = () => {
                             </select>
                         </div>
                         {/* End of Change perspective */}
-                        <Plot3D data={filteredData2} axis1={dim1_3D_2} axis2={dim2_3D_2} axis3={dim3_3D_2} colorAxis={dim4_3D_2} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} width={600} height={700} csv_file={selectedCsvFile2} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax1} timeMin={timeMin1} /> 
+                        <Plot3D 
+                            data={filteredData2} 
+                            axis1={dim1_3D_2} 
+                            axis2={dim2_3D_2} 
+                            axis3={dim3_3D_2} 
+                            colorAxis={dim4_3D_2} 
+                            colorScale={colorScale} 
+                            selectedMarkers={selectedMarkers} 
+                            allMarkerGroups={allGroups} 
+                            width={600} 
+                            height={750} 
+                            csv_file={selectedCsvFile2} 
+                            timeStart={timeStart} 
+                            timeEnd={timeEnd} 
+                            timeMax={timeMax1} 
+                            timeMin={timeMin1} 
+                        /> 
                     </div>
                 </div>
             ) : 
