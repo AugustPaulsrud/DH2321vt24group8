@@ -2,9 +2,6 @@ import React, { useState , useEffect, useRef, useMemo} from "react";
 import { VelocityChart } from "../components/VelocityPlot";
 import Plot3D from "../components/Plot3D";
 import MultiRangeSlider, { ChangeResult } from "multi-range-slider-react";
-import { ScatterXY } from "../components/ScatterXY";
-import { ScatterXZ } from "../components/ScatterXZ";
-import { ScatterYZ } from "../components/ScatterYZ";
 import OverviewTable from "../components/OverviewTable";
 import * as d3 from 'd3';
 import { Plot2D } from "../components/Plot2D";
@@ -65,27 +62,11 @@ const Visualisation = () => {
    const [minZ2, setMinZ2] = useState<number>(0);
 
     // State to track whether to render 2D or 3D graph
-    const [is3D, setIs3D] = useState(false);
+    const [is3D, setIs3D] = useState(true);
 
     // Initial state for selected CSV files as empty string
     const [selectedCsvFile1, setSelectedCsvFile1] = useState("");
     const [selectedCsvFile2, setSelectedCsvFile2] = useState("");
-
-    // const [csvFiles, setCsvFiles] = useState<string[]>([]);
-
-    // Manually provided list of CSV file names for demonstration
-    // const csvFiles = ["EVDa_SimCaTip_Ale0003", 
-    //                 "EVDb_SimCaPlus_Ale0004", 
-    //                 "EVDb_SimCaPlus_Ale0005", 
-    //                 "EVDb_SimCaPlus_Mario0006", 
-    //                 "EVDb_SimCaPlus_Mario0007"
-    //             ]; 
-
-    // const csvFiles = ["EVDb_SimCaPlus_Ale0004_downsampled_500", 
-    //             "EVDb_SimCaPlus_Ale0005_downsampled_500", 
-    //             "EVDb_SimCaPlus_Mario0006_downsampled_500", 
-    //             "EVDb_SimCaPlus_Mario0007_downsampled_500"
-    //         ]; 
 
     type dataFormat = {
         time: number;
