@@ -99,7 +99,7 @@ const Visualisation = () => {
     /**
      * Sync data loading and marker selection
      */
-    const [selectedMarkers, setSelectedMarkers] = useState<string[]>([]);
+    const [selectedMarkers, setSelectedMarkers] = useState<string[]>(["tip7"]);
     const [selectedStudies1, setSelectedStudies1] = useState<Record<string, string>>({});
     const [selectedStudies2, setSelectedStudies2] = useState<Record<string, string>>({});
     const [rawData1, setRawData1] = useState<any>([]);
@@ -238,7 +238,7 @@ const Visualisation = () => {
         return d3
         .scaleOrdinal<string>()
         .domain(allGroups)
-        .range(["#e0ac2b", "#e85252", "#6689c6", "#9a6fb0", "#a53253"]);    
+        .range(["#800000", "#f032e6", "#e6194b", "#f58231", "#ffe119", "#fabed4", "#9a6324", "#3cb44b", "#000000", "#42d4f4", "#000075"]);
     }, [allGroups]);
 
     const handleGroupChange = (selectedMarker: string) => {
@@ -338,6 +338,12 @@ const Visualisation = () => {
             setSelectedCsvFile2(trialName);
         }
     };
+
+    const [isImageVisible, setIsImageVisible] = useState(true);
+
+    const toggleImageVisibility = () => {
+        setIsImageVisible(prevState => !prevState);
+    };
     
     return (
         <div className="flex flex-col w-full">
@@ -355,31 +361,42 @@ const Visualisation = () => {
                     Show 3D Graph
                 </button>
             </div>
-            <div className="mb-4 mt-10">
-                <div className="flex justify-center m-4">
-                    <img src={catimg} alt="Catheder with markers" className="object-scale-down h-96"/>
-                </div>
-                <label className="p-4">Select Markers:</label>
-                <button className="px-4 py-2 rounded-md bg-blue-500 text-white" onClick={() => selectAllMarkers()}>
-                    Select All
-                </button>
-                <button className="px-4 py-2 rounded-md bg-gray-300 text-black}" onClick={() => deselectAllMarkers()}>
-                    Deselect All
-                </button>
-                <div className="grid grid-cols-3 gap-2">
-                    {allGroups.map((group: any) => (
-                        <div key={group} className="flex items-center">
-                            <label className="flex items-center">
-                                <input 
-                                type="checkbox"
-                                checked={selectedMarkers.includes(group)}
-                                onChange={() => handleGroupChange(group)}
-                                className="form-checkbox h-5 w-5 text-indigo-600"
-                                />
-                                <span className="ml-2 text-gray-700" style={{color: colorScale(group)}}>{group}</span>
-                            </label>
+            <div className="mb-4 mt-10 flex justify-center">
+                <div className="flex flex-col items-center">
+                    <div className="mb-4">
+                        <label className="block mb-4">Select Markers:</label>
+                        <div className="mb-4">
+                            <button className="px-4 py-2 rounded-md bg-blue-500 text-white mr-4" onClick={() => selectAllMarkers()}>
+                                Select All
+                            </button>
+                            <button className="px-4 py-2 rounded-md bg-gray-300 text-black mr-4" onClick={() => deselectAllMarkers()}>
+                                Deselect All
+                            </button>
                         </div>
-                    ))}
+                        <div className="grid grid-cols-4 gap-4">
+                            {allGroups.map((group: any) => (
+                                <div key={group} className="flex items-center">
+                                    <label className="flex mt-4gfe items-center">
+                                        <input 
+                                            type="checkbox"
+                                            checked={selectedMarkers.includes(group)}
+                                            onChange={() => handleGroupChange(group)}
+                                            className="form-checkbox h-5 w-5 text-indigo-600"
+                                        />
+                                        <span className="ml-2 text-gray-700" style={{color: colorScale(group)}}>{group}</span>
+                                    </label>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+                <div className="relative ml-8">
+                    {isImageVisible && (
+                        <img src={catimg} alt="Catheter with markers" className="object-scale-down h-72" />
+                    )}
+                    <button onClick={toggleImageVisibility} className="absolute bottom-0 right-0 p-2 bg-blue-500 text-white rounded-lg focus:outline-none">
+                        {isImageVisible ? 'Hide Image' : 'Show Image'}
+                    </button>
                 </div>
             </div>
             { is3D ? 
