@@ -133,6 +133,15 @@ const OverviewTable: React.FC<OverviewTableProps> = ({ onSelectStudies1, selecte
         onSelectStudies2('Study 2', selectedEntries2[0] || '');
     }, [selectedEntries1, selectedEntries2, onSelectStudies1, onSelectStudies2]);
 
+    // Save selected entries to localStorage when they change
+    useEffect(() => {
+        localStorage.setItem('selectedEntries1', JSON.stringify(selectedEntries1));
+    }, [selectedEntries1]);
+    
+    useEffect(() => {
+        localStorage.setItem('selectedEntries2', JSON.stringify(selectedEntries2));
+    }, [selectedEntries2]);
+
     // Allows users to edit Rating and Comments, and save them to local storage
     const handleRatingChange = (trialName: string, value: number) => {
         // Ensure the rating value is within the range of 0 to 10

@@ -41,12 +41,15 @@ export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
     // Hook to handle the initial setup of the play/pause functionality
     useEffect(() => {
         if (!props.data1.length || !props.data2.length || !svgRef.current) return;
-
+    
         const allData = [...props.data1, ...props.data2];
         const minTime = d3.min(allData, d => d.time)!;
         const maxTime = d3.max(allData, d => d.time)!;
+    
+        // Set current time to the maximum time
+        setCurrentTime(maxTime);
         setTimeRange({ min: minTime, max: maxTime });
-
+    
         if (!isPlaying && pausedTime !== null) setCurrentTime(pausedTime);
     }, [props.data1, props.data2, isPlaying, pausedTime]);
 

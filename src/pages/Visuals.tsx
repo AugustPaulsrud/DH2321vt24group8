@@ -280,7 +280,6 @@ const Visualisation = () => {
 
     // Add setSelectedStudies function
     const handleSelectStudies1 = (study: string, trialName: string) => {
-        trialName = `${trialName}_downsampled_500`;
         const updatedSelectedStudies1 = { ...selectedStudies1 };
 
         // Check if the selected study is already selected in Study 2
@@ -311,7 +310,6 @@ const Visualisation = () => {
     };
     
     const handleSelectStudiesStudy2 = (study: string, trialName: string) => {
-        trialName = `${trialName}_downsampled_500`;
         const updatedSelectedStudies2 = { ...selectedStudies2 };
 
         // Check if the selected study is already selected in Study 1
@@ -341,97 +339,9 @@ const Visualisation = () => {
         }
     };
     
-    const toggleGraph = () => {
-        setIs3D(!is3D); // Toggle between 2D and 3D graphs
-    };
-
     return (
         <div className="flex flex-col w-full">
-            <div>
-               <div className="w-full mb-4">
-                    <h1 className="flex text-3xl font-bold mb-2 justify-center items-center">
-                        Overview
-                    </h1>
-                    <p className="flex mb-4 justify-center items-center">
-                        Select two studies for comparison to render the data on the graphs below. 
-                        Table can be sorted in ascending/descending order by clicking on the column headers.
-                    </p>
-                    <OverviewTable 
-                        onSelectStudies1={handleSelectStudies1} 
-                        selectedStudies1={selectedStudies1} 
-                        onSelectStudies2={handleSelectStudiesStudy2}
-                        selectedStudies2={selectedStudies2}
-                    />
-                </div>
-      <label className="ml-4">Select time range:</label> 
-      <MultiRangeSlider
-        style={{width: "90%"}}
-        className="m-2 ml-4"
-	    min={timeMin1 < timeMin2 ? timeMin1 : timeMin2}
-        max={timeMax1 > timeMax2 ? timeMax1 : timeMax2}
-        step={1}
-        minValue={timeStart}
-        maxValue={timeEnd}
-        onChange={(e: ChangeResult) => {
-          setTimeStart(e.minValue);
-          setTimeEnd(e.maxValue);
-          //console.log(e);
-			  }}
-		  />
-      <br />
-      <label className="ml-4">Select X range:</label>
-      <MultiRangeSlider
-        style={{width: "90%"}}
-        className="m-2 ml-4"
-		min={minX1 < minX2 ? minX1 : minX2}
-        max={maxX1 > maxX2 ? maxX1 : maxX2}
-        step={10}
-        minValue={lowerX}
-        maxValue={upperX}
-        onChange={(e: ChangeResult) => {
-          setLowerX(e.minValue);
-          setUpperX(e.maxValue);
-          //console.log(e);
-			  }}
-		  />
-      <br />
-      <label className="ml-4">Select Y range:</label>
-      <MultiRangeSlider
-        style={{width: "90%"}}
-        className="m-2 ml-4"
-		min={minY1 < minY2 ? minY1 : minY2}
-        max={maxY1 > maxY2 ? maxY1 : maxY2}
-        step={10}
-        minValue={lowerY}
-        maxValue={upperY}
-        onChange={(e: ChangeResult) => {
-          setLowerY(e.minValue);
-          setUpperY(e.maxValue);
-          //console.log(e);
-			  }}
-		  />
-      <br />
-      <label className="ml-4">Select Z range:</label>
-      <MultiRangeSlider
-        style={{width: "90%"}}
-        className="m-2 ml-4"
-		min={minZ1 < minZ2 ? minZ1 : minZ2}
-        max={maxZ1 > maxZ2 ? maxZ1 : maxZ2}
-        step={10}
-        minValue={lowerZ}
-        maxValue={upperZ}
-        onChange={(e: ChangeResult) => {
-          setLowerZ(e.minValue);
-          setUpperZ(e.maxValue);
-          //console.log(e);
-			  }}
-		  />
-      <br />
-      <div className="mb-4 mt-10">
-      <div className="flex justify-center m-4">
-            <img src={catimg} alt="Catheder with markers" className="object-scale-down h-96"/>
-        </div>
-            <div className="flex space-x-4 w-full mb-4 justify-center items-center">
+            <div className="flex space-x-4 w-full mt-4 justify-center items-center">
                 <button
                     className={`px-4 py-2 rounded-md ${is3D ? 'bg-gray-300' : 'bg-blue-500 text-white'}`}
                     onClick={() => setIs3D(false)}
@@ -445,37 +355,38 @@ const Visualisation = () => {
                     Show 3D Graph
                 </button>
             </div>
-        <label className="p-4">Select Markers:</label>
-        <button className="px-4 py-2 rounded-md bg-blue-500 text-white" onClick={() => selectAllMarkers()}>
-            Select all
-        </button>
-        <button className="px-4 py-2 rounded-md bg-gray-300 text-black}" onClick={() => deselectAllMarkers()}>
-            Deselect all
-        </button>
-        <div className="grid grid-cols-3 gap-2">
-            {allGroups.map((group: any) => (
-                <div key={group} className="flex items-center">
-                <label className="flex items-center">
-                    <input 
-                    type="checkbox"
-                    checked={selectedMarkers.includes(group)}
-                    onChange={() => handleGroupChange(group)}
-                    className="form-checkbox h-5 w-5 text-indigo-600"
-                    />
-                    <span className="ml-2 text-gray-700" style={{color: colorScale(group)}}>{group}</span>
-                </label>
+            <div className="mb-4 mt-10">
+                <div className="flex justify-center m-4">
+                    <img src={catimg} alt="Catheder with markers" className="object-scale-down h-96"/>
                 </div>
-            ))}
-        </div>
-       
-    </div>
-
-      </div>
+                <label className="p-4">Select Markers:</label>
+                <button className="px-4 py-2 rounded-md bg-blue-500 text-white" onClick={() => selectAllMarkers()}>
+                    Select All
+                </button>
+                <button className="px-4 py-2 rounded-md bg-gray-300 text-black}" onClick={() => deselectAllMarkers()}>
+                    Deselect All
+                </button>
+                <div className="grid grid-cols-3 gap-2">
+                    {allGroups.map((group: any) => (
+                        <div key={group} className="flex items-center">
+                            <label className="flex items-center">
+                                <input 
+                                type="checkbox"
+                                checked={selectedMarkers.includes(group)}
+                                onChange={() => handleGroupChange(group)}
+                                className="form-checkbox h-5 w-5 text-indigo-600"
+                                />
+                                <span className="ml-2 text-gray-700" style={{color: colorScale(group)}}>{group}</span>
+                            </label>
+                        </div>
+                    ))}
+                </div>
+            </div>
             { is3D ? 
             ( // 3D Graph
                 <div className="flex flex-col md:flex-row w-full justify-center items-center">
                     <div className="md:mr-5">
-                        <div className="pt-20">
+                        <div className="pt-10">
                             <h2 className="text-xl font-bold mb-4">{`Study #1: ${selectedCsvFile1}`}</h2>
                             {/*<select
                                 className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
@@ -542,7 +453,7 @@ const Visualisation = () => {
                         <Plot3D data={filteredData1} axis1={dim1_3D_1} axis2={dim2_3D_1} axis3={dim3_3D_1} colorAxis={dim4_3D_1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups} width={600} height={700} csv_file={selectedCsvFile1} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax1} timeMin={timeMin1} /> 
                     </div>
                     <div className="md:ml-5 relative">
-                        <div className="pt-20">
+                        <div className="pt-10">
                             <h2 className="text-xl font-bold mb-4">{`Study #2: ${selectedCsvFile2}`}</h2>
                             {/*<select
                                 className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
@@ -555,7 +466,6 @@ const Visualisation = () => {
                                 ))}
                                 </select>*/}
                         </div>
-
                         {/* This can probably be done in a cleaner way */}
                         {/* Start of Change perspective */}
                         <div className="flex w-full pt-4">
@@ -613,7 +523,7 @@ const Visualisation = () => {
             ( // 2D Graph
                 <div className="flex flex-col md:flex-row w-full justify-center items-center">
                     <div className="md:mr-5 relative">
-                        <div className="mb-4 pt-20">
+                        <div className="mb-4 pt-10">
                             <h2 className="text-xl font-bold mb-4">{`Study #1: ${selectedCsvFile1}`}</h2>
                             {/*<select
                                 className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
@@ -674,7 +584,7 @@ const Visualisation = () => {
                         <ScatterYZ width={600} height={600} data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups}  maxX={maxX1} minX={minX1} maxY={maxY1} minY={minY1} maxZ={maxZ1} minZ={minZ1} timeMax={timeMax1} timeMin={timeMin1} /> */}
                     </div>
                     <div className="md:ml-5 relative">
-                        <div className="pt-20 mb-4">
+                        <div className="pt-10 mb-4">
                             <h2 className="text-xl font-bold mb-4">{`Study #2: ${selectedCsvFile2}`}</h2>
                             {/*<select
                                 className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
@@ -735,23 +645,71 @@ const Visualisation = () => {
                     </div>
                 </div>
             )}
-            <div className="justify-center items-center">
-                <label>Select time range:</label> 
+            
+            <div>
+               <label className="ml-4">Select Time Range:</label> 
                 <MultiRangeSlider
-                  style={{width: "90%"}}
-                  className="m-2"
-	              min={timeMin1 < timeMin2 ? timeMin1 : timeMin2}
-                  max={timeMax1 > timeMax2 ? timeMax1 : timeMax2}
-                  step={1}
-                  minValue={timeStart}
-                  maxValue={timeEnd}
-                  onChange={(e: ChangeResult) => {
+                    style={{width: "90%"}}
+                    className="m-2 ml-4"
+                    min={timeMin1 < timeMin2 ? timeMin1 : timeMin2}
+                    max={timeMax1 > timeMax2 ? timeMax1 : timeMax2}
+                    step={1}
+                    minValue={timeStart}
+                    maxValue={timeEnd}
+                    onChange={(e: ChangeResult) => {
                     setTimeStart(e.minValue);
                     setTimeEnd(e.maxValue);
-                    //console.log(e);
-	            		  }}
-	            	  />
+                    }}
+                />
                 <br />
+                <label className="ml-4">Select X range:</label>
+                <MultiRangeSlider
+                    style={{width: "90%"}}
+                    className="m-2 ml-4"
+                    min={minX1 < minX2 ? minX1 : minX2}
+                    max={maxX1 > maxX2 ? maxX1 : maxX2}
+                    step={10}
+                    minValue={lowerX}
+                    maxValue={upperX}
+                    onChange={(e: ChangeResult) => {
+                    setLowerX(e.minValue);
+                    setUpperX(e.maxValue);
+                    }}
+                />
+                <br />
+                <label className="ml-4">Select Y range:</label>
+                <MultiRangeSlider
+                    style={{width: "90%"}}
+                    className="m-2 ml-4"
+                    min={minY1 < minY2 ? minY1 : minY2}
+                    max={maxY1 > maxY2 ? maxY1 : maxY2}
+                    step={10}
+                    minValue={lowerY}
+                    maxValue={upperY}
+                    onChange={(e: ChangeResult) => {
+                    setLowerY(e.minValue);
+                    setUpperY(e.maxValue);
+                    }}
+                />
+                <br />
+                <label className="ml-4">Select Z range:</label>
+                <MultiRangeSlider
+                    style={{width: "90%"}}
+                    className="m-2 ml-4"
+                    min={minZ1 < minZ2 ? minZ1 : minZ2}
+                    max={maxZ1 > maxZ2 ? maxZ1 : maxZ2}
+                    step={10}
+                    minValue={lowerZ}
+                    maxValue={upperZ}
+                    onChange={(e: ChangeResult) => {
+                    setLowerZ(e.minValue);
+                    setUpperZ(e.maxValue);
+                    }}
+                />
+                <br />
+            </div>
+            
+            <div className="justify-center items-center">
                 <VelocityChart 
                  study1={selectedCsvFile1}
                  study2={selectedCsvFile2}
@@ -761,7 +719,22 @@ const Visualisation = () => {
                  selectedMarkers={selectedMarkers} 
                  allMarkerGroups={allGroups}
                  timeStart={timeStart} 
-                 timeEnd={timeEnd} /> 
+                 timeEnd={timeEnd} />
+                 <div className="w-full my-4">
+                    <h1 className="flex text-3xl font-bold mb-2 justify-center items-center">
+                        Studies Overview
+                    </h1>
+                    <p className="flex mb-4 justify-center items-center">
+                        Select two studies for comparison to render the data on the graphs above. 
+                        Table can be sorted in ascending/descending order by clicking on the column headers.
+                    </p>
+                    <OverviewTable 
+                        onSelectStudies1={handleSelectStudies1} 
+                        selectedStudies1={selectedStudies1} 
+                        onSelectStudies2={handleSelectStudiesStudy2}
+                        selectedStudies2={selectedStudies2}
+                    />
+                </div> 
             </div>
         </div>
     );
