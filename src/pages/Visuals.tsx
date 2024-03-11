@@ -342,62 +342,53 @@ const Visualisation = () => {
                     Show 3D Graph
                 </button>
             </div>
-            <div className="mb-4 mt-10 flex justify-center">
-                <div className="flex flex-col items-center">
-                    <div className="mb-4">
-                        <label className="block mb-4">Select Markers:</label>
-                        <div className="mb-4">
-                            <button className="px-4 py-2 rounded-md bg-blue-500 text-white mr-4" onClick={() => selectAllMarkers()}>
-                                Select All
-                            </button>
-                            <button className="px-4 py-2 rounded-md bg-gray-300 text-black mr-4" onClick={() => deselectAllMarkers()}>
-                                Deselect All
-                            </button>
-                        </div>
-                        <div className="grid grid-cols-4 gap-4">
-                            {allGroups.map((group: any) => (
-                                <div key={group} className="flex items-center">
-                                    <label className="flex mt-4gfe items-center">
-                                        <input 
-                                            type="checkbox"
-                                            checked={selectedMarkers.includes(group)}
-                                            onChange={() => handleGroupChange(group)}
-                                            className="form-checkbox h-5 w-5 text-indigo-600"
-                                        />
-                                        <span className="ml-2 text-gray-700" style={{color: colorScale(group)}}>{group}</span>
-                                    </label>
+            <div className="mb-4 mt-10">
+                <div className="flex gap-20 justify-center">
+                    <div className="rounded-lg border border-gray-300 p-8 shadow-md">
+                        <div className="flex flex-col items-center">
+                            <div className="mb-4">
+                                <label className="block mb-4 font-bold">Select Markers:</label>
+                                <div className="mb-6">
+                                    <button className="px-4 py-2 rounded-md bg-blue-500 text-white mr-4" onClick={() => selectAllMarkers()}>
+                                        Select All
+                                    </button>
+                                    <button className="px-4 py-2 rounded-md bg-gray-300 text-black mr-4" onClick={() => deselectAllMarkers()}>
+                                        Deselect All
+                                    </button>
                                 </div>
-                            ))}
+                                <div className="grid grid-cols-4 gap-4">
+                                    {allGroups.map((group: any) => (
+                                        <div key={group} className="flex items-center">
+                                            <label className="flex mt-4gfe items-center">
+                                                <input 
+                                                    type="checkbox"
+                                                    checked={selectedMarkers.includes(group)}
+                                                    onChange={() => handleGroupChange(group)}
+                                                    className="form-checkbox h-5 w-5 text-indigo-600"
+                                                />
+                                                <span className="ml-2 text-gray-700" style={{color: colorScale(group)}}>{group}</span>
+                                            </label>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className="relative ml-8">
-                    {isImageVisible && (
-                        <img src={catimg} alt="Catheter with markers" className="object-scale-down h-72" />
-                    )}
-                    <button onClick={toggleImageVisibility} className="absolute bottom-0 right-0 p-2 bg-blue-500 text-white rounded-lg focus:outline-none">
-                        {isImageVisible ? 'Hide Image' : 'Show Image'}
-                    </button>
+                    <div className="relative ml-4">
+                        {isImageVisible && (
+                            <img src={catimg} alt="Catheter with markers" className="object-scale-down h-72" />
+                        )}
+                        <button onClick={toggleImageVisibility} className={`absolute bottom-0 right-0 p-2 bg-blue-500 text-white rounded-lg focus:outline-none ${isImageVisible ? '' : 'mb-24'}`}>
+                            {isImageVisible ? 'Hide Image' : 'Show Image'}
+                        </button>
+                    </div>
                 </div>
             </div>
             { is3D ? 
             ( // 3D Graph
                 <div className="flex flex-col md:flex-row w-full justify-center items-center">
-                    <div className="md:mr-5">
-                        <div className="pt-10">
-                            <h2 className="text-xl font-bold mb-4">{`Study #1: ${selectedCsvFile1}`}</h2>
-                            {/*<select
-                                className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-                                onChange={(e) => setSelectedCsvFile1(e.target.value)}
-                                value={selectedCsvFile1}
-                            >
-                                <option value="" className="font-bold">Select Study...</option>
-                                {csvFiles.map((file, index) => (
-                                    <option key={index} value={file}>{file}</option>
-                                ))}
-                                </select>*/}
-                        </div>
-
+                    <div className="md:mr-5 rounded-lg border border-gray-300 p-6 shadow-md my-10 hover:shadow-lg">
+                        <h2 className="text-xl font-bold mb-4">{`Study #1: ${selectedCsvFile1}`}</h2>
                         {/* This can probably be done in a cleaner way */}
                         {/* Start of Change perspective */}
                         <div className="flex w-full pt-4">
@@ -466,20 +457,8 @@ const Visualisation = () => {
                             timeMin={timeMin1} 
                         /> 
                     </div>
-                    <div className="md:ml-5 relative">
-                        <div className="pt-10">
-                            <h2 className="text-xl font-bold mb-4">{`Study #2: ${selectedCsvFile2}`}</h2>
-                            {/*<select
-                                className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-                                onChange={(e) => setSelectedCsvFile2(e.target.value)}
-                                value={selectedCsvFile2}
-                            >
-                                <option value="">Select Study...</option>
-                                {csvFiles.map((file, index) => (
-                                    <option key={index} value={file}>{file}</option>
-                                ))}
-                                </select>*/}
-                        </div>
+                    <div className="md:ml-5 relative rounded-lg border border-gray-300 p-6 shadow-md my-10 hover:shadow-lg">
+                        <h2 className="text-xl font-bold mb-4">{`Study #2: ${selectedCsvFile2}`}</h2>
                         {/* This can probably be done in a cleaner way */}
                         {/* Start of Change perspective */}
                         <div className="flex w-full pt-4">
@@ -552,21 +531,8 @@ const Visualisation = () => {
             ) : 
             ( // 2D Graph
                 <div className="flex flex-col md:flex-row w-full justify-center items-center">
-                    <div className="md:mr-5 relative">
-                        <div className="mb-4 pt-10">
-                            <h2 className="text-xl font-bold mb-4">{`Study #1: ${selectedCsvFile1}`}</h2>
-                            {/*<select
-                                className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-                                onChange={(e) => setSelectedCsvFile1(e.target.value)}
-                                value={selectedCsvFile1}
-                            >
-                                <option value="" className="font-bold">Select Study...</option>
-                                {csvFiles.map((file, index) => (
-                                    <option key={index} value={file}>{file}</option>
-                                ))}
-                                </select>*/}
-                        </div>
-
+                    <div className="md:mr-5 relative rounded-lg border border-gray-300 p-6 shadow-md my-10 hover:shadow-lg">
+                        <h2 className="text-xl font-bold mb-4">{`Study #1: ${selectedCsvFile1}`}</h2>
                         {/* <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile1} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> */}
 
                         {/* This can probably be done in a cleaner way */}
@@ -613,20 +579,8 @@ const Visualisation = () => {
                         <ScatterXZ width={600} height={600} data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups}  maxX={maxX1} minX={minX1} maxY={maxY1} minY={minY1} maxZ={maxZ1} minZ={minZ1} timeMax={timeMax1} timeMin={timeMin1} />
                         <ScatterYZ width={600} height={600} data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups}  maxX={maxX1} minX={minX1} maxY={maxY1} minY={minY1} maxZ={maxZ1} minZ={minZ1} timeMax={timeMax1} timeMin={timeMin1} /> */}
                     </div>
-                    <div className="md:ml-5 relative">
-                        <div className="pt-10 mb-4">
-                            <h2 className="text-xl font-bold mb-4">{`Study #2: ${selectedCsvFile2}`}</h2>
-                            {/*<select
-                                className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-                                onChange={(e) => setSelectedCsvFile2(e.target.value)}
-                                value={selectedCsvFile2}
-                            >
-                                <option value="">Select Study...</option>
-                                {csvFiles.map((file, index) => (
-                                    <option key={index} value={file}>{file}</option>
-                                ))}
-                                </select>*/}
-                        </div>
+                    <div className="md:ml-5 relative rounded-lg border border-gray-300 p-6 shadow-md my-10 hover:shadow-lg">
+                        <h2 className="text-xl font-bold mb-4">{`Study #2: ${selectedCsvFile2}`}</h2>
                         {/* <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile2} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />  */}
 
                         {/* This can probably be done in a cleaner way */}
@@ -675,9 +629,8 @@ const Visualisation = () => {
                     </div>
                 </div>
             )}
-            
-            <div>
-               <label className="ml-4">Select Time Range:</label> 
+            <div className="flex flex-col gap-2 justify-center items-center">
+               <label className="ml-4 font-bold">Select Time Range:</label> 
                 <MultiRangeSlider
                     style={{width: "90%"}}
                     className="m-2 ml-4"
@@ -692,7 +645,7 @@ const Visualisation = () => {
                     }}
                 />
                 <br />
-                <label className="ml-4">Select X range:</label>
+                <label className="ml-4 font-bold">Select X-Range:</label>
                 <MultiRangeSlider
                     style={{width: "90%"}}
                     className="m-2 ml-4"
@@ -707,7 +660,7 @@ const Visualisation = () => {
                     }}
                 />
                 <br />
-                <label className="ml-4">Select Y range:</label>
+                <label className="ml-4 font-bold">Select Y-Range:</label>
                 <MultiRangeSlider
                     style={{width: "90%"}}
                     className="m-2 ml-4"
@@ -722,7 +675,7 @@ const Visualisation = () => {
                     }}
                 />
                 <br />
-                <label className="ml-4">Select Z range:</label>
+                <label className="ml-4 font-bold">Select Z-Range:</label>
                 <MultiRangeSlider
                     style={{width: "90%"}}
                     className="m-2 ml-4"
@@ -738,18 +691,19 @@ const Visualisation = () => {
                 />
                 <br />
             </div>
-            
-            <div className="justify-center items-center">
-                <VelocityChart 
-                 study1={selectedCsvFile1}
-                 study2={selectedCsvFile2}
-                 data1={filteredData1} 
-                 data2={filteredData2} 
-                 colorScale={colorScale} 
-                 selectedMarkers={selectedMarkers} 
-                 allMarkerGroups={allGroups}
-                 timeStart={timeStart} 
-                 timeEnd={timeEnd} />
+            <div>
+                
+                    <VelocityChart 
+                    study1={selectedCsvFile1}
+                    study2={selectedCsvFile2}
+                    data1={filteredData1} 
+                    data2={filteredData2} 
+                    colorScale={colorScale} 
+                    selectedMarkers={selectedMarkers} 
+                    allMarkerGroups={allGroups}
+                    timeStart={timeStart} 
+                    timeEnd={timeEnd} />
+                 
                  <div className="w-full my-4">
                     <h1 className="flex text-3xl font-bold mb-2 justify-center items-center">
                         Studies Overview
