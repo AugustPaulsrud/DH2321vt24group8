@@ -376,10 +376,10 @@ const Visualisation = () => {
                     </div>
                     <div className="relative ml-4">
                         {isImageVisible && (
-                            <img src={catimg} alt="Catheter with markers" className="object-scale-down h-72" />
+                            <img src={catimg} alt="Catheter with markers" className="object-scale-down h-80 rounded-md" />
                         )}
-                        <button onClick={toggleImageVisibility} className={`absolute bottom-0 right-0 p-2 bg-blue-500 text-white rounded-lg focus:outline-none ${isImageVisible ? '' : 'mb-24'}`}>
-                            {isImageVisible ? 'Hide Image' : 'Show Image'}
+                        <button onClick={toggleImageVisibility} className={`absolute bottom-0 right-0 p-2 bg-blue-500 text-white rounded-lg focus:outline-none ${isImageVisible ? '' : 'mb-24 left-5'}`}>
+                            {isImageVisible ? 'Hide Marker Reference' : 'Show Marker Reference'}
                         </button>
                     </div>
                 </div>
@@ -387,12 +387,12 @@ const Visualisation = () => {
             { is3D ? 
             ( // 3D Graph
                 <div className="flex flex-col md:flex-row w-full justify-center items-center">
-                    <div className="md:mr-5 rounded-lg border border-gray-300 p-6 shadow-md my-10 hover:shadow-lg">
+                    <div className="md:mr-5 rounded-lg border border-gray-300 pt-6 px-6 shadow-md my-10 hover:shadow-lg">
                         <h2 className="text-xl font-bold mb-4">{`Study #1: ${selectedCsvFile1}`}</h2>
                         {/* This can probably be done in a cleaner way */}
                         {/* Start of Change perspective */}
                         <div className="flex w-full pt-4">
-                            <p className="text-s font-bold mb-4">Axis 1: </p>
+                            <p className="text-s font-bold mt-1 mr-2">Axis 1: </p>
                             <select
                                 className="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
                                 onChange={(e) => setDim1_3D_1(Number(e.target.value))}
@@ -404,7 +404,7 @@ const Visualisation = () => {
                                 <option key={3} value={TIME_DIM}>TIME</option>
                             </select>
 
-                            <p className="text-s font-bold mb-4">Axis 2: </p>
+                            <p className="text-s font-bold mt-1 mx-2">Axis 2: </p>
                             <select
                                 className="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
                                 onChange={(e) => setDim2_3D_1(Number(e.target.value))}
@@ -416,7 +416,7 @@ const Visualisation = () => {
                                 <option key={3} value={TIME_DIM}>TIME</option>
                             </select>
 
-                            <p className="text-s font-bold mb-4">Axis 3: </p>
+                            <p className="text-s font-bold mt-1 mx-2">Axis 3: </p>
                             <select
                                 className="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
                                 onChange={(e) => setDim3_3D_1(Number(e.target.value))}
@@ -428,7 +428,7 @@ const Visualisation = () => {
                                 <option key={3} value={TIME_DIM}>TIME</option>
                             </select>
 
-                            <p className="text-s font-bold mb-4">Color: </p>
+                            <p className="text-s font-bold mt-1 mx-2">Color: </p>
                             <select
                                 className="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
                                 onChange={(e) => setDim4_3D_1(Number(e.target.value))}
@@ -457,12 +457,12 @@ const Visualisation = () => {
                             timeMin={timeMin1} 
                         /> 
                     </div>
-                    <div className="md:ml-5 relative rounded-lg border border-gray-300 p-6 shadow-md my-10 hover:shadow-lg">
+                    <div className="md:ml-5 relative rounded-lg border border-gray-300 pt-6 px-6 shadow-md my-10 hover:shadow-lg">
                         <h2 className="text-xl font-bold mb-4">{`Study #2: ${selectedCsvFile2}`}</h2>
                         {/* This can probably be done in a cleaner way */}
                         {/* Start of Change perspective */}
                         <div className="flex w-full pt-4">
-                            <p className="text-s font-bold mb-4">Axis 1: </p>
+                            <p className="text-s font-bold mt-1 mr-2">Axis 1: </p>
                             <select
                                 className="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
                                 onChange={(e) => setDim1_3D_2(Number(e.target.value))}
@@ -474,7 +474,7 @@ const Visualisation = () => {
                                 <option key={3} value={TIME_DIM}>TIME</option>
                             </select>
 
-                            <p className="text-s font-bold mb-4">Axis 2: </p>
+                            <p className="text-s font-bold mt-1 mx-2">Axis 2: </p>
                             <select
                                 className="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
                                 onChange={(e) => setDim2_3D_2(Number(e.target.value))}
@@ -486,7 +486,7 @@ const Visualisation = () => {
                                 <option key={3} value={TIME_DIM}>TIME</option>
                             </select>
 
-                            <p className="text-s font-bold mb-4">Axis 3: </p>
+                            <p className="text-s font-bold mt-1 mx-2">Axis 3: </p>
                             <select
                                 className="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
                                 onChange={(e) => setDim3_3D_2(Number(e.target.value))}
@@ -498,7 +498,7 @@ const Visualisation = () => {
                                 <option key={3} value={TIME_DIM}>TIME</option>
                             </select>
 
-                            <p className="text-s font-bold mb-4">Color: </p>
+                            <p className="text-s font-bold mt-1 mx-2">Color: </p>
                             <select
                                 className="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
                                 onChange={(e) => setDim4_3D_2(Number(e.target.value))}
@@ -538,7 +538,7 @@ const Visualisation = () => {
                         {/* This can probably be done in a cleaner way */}
                         {/* Start of Change perspective */}
                         <div className="flex w-full pt-4">
-                            <p className="text-s font-bold mb-4">Axis 1: </p>
+                            <p className="text-s font-bold mt-1 mr-4">Axis 1: </p>
                             <select
                                 className="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
                                 onChange={(e) => setDim1_2D_1(Number(e.target.value))}
@@ -550,7 +550,7 @@ const Visualisation = () => {
                                 <option key={3} value={TIME_DIM}>TIME</option>
                             </select>
 
-                            <p className="text-s font-bold mb-4">Axis 2: </p>
+                            <p className="text-s font-bold mt-1 mx-4">Axis 2: </p>
                             <select
                                 className="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
                                 onChange={(e) => setDim2_2D_1(Number(e.target.value))}
@@ -562,7 +562,7 @@ const Visualisation = () => {
                                 <option key={3} value={TIME_DIM}>TIME</option>
                             </select>
 
-                            <p className="text-s font-bold mb-4">Color: </p>
+                            <p className="text-s font-bold mt-1 mx-4">Color: </p>
                             <select
                                 className="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
                                 onChange={(e) => setDim3_2D_1(Number(e.target.value))}
@@ -586,7 +586,7 @@ const Visualisation = () => {
                         {/* This can probably be done in a cleaner way */}
                         {/* Start of Change perspective */}
                         <div className="flex w-full pt-4">
-                            <p className="text-s font-bold mb-4">Axis 1: </p>
+                            <p className="text-s font-bold mt-1 mr-4">Axis 1: </p>
                             <select
                                 className="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
                                 onChange={(e) => setDim1_2D_2(Number(e.target.value))}
@@ -598,7 +598,7 @@ const Visualisation = () => {
                                 <option key={3} value={TIME_DIM}>TIME</option>
                             </select>
 
-                            <p className="text-s font-bold mb-4">Axis 2: </p>
+                            <p className="text-s font-bold mt-1 mx-4">Axis 2: </p>
                             <select
                                 className="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
                                 onChange={(e) => setDim2_2D_2(Number(e.target.value))}
@@ -610,7 +610,7 @@ const Visualisation = () => {
                                 <option key={3} value={TIME_DIM}>TIME</option>
                             </select>
 
-                            <p className="text-s font-bold mb-4">Color: </p>
+                            <p className="text-s font-bold mt-1 mx-4">Color: </p>
                             <select
                                 className="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
                                 onChange={(e) => setDim3_2D_2(Number(e.target.value))}
@@ -692,8 +692,7 @@ const Visualisation = () => {
                 <br />
             </div>
             <div>
-                
-                    <VelocityChart 
+                <VelocityChart 
                     study1={selectedCsvFile1}
                     study2={selectedCsvFile2}
                     data1={filteredData1} 
@@ -702,9 +701,9 @@ const Visualisation = () => {
                     selectedMarkers={selectedMarkers} 
                     allMarkerGroups={allGroups}
                     timeStart={timeStart} 
-                    timeEnd={timeEnd} />
-                 
-                 <div className="w-full my-4">
+                    timeEnd={timeEnd} 
+                />
+                 <div className="w-full mt-8">
                     <h1 className="flex text-3xl font-bold mb-2 justify-center items-center">
                         Studies Overview
                     </h1>
