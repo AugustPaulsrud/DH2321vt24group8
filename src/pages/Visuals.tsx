@@ -40,8 +40,11 @@ const Visualisation = () => {
    const [upperZ, setUpperZ] = useState<number>(1000);
    const [lowerZ, setLowerZ] = useState<number>(-1000);
 
-   const [timeStart, setTimeStart] = useState<number>(0);
-   const [timeEnd, setTimeEnd] = useState<number>(100);
+   const [syncTimeSliders, setSyncTimeSliders] = useState<boolean>(true);
+   const [timeStart1, setTimeStart1] = useState<number>(0);
+   const [timeEnd1, setTimeEnd1] = useState<number>(100);
+   const [timeStart2, setTimeStart2] = useState<number>(0);
+   const [timeEnd2, setTimeEnd2] = useState<number>(100);
 
    const [timeMin1, setTimeMin1] = useState<number>(0);
    const [timeMax1, setTimeMax1] = useState<number>(1);
@@ -187,26 +190,26 @@ const Visualisation = () => {
 
     const filteredData1: dataFormat[] = useMemo(() => {
         return parsedData1.filter((d) => selectedMarkers.includes(d.group))
-        .filter((d) => d.time >= timeStart && d.time <= timeEnd)
+        .filter((d) => d.time >= timeStart1 && d.time <= timeEnd1)
         .filter((d) => d.x >= lowerX && d.x <= upperX)
         .filter((d) => d.y >= lowerY && d.y <= upperY)
         .filter((d) => d.z >= lowerZ && d.z <= upperZ);
     }, [parsedData1,
         upperX, upperY, upperZ, 
         lowerX, lowerY, lowerZ, 
-        timeStart, timeEnd, 
+        timeStart1, timeEnd1, 
         selectedMarkers]);
     
     const filteredData2: dataFormat[] = useMemo(() => {
         return parsedData2.filter((d) => selectedMarkers.includes(d.group))
-        .filter((d) => d.time >= timeStart && d.time <= timeEnd)
+        .filter((d) => d.time >= timeStart2 && d.time <= timeEnd2)
         .filter((d) => d.x >= lowerX && d.x <= upperX)
         .filter((d) => d.y >= lowerY && d.y <= upperY)
         .filter((d) => d.z >= lowerZ && d.z <= upperZ);
     }, [parsedData2,
         upperX, upperY, upperZ, 
         lowerX, lowerY, lowerZ, 
-        timeStart, timeEnd, 
+        timeStart2, timeEnd2, 
         selectedMarkers]);
 
     const allGroups: string[] = useMemo(() => {
@@ -451,8 +454,8 @@ const Visualisation = () => {
                             width={600} 
                             height={700} 
                             csv_file={selectedCsvFile1} 
-                            timeStart={timeStart} 
-                            timeEnd={timeEnd} 
+                            timeStart={timeStart1} 
+                            timeEnd={timeEnd1} 
                             timeMax={timeMax1} 
                             timeMin={timeMin1} 
                         /> 
@@ -521,8 +524,8 @@ const Visualisation = () => {
                             width={600} 
                             height={700} 
                             csv_file={selectedCsvFile2} 
-                            timeStart={timeStart} 
-                            timeEnd={timeEnd} 
+                            timeStart={timeStart2} 
+                            timeEnd={timeEnd2} 
                             timeMax={timeMax1} 
                             timeMin={timeMin1} 
                         /> 
@@ -630,21 +633,65 @@ const Visualisation = () => {
                 </div>
             )}
             <div className="flex flex-col gap-2 justify-center items-center">
-               <label className="ml-4 font-bold">Select Time Range:</label> 
+               {syncTimeSliders ? (
+                <>
+                <label className="ml-4 font-bold">Select Time Range: <span className="font-medium">(Sync time ranges <input type="checkbox" checked={true} onChange={() => setSyncTimeSliders(false)} />)</span></label>
                 <MultiRangeSlider
                     style={{width: "90%"}}
                     className="m-2 ml-4"
                     min={timeMin1 < timeMin2 ? timeMin1 : timeMin2}
                     max={timeMax1 > timeMax2 ? timeMax1 : timeMax2}
                     step={1}
-                    minValue={timeStart}
-                    maxValue={timeEnd}
+                    minValue={timeStart1}
+                    maxValue={timeEnd1}
                     onChange={(e: ChangeResult) => {
-                    setTimeStart(e.minValue);
-                    setTimeEnd(e.maxValue);
+                    setTimeStart1(e.minValue);
+                    setTimeStart2(e.minValue);
+                    setTimeEnd1(e.maxValue);
+                    setTimeEnd2(e.maxValue);
                     }}
                 />
                 <br />
+                </>
+               ) : (
+                <>
+                <div className="flex space-x-4 w-full mt-4 justify-center items-center">
+                <div className="w-full">
+                <label className="ml-4 font-bold">Select Time Range for Study#1: <span className="font-medium">(Sync time ranges <input type="checkbox" checked={false} onChange={() => setSyncTimeSliders(true)} />)</span></label>
+                <MultiRangeSlider
+                    style={{width: "90%"}}
+                    className="m-2 ml-4"
+                    min={timeMin1}
+                    max={timeMax1}
+                    step={1}
+                    minValue={timeStart1}
+                    maxValue={timeEnd1}
+                    onChange={(e: ChangeResult) => {
+                    setTimeStart1(e.minValue);
+                    setTimeEnd1(e.maxValue);
+                    }}
+                />
+                </div>
+                <div className="w-full">
+                <label className="ml-4 font-bold">Select Time Range for Study#2: <span className="font-medium">(Sync time ranges <input type="checkbox" checked={false} onChange={() => setSyncTimeSliders(true)} />)</span></label>
+                <MultiRangeSlider
+                    style={{width: "90%"}}
+                    className="m-2 ml-4"
+                    min={timeMin2}
+                    max={timeMax2}
+                    step={1}
+                    minValue={timeStart2}
+                    maxValue={timeEnd2}
+                    onChange={(e: ChangeResult) => {
+                    setTimeStart2(e.minValue);
+                    setTimeEnd2(e.maxValue);
+                    }}
+                />
+                </div>
+                </div>
+                <br />
+                </>
+               )}
                 <label className="ml-4 font-bold">Select X-Range:</label>
                 <MultiRangeSlider
                     style={{width: "90%"}}
@@ -701,8 +748,8 @@ const Visualisation = () => {
                     colorScale={colorScale} 
                     selectedMarkers={selectedMarkers} 
                     allMarkerGroups={allGroups}
-                    timeStart={timeStart} 
-                    timeEnd={timeEnd} />
+                    timeStart={timeEnd1 < timeEnd2 ? timeEnd1 : timeEnd2} 
+                    timeEnd={timeEnd1 > timeEnd2 ? timeEnd1 : timeEnd2} />
                  
                  <div className="w-full my-4">
                     <h1 className="flex text-3xl font-bold mb-2 justify-center items-center">
