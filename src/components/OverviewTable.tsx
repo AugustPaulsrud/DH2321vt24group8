@@ -23,7 +23,7 @@ interface OverviewTableProps {
 }
 
 // Currently, the TSV files are hardcoded, future work could include a way to dynamically fetch the TSV files
-const tsvFiles = [  "EVDa_SimCaTip_Ale0003", 
+const tsvFiles = [
                     "EVDb_SimCaPlus_Ale0004", 
                     "EVDb_SimCaPlus_Ale0005", 
                     "EVDb_SimCaPlus_Mario0006", 
