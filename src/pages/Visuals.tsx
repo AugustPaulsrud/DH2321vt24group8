@@ -458,7 +458,7 @@ const Visualisation = () => {
                             selectedMarkers={selectedMarkers} 
                             allMarkerGroups={allGroups} 
                             width={600} 
-                            height={750} 
+                            height={700} 
                             csv_file={selectedCsvFile1} 
                             timeStart={timeStart} 
                             timeEnd={timeEnd} 
@@ -540,7 +540,7 @@ const Visualisation = () => {
                             selectedMarkers={selectedMarkers} 
                             allMarkerGroups={allGroups} 
                             width={600} 
-                            height={750} 
+                            height={700} 
                             csv_file={selectedCsvFile2} 
                             timeStart={timeStart} 
                             timeEnd={timeEnd} 

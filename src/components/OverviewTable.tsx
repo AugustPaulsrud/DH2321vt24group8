@@ -131,7 +131,7 @@ const OverviewTable: React.FC<OverviewTableProps> = ({ onSelectStudies1, selecte
         // Pass selected studies back to the parent component when they change
         onSelectStudies1('Study 1', selectedEntries1[0] || '');
         onSelectStudies2('Study 2', selectedEntries2[0] || '');
-    }, [selectedEntries1, selectedEntries2, onSelectStudies1, onSelectStudies2]);
+    }, [selectedEntries1, selectedEntries2]);
 
     // Save selected entries to localStorage when they change
     useEffect(() => {
