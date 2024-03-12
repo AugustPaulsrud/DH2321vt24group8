@@ -10,10 +10,10 @@ Plotly.register(require('plotly.js/lib/mesh3d'));
 const Plot = createPlotlyComponent(Plotly);
 
 const AXIS_LABEL = {
-  0: 'X',
-  1: 'Y',
-  2: 'Z',
-  3: 'TIME'
+  0: 'X (mm)',
+  1: 'Y (mm)',
+  2: 'Z (mm)',
+  3: 'TIME(s)'
 };
 
 var skullData = {
@@ -202,7 +202,7 @@ const Plot3D = (props) => {
     k: lowData.k
   }
 
-  if (scatterPlot.length > 0 && plotLayout.scene.xaxis.title === "X" && plotLayout.scene.yaxis.title === "Y" && plotLayout.scene.zaxis.title === "Z") {
+  if (scatterPlot.length > 0 && plotLayout.scene.xaxis.title === AXIS_LABEL[0] && plotLayout.scene.yaxis.title === AXIS_LABEL[1] && plotLayout.scene.zaxis.title === AXIS_LABEL[2]) {
   scatterPlot.push(skull)
   scatterPlot.push(low)
   scatterPlot.push(marker)

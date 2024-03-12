@@ -13,10 +13,10 @@ import { InteractionData, Tooltip } from "./Tooltip";
 const MARGIN = { top: 60, right: 60, bottom: 60, left: 60 };
 
 const AXIS_LABEL: any = {
-  0: 'X',
-  1: 'Y',
-  2: 'Z',
-  3: 'TIME'
+  0: 'X (mm)',
+  1: 'Y (mm)',
+  2: 'Z (mm)',
+  3: 'TIME (s)'
 };
 
 type ScatterplotProps = {
@@ -273,7 +273,7 @@ const groupedShapesAndLines = props.allMarkerGroups.map((group) => {
       style={{
         fontSize: "15px",
         textAnchor: "end",
-        transform: "translateX(-10px)",
+        transform: "translateX(10px)",
         fill: "#505050",
       }}
       >
