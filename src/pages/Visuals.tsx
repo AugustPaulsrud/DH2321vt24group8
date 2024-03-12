@@ -330,7 +330,7 @@ const Visualisation = () => {
     };
     
     return (
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col w-full pt-4 bg-gray-100">
             <div className="flex space-x-4 w-full mt-4 justify-center items-center">
                 <button
                     className={`px-4 py-2 rounded-md ${is3D ? 'bg-gray-300' : 'bg-blue-900 text-white'}`}
@@ -346,8 +346,8 @@ const Visualisation = () => {
                 </button>
             </div>
             <div className="mb-4 mt-10 animate-fade-up">
-                <div className="flex gap-20 justify-center">
-                    <div className="rounded-lg border border-gray-300 p-8 shadow-md">
+                <div className="flex gap-5 justify-center">
+                    <div className="rounded-lg border border-gray-300 p-8 shadow-md bg-white">
                         <div className="flex flex-col items-center">
                             <div className="mb-4">
                                 <label className="block mb-4 font-bold">Select Markers:</label>
@@ -390,7 +390,7 @@ const Visualisation = () => {
             { is3D ? 
             ( // 3D Graph
                 <div className="flex flex-col md:flex-row w-full justify-center items-center animate-fade-up">
-                    <div className="md:mr-5 rounded-lg border border-gray-300 pt-6 px-6 shadow-md my-10 hover:shadow-lg animate-fade-up">
+                    <div className="md:mr-5 rounded-lg border border-gray-300 pt-6 px-6 bg-white shadow-md my-10 hover:shadow-lg animate-fade-up">
                         <h2 className="text-xl font-bold mb-4 text-blue-900">{`Study #1: ${selectedCsvFile1}`}</h2>
                         {/* This can probably be done in a cleaner way */}
                         {/* Start of Change perspective */}
@@ -460,7 +460,7 @@ const Visualisation = () => {
                             timeMin={timeMin1} 
                         /> 
                     </div>
-                    <div className="md:ml-5 relative rounded-lg border border-gray-300 pt-6 px-6 shadow-md my-10 hover:shadow-lg animate-fade-up">
+                    <div className="md:ml-5 relative rounded-lg border bg-white border-gray-300 pt-6 px-6 shadow-md my-10 hover:shadow-lg animate-fade-up">
                         <h2 className="text-xl font-bold mb-4 text-blue-900">{`Study #2: ${selectedCsvFile2}`}</h2>
                         {/* This can probably be done in a cleaner way */}
                         {/* Start of Change perspective */}
@@ -534,7 +534,7 @@ const Visualisation = () => {
             ) : 
             ( // 2D Graph
                 <div className="flex flex-col md:flex-row w-full justify-center items-center animate-fade-up">
-                    <div className="md:mr-5 relative rounded-lg border border-gray-300 p-6 shadow-md my-10 hover:shadow-lg animate-fade-up">
+                    <div className="md:mr-5 relative rounded-lg border bg-white border-gray-300 p-6 shadow-md my-10 hover:shadow-lg animate-fade-up">
                         <h2 className="text-xl font-bold mb-4 text-blue-900">{`Study #1: ${selectedCsvFile1}`}</h2>
                         {/* <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile1} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> */}
 
@@ -582,7 +582,7 @@ const Visualisation = () => {
                         <ScatterXZ width={600} height={600} data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups}  maxX={maxX1} minX={minX1} maxY={maxY1} minY={minY1} maxZ={maxZ1} minZ={minZ1} timeMax={timeMax1} timeMin={timeMin1} />
                         <ScatterYZ width={600} height={600} data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups}  maxX={maxX1} minX={minX1} maxY={maxY1} minY={minY1} maxZ={maxZ1} minZ={minZ1} timeMax={timeMax1} timeMin={timeMin1} /> */}
                     </div>
-                    <div className="md:ml-5 relative rounded-lg border border-gray-300 p-6 shadow-md my-10 hover:shadow-lg animate-fade-up">
+                    <div className="md:ml-5 relative rounded-lg bg-white border border-gray-300 p-6 shadow-md my-10 hover:shadow-lg animate-fade-up">
                         <h2 className="text-xl font-bold mb-4 text-blue-900">{`Study #2: ${selectedCsvFile2}`}</h2>
                         {/* <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile2} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />  */}
 
@@ -637,7 +637,7 @@ const Visualisation = () => {
                 <>
                 <label className="ml-4 font-bold">Select Time Range: <span className="font-medium">(Sync time ranges <input type="checkbox" checked={true} onChange={() => setSyncTimeSliders(false)} />)</span></label>
                 <MultiRangeSlider
-                    style={{width: "90%"}}
+                    style={{width: "90%", backgroundColor: "white"}}
                     className="m-2 ml-4"
                     min={timeMin1 < timeMin2 ? timeMin1 : timeMin2}
                     max={timeMax1 > timeMax2 ? timeMax1 : timeMax2}
@@ -657,9 +657,9 @@ const Visualisation = () => {
                 <>
                 <div className="flex space-x-4 w-full mt-4 justify-center items-center">
                 <div className="w-full">
-                <label className="ml-4 font-bold">Select Time Range for Study#1: <span className="font-medium">(Sync time ranges <input type="checkbox" checked={false} onChange={() => setSyncTimeSliders(true)} />)</span></label>
+                <label className="ml-4 font-bold">Select Time Range for Study #1: <span className="font-medium">(Sync time ranges <input type="checkbox" checked={false} onChange={() => setSyncTimeSliders(true)} />)</span></label>
                 <MultiRangeSlider
-                    style={{width: "90%"}}
+                    style={{width: "90%", backgroundColor: "white"}}
                     className="m-2 ml-4"
                     min={timeMin1}
                     max={timeMax1}
@@ -673,9 +673,9 @@ const Visualisation = () => {
                 />
                 </div>
                 <div className="w-full">
-                <label className="ml-4 font-bold">Select Time Range for Study#2: <span className="font-medium">(Sync time ranges <input type="checkbox" checked={false} onChange={() => setSyncTimeSliders(true)} />)</span></label>
+                <label className="ml-4 font-bold">Select Time Range for Study #2: <span className="font-medium">(Sync time ranges <input type="checkbox" checked={false} onChange={() => setSyncTimeSliders(true)} />)</span></label>
                 <MultiRangeSlider
-                    style={{width: "90%"}}
+                    style={{width: "90%", backgroundColor: "white"}}
                     className="m-2 ml-4"
                     min={timeMin2}
                     max={timeMax2}
@@ -694,7 +694,7 @@ const Visualisation = () => {
                )}
                 <label className="ml-4 font-bold">Select X-Range:</label>
                 <MultiRangeSlider
-                    style={{width: "90%"}}
+                    style={{width: "90%", backgroundColor: "white"}}
                     className="m-2 ml-4"
                     min={minX1 < minX2 ? minX1 : minX2}
                     max={maxX1 > maxX2 ? maxX1 : maxX2}
@@ -709,7 +709,7 @@ const Visualisation = () => {
                 <br />
                 <label className="ml-4 font-bold">Select Y-Range:</label>
                 <MultiRangeSlider
-                    style={{width: "90%"}}
+                    style={{width: "90%", backgroundColor: "white"}}
                     className="m-2 ml-4"
                     min={minY1 < minY2 ? minY1 : minY2}
                     max={maxY1 > maxY2 ? maxY1 : maxY2}
@@ -724,7 +724,7 @@ const Visualisation = () => {
                 <br />
                 <label className="ml-4 font-bold">Select Z-Range:</label>
                 <MultiRangeSlider
-                    style={{width: "90%"}}
+                    style={{width: "90%", backgroundColor: "white"}}
                     className="m-2 ml-4"
                     min={minZ1 < minZ2 ? minZ1 : minZ2}
                     max={maxZ1 > maxZ2 ? maxZ1 : maxZ2}
@@ -749,7 +749,7 @@ const Visualisation = () => {
                     allMarkerGroups={allGroups}
                     timeStart={timeEnd1 < timeEnd2 ? timeEnd1 : timeEnd2} 
                     timeEnd={timeEnd1 > timeEnd2 ? timeEnd1 : timeEnd2} /> 
-                 <div className="w-full my-4">
+                 <div className="w-full mt-8">
                     <h1 className="flex text-3xl font-bold mb-2 mt-4 justify-center items-center text-blue-900">
                         Studies Overview
                     </h1>

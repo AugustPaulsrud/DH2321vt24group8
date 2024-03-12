@@ -173,7 +173,7 @@ export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
                 </div>
             </div>
             <svg ref={svgRef} width={width + margin.left + margin.right} height={height + margin.top + margin.bottom}></svg>
-            <div className="flex justify-center rounded-md p-2 w-4/5 border border-gray-300">
+            <div className="flex justify-center rounded-md p-4 w-4/5 border border-gray-300 bg-white">
                 <button onClick={handlePlayPause} className={`px-6 py-2 rounded-md ${isPlaying ? 'bg-gray-300' : 'bg-blue-900 text-white'}`}>
                     {isPlaying ? 'Pause' : 'Play'}
                 </button>
