@@ -27,6 +27,7 @@ const y_label = "VELOCITY (mm/s)";
 
 export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
     const [currentTime, setCurrentTime] = useState<number>(0);
+    const [initialized, setInitialized] = useState<boolean>(false);
     const [pausedTime, setPausedTime] = useState<number | null>(null);
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
     const [timeRange, setTimeRange] = useState<{ min: number; max: number }>({ min: 0, max: 0 });
@@ -38,18 +39,25 @@ export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
     const width = 1300 - margin.left - margin.right;
     const height = 400 - margin.top - margin.bottom;
 
+    // Hook to handle the initial setup of the chart by setting the max time as the current time
+    useEffect(() => {
+        if (!initialized && props.data1.length && props.data2.length) {
+            const allData = [...props.data1, ...props.data2];
+            const maxTime = d3.max(allData, d => d.time)!;
+            setCurrentTime(maxTime);
+            setInitialized(true);
+        }
+    }, [props.data1, props.data2, initialized]);
+    
     // Hook to handle the initial setup of the play/pause functionality
     useEffect(() => {
         if (!props.data1.length || !props.data2.length || !svgRef.current) return;
-    
+
         const allData = [...props.data1, ...props.data2];
         const minTime = d3.min(allData, d => d.time)!;
         const maxTime = d3.max(allData, d => d.time)!;
-    
-        // Set current time to the maximum time
-        setCurrentTime(maxTime);
         setTimeRange({ min: minTime, max: maxTime });
-    
+
         if (!isPlaying && pausedTime !== null) setCurrentTime(pausedTime);
     }, [props.data1, props.data2, isPlaying, pausedTime]);
 
@@ -153,7 +161,7 @@ export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
     };
     return (
         <div className="flex flex-col justify-center items-center mt-4">
-            <h1>Velocity-Time Chart</h1>
+            <h1 className='font-bold'>Velocity-Time Chart</h1>
             <div className="flex mt-4">
                 <div className="flex mr-4">
                     <div className="w-4 h-4 mt-1 mr-2 bg-blue-600 rounded-full"></div>
@@ -165,8 +173,8 @@ export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
                 </div>
             </div>
             <svg ref={svgRef} width={width + margin.left + margin.right} height={height + margin.top + margin.bottom}></svg>
-            <div className="flex justify-center rounded-md p-2 w-4/5 border border-gray-300">
-                <button onClick={handlePlayPause} className={`px-6 py-2 rounded-md ${isPlaying ? 'bg-gray-300' : 'bg-blue-500 text-white'}`}>
+            <div className="flex justify-center rounded-md p-4 w-4/5 border border-gray-300 bg-white">
+                <button onClick={handlePlayPause} className={`px-6 py-2 rounded-md ${isPlaying ? 'bg-gray-300' : 'bg-blue-900 text-white'}`}>
                     {isPlaying ? 'Pause' : 'Play'}
                 </button>
                 <span className="my-2 mx-4">Min:</span>
