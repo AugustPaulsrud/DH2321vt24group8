@@ -342,7 +342,7 @@ const Visualisation = () => {
                     Show 3D Graph
                 </button>
             </div>
-            <div className="mb-4 mt-10">
+            <div className="mb-4 mt-10 animate-fade-up">
                 <div className="flex gap-20 justify-center">
                     <div className="rounded-lg border border-gray-300 p-8 shadow-md">
                         <div className="flex flex-col items-center">
@@ -378,7 +378,7 @@ const Visualisation = () => {
                         {isImageVisible && (
                             <img src={catimg} alt="Catheter with markers" className="object-scale-down h-80 rounded-md" />
                         )}
-                        <button onClick={toggleImageVisibility} className={`absolute bottom-0 right-0 p-2 bg-blue-500 text-white rounded-lg focus:outline-none ${isImageVisible ? '' : 'mb-24 left-5'}`}>
+                        <button onClick={toggleImageVisibility} className={`absolute bottom-0 right-0 p-2 bg-blue-500 text-white rounded-lg focus:outline-none ${isImageVisible ? '' : 'mb-24 left-3'}`}>
                             {isImageVisible ? 'Hide Marker Reference' : 'Show Marker Reference'}
                         </button>
                     </div>
@@ -386,8 +386,8 @@ const Visualisation = () => {
             </div>
             { is3D ? 
             ( // 3D Graph
-                <div className="flex flex-col md:flex-row w-full justify-center items-center">
-                    <div className="md:mr-5 rounded-lg border border-gray-300 pt-6 px-6 shadow-md my-10 hover:shadow-lg">
+                <div className="flex flex-col md:flex-row w-full justify-center items-center animate-fade-up">
+                    <div className="md:mr-5 rounded-lg border border-gray-300 pt-6 px-6 shadow-md my-10 hover:shadow-lg animate-fade-up">
                         <h2 className="text-xl font-bold mb-4">{`Study #1: ${selectedCsvFile1}`}</h2>
                         {/* This can probably be done in a cleaner way */}
                         {/* Start of Change perspective */}
@@ -457,7 +457,7 @@ const Visualisation = () => {
                             timeMin={timeMin1} 
                         /> 
                     </div>
-                    <div className="md:ml-5 relative rounded-lg border border-gray-300 pt-6 px-6 shadow-md my-10 hover:shadow-lg">
+                    <div className="md:ml-5 relative rounded-lg border border-gray-300 pt-6 px-6 shadow-md my-10 hover:shadow-lg animate-fade-up">
                         <h2 className="text-xl font-bold mb-4">{`Study #2: ${selectedCsvFile2}`}</h2>
                         {/* This can probably be done in a cleaner way */}
                         {/* Start of Change perspective */}
@@ -530,8 +530,8 @@ const Visualisation = () => {
                 </div>
             ) : 
             ( // 2D Graph
-                <div className="flex flex-col md:flex-row w-full justify-center items-center">
-                    <div className="md:mr-5 relative rounded-lg border border-gray-300 p-6 shadow-md my-10 hover:shadow-lg">
+                <div className="flex flex-col md:flex-row w-full justify-center items-center animate-fade-up">
+                    <div className="md:mr-5 relative rounded-lg border border-gray-300 p-6 shadow-md my-10 hover:shadow-lg animate-fade-up">
                         <h2 className="text-xl font-bold mb-4">{`Study #1: ${selectedCsvFile1}`}</h2>
                         {/* <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile1} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> */}
 
@@ -579,7 +579,7 @@ const Visualisation = () => {
                         <ScatterXZ width={600} height={600} data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups}  maxX={maxX1} minX={minX1} maxY={maxY1} minY={minY1} maxZ={maxZ1} minZ={minZ1} timeMax={timeMax1} timeMin={timeMin1} />
                         <ScatterYZ width={600} height={600} data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups}  maxX={maxX1} minX={minX1} maxY={maxY1} minY={minY1} maxZ={maxZ1} minZ={minZ1} timeMax={timeMax1} timeMin={timeMin1} /> */}
                     </div>
-                    <div className="md:ml-5 relative rounded-lg border border-gray-300 p-6 shadow-md my-10 hover:shadow-lg">
+                    <div className="md:ml-5 relative rounded-lg border border-gray-300 p-6 shadow-md my-10 hover:shadow-lg animate-fade-up">
                         <h2 className="text-xl font-bold mb-4">{`Study #2: ${selectedCsvFile2}`}</h2>
                         {/* <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile2} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />  */}
 
@@ -691,7 +691,7 @@ const Visualisation = () => {
                 />
                 <br />
             </div>
-            <div>
+            <div className="animate-fade-up">
                 <VelocityChart 
                     study1={selectedCsvFile1}
                     study2={selectedCsvFile2}

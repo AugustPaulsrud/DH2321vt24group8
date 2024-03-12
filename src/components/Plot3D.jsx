@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import Scatter3d from 'plotly.js/lib/scatter3d';
 import createPlotlyComponent from 'react-plotly.js/factory';
 import * as d3 from 'd3';
@@ -128,15 +128,18 @@ const Plot3D = (props) => {
     legend_itemclick: true
   };
 
-  const scatterPlot = generateScatterData(
-    props.data,
-    props.colorScale,
-    timeScale,
-    props.axis1,
-    props.axis2,
-    props.axis3,
-    props.colorAxis
-  )
+  const scatterPlot = useMemo(() => {
+    return generateScatterData(
+      props.data,
+      props.colorScale,
+      timeScale,
+      props.axis1,
+      props.axis2,
+      props.axis3,
+      props.colorAxis
+    );
+  }, [props.data, props.colorScale, timeScale, props.axis1, props.axis2, props.axis3, props.colorAxis]);
+
   
   const skull = {
     name: 'Upper Skull',

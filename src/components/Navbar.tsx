@@ -13,7 +13,7 @@ const Navbar = () => {
     const Links =[
         {name:"Home",link:"/"},
         {name:"Visualisation",link:"/"},
-        {name:"Miscellaneous",link:"/"},
+        {name:"About Us",link:"/"},
       ];
 
     let [open, setOpen] = useState(false);
@@ -21,8 +21,8 @@ const Navbar = () => {
     return (
         <div className='shadow-md w-full fixed top-0 left-0 z-10'>
             <div className='md:flex items-center justify-between bg-white py-4 md:px-10 px-7'>
-            <div className='font-bold text-2xl cursor-pointer flex items-center gap-1'>
-                <span>DH2321 - Group 8</span>
+            <div className='font-bold text-2xl cursor-pointer flex items-center gap-1 text-blue-500'>
+                <span>4DMotion</span>
             </div>
             <div onClick={()=>setOpen(!open)} className='absolute right-8 top-6 cursor-pointer md:hidden w-7 h-7'>
                 {

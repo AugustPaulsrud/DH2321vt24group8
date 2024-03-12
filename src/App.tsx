@@ -5,7 +5,7 @@ import { Route, Routes} from 'react-router-dom';
 // Pages
 import Home from './pages/Home';
 import Visualisation from './pages/Visuals';
-import Miscellaneous from './pages/Miscellaneous';
+import AboutUs from './pages/Miscellaneous';
 
 const App = () => {
   // Routes allows the code to be scalable, by allowing different pages by specifying their path
@@ -17,7 +17,7 @@ const App = () => {
                   <Route path="/" element={<Visualisation/>}/> {/* Default page */}
                   <Route path="Home" element={<Home/>}/>
                   <Route path="Visualisation" element={<Visualisation/>}/>
-                  <Route path="Miscellaneous" element={<Miscellaneous/>}/>
+                  <Route path="About Us" element={<AboutUs/>}/>
               </Routes>
           </div>
       </>

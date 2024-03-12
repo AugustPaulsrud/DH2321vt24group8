@@ -32,7 +32,6 @@ const Home = () => {
                 <li>Make the application mobile responsive to be portable</li>
                 <li>Continue meeting with Alessandro to refine our project and ideas</li>
             </ul>
-            <h1 className="text-3xl font-bold my-4">Overview</h1>
         </div>
     );
 };
