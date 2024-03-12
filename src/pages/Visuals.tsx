@@ -333,13 +333,13 @@ const Visualisation = () => {
         <div className="flex flex-col w-full">
             <div className="flex space-x-4 w-full mt-4 justify-center items-center">
                 <button
-                    className={`px-4 py-2 rounded-md ${is3D ? 'bg-gray-300' : 'bg-blue-500 text-white'}`}
+                    className={`px-4 py-2 rounded-md ${is3D ? 'bg-gray-300' : 'bg-blue-900 text-white'}`}
                     onClick={() => setIs3D(false)}
                 >
                     Show 2D Graph
                 </button>
                 <button
-                    className={`px-4 py-2 rounded-md ${is3D ? 'bg-blue-500 text-white' : 'bg-gray-300'}`}
+                    className={`px-4 py-2 rounded-md ${is3D ? 'bg-blue-900 text-white' : 'bg-gray-300'}`}
                     onClick={() => setIs3D(true)}
                 >
                     Show 3D Graph
@@ -352,7 +352,7 @@ const Visualisation = () => {
                             <div className="mb-4">
                                 <label className="block mb-4 font-bold">Select Markers:</label>
                                 <div className="mb-6">
-                                    <button className="px-4 py-2 rounded-md bg-blue-500 text-white mr-4" onClick={() => selectAllMarkers()}>
+                                    <button className="px-4 py-2 rounded-md bg-blue-900 text-white mr-4" onClick={() => selectAllMarkers()}>
                                         Select All
                                     </button>
                                     <button className="px-4 py-2 rounded-md bg-gray-300 text-black mr-4" onClick={() => deselectAllMarkers()}>
@@ -381,7 +381,7 @@ const Visualisation = () => {
                         {isImageVisible && (
                             <img src={catimg} alt="Catheter with markers" className="object-scale-down h-80 rounded-md" />
                         )}
-                        <button onClick={toggleImageVisibility} className={`absolute bottom-0 right-0 p-2 bg-blue-500 text-white rounded-lg focus:outline-none ${isImageVisible ? '' : 'mb-24 left-3'}`}>
+                        <button onClick={toggleImageVisibility} className={`absolute bottom-0 right-0 p-2 bg-blue-900 text-white rounded-lg focus:outline-none ${isImageVisible ? '' : 'mb-24 left-3'}`}>
                             {isImageVisible ? 'Hide Marker Reference' : 'Show Marker Reference'}
                         </button>
                     </div>
@@ -391,7 +391,7 @@ const Visualisation = () => {
             ( // 3D Graph
                 <div className="flex flex-col md:flex-row w-full justify-center items-center animate-fade-up">
                     <div className="md:mr-5 rounded-lg border border-gray-300 pt-6 px-6 shadow-md my-10 hover:shadow-lg animate-fade-up">
-                        <h2 className="text-xl font-bold mb-4">{`Study #1: ${selectedCsvFile1}`}</h2>
+                        <h2 className="text-xl font-bold mb-4 text-blue-900">{`Study #1: ${selectedCsvFile1}`}</h2>
                         {/* This can probably be done in a cleaner way */}
                         {/* Start of Change perspective */}
                         <div className="flex w-full pt-4">
@@ -461,7 +461,7 @@ const Visualisation = () => {
                         /> 
                     </div>
                     <div className="md:ml-5 relative rounded-lg border border-gray-300 pt-6 px-6 shadow-md my-10 hover:shadow-lg animate-fade-up">
-                        <h2 className="text-xl font-bold mb-4">{`Study #2: ${selectedCsvFile2}`}</h2>
+                        <h2 className="text-xl font-bold mb-4 text-blue-900">{`Study #2: ${selectedCsvFile2}`}</h2>
                         {/* This can probably be done in a cleaner way */}
                         {/* Start of Change perspective */}
                         <div className="flex w-full pt-4">
@@ -535,7 +535,7 @@ const Visualisation = () => {
             ( // 2D Graph
                 <div className="flex flex-col md:flex-row w-full justify-center items-center animate-fade-up">
                     <div className="md:mr-5 relative rounded-lg border border-gray-300 p-6 shadow-md my-10 hover:shadow-lg animate-fade-up">
-                        <h2 className="text-xl font-bold mb-4">{`Study #1: ${selectedCsvFile1}`}</h2>
+                        <h2 className="text-xl font-bold mb-4 text-blue-900">{`Study #1: ${selectedCsvFile1}`}</h2>
                         {/* <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile1} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} /> */}
 
                         {/* This can probably be done in a cleaner way */}
@@ -583,7 +583,7 @@ const Visualisation = () => {
                         <ScatterYZ width={600} height={600} data={filteredData1} colorScale={colorScale} selectedMarkers={selectedMarkers} allMarkerGroups={allGroups}  maxX={maxX1} minX={minX1} maxY={maxY1} minY={minY1} maxZ={maxZ1} minZ={minZ1} timeMax={timeMax1} timeMin={timeMin1} /> */}
                     </div>
                     <div className="md:ml-5 relative rounded-lg border border-gray-300 p-6 shadow-md my-10 hover:shadow-lg animate-fade-up">
-                        <h2 className="text-xl font-bold mb-4">{`Study #2: ${selectedCsvFile2}`}</h2>
+                        <h2 className="text-xl font-bold mb-4 text-blue-900">{`Study #2: ${selectedCsvFile2}`}</h2>
                         {/* <ScatterplotSimple width={600} height={600} csv_file={selectedCsvFile2} upperX={upperX} lowerX={lowerX} upperY={upperY} lowerY={lowerY} timeStart={timeStart} timeEnd={timeEnd} timeMax={timeMax} />  */}
 
                         {/* This can probably be done in a cleaner way */}
@@ -750,7 +750,7 @@ const Visualisation = () => {
                     timeStart={timeEnd1 < timeEnd2 ? timeEnd1 : timeEnd2} 
                     timeEnd={timeEnd1 > timeEnd2 ? timeEnd1 : timeEnd2} /> 
                  <div className="w-full my-4">
-                    <h1 className="flex text-3xl font-bold mb-2 justify-center items-center">
+                    <h1 className="flex text-3xl font-bold mb-2 mt-4 justify-center items-center text-blue-900">
                         Studies Overview
                     </h1>
                     <p className="flex mb-4 justify-center items-center">

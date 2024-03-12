@@ -10,7 +10,7 @@ const AboutUs = () => {
     return (
         <div>
             <h1 className="text-3xl font-bold my-4 text-center">About Us</h1>
-            <div className="flex flex-wrap justify-center gap-4 my-10">
+            <div className="flex flex-wrap justify-center gap-6 my-10">
                 <ProfileCard
                     name="Alexander Astély"
                     email="astely@kth.se"

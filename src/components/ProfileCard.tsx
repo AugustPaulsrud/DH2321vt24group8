@@ -19,7 +19,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ name, email, role, secondRole
                     style={{ backgroundImage: `url(${imageSrc})` }}
                 ></div>
             </div>
-            <h2 className="text-lg text-blue-500 font-bold text-center">{name}</h2>
+            <h2 className="text-lg text-blue-900 font-bold text-center">{name}</h2>
             <p className="text-gray-600 mb-6 text-center">{email}</p>
             <p className="text-gray-600 text-center">{role}</p>
             <p className="text-gray-600 mb-4 text-center">{secondRole}</p>
