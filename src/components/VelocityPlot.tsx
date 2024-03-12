@@ -161,7 +161,7 @@ export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
     };
     return (
         <div className="flex flex-col justify-center items-center mt-4">
-            <h1>Velocity-Time Chart</h1>
+            <h1 className='font-bold'>Velocity-Time Chart</h1>
             <div className="flex mt-4">
                 <div className="flex mr-4">
                     <div className="w-4 h-4 mt-1 mr-2 bg-blue-600 rounded-full"></div>

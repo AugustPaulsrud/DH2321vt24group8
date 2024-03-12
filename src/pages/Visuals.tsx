@@ -632,7 +632,7 @@ const Visualisation = () => {
                     </div>
                 </div>
             )}
-            <div className="flex flex-col gap-2 justify-center items-center">
+            <div className="flex flex-col gap-2 justify-center items-center animate-fade-up">
                {syncTimeSliders ? (
                 <>
                 <label className="ml-4 font-bold">Select Time Range: <span className="font-medium">(Sync time ranges <input type="checkbox" checked={true} onChange={() => setSyncTimeSliders(false)} />)</span></label>
