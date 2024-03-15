@@ -89,6 +89,9 @@ export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
         const filteredData2 = props.data2.filter((d) => !isNaN(d.velocity) && d.time >= timeRange.min && d.time <= currentTime);
         const combinedData = [...filteredData1, ...filteredData2];
 
+        console.log(filteredData1);
+        console.log(filteredData2);
+
         // Create scales for x and y axes
         const xScale = d3.scaleLinear()
             .domain([timeRange.min, currentTime]) // Update the x-scale domain to [timeRange.min, currentTime]
@@ -119,14 +122,35 @@ export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
             .call(d3.axisLeft(yScale));
 
         // Append lines for the data
+        // svg.selectAll(".line")
+        //     .data([filteredData1, filteredData2])
+        //     .join("path")
+        //     .attr("class", "line")
+        //     .attr("d", line)
+        //     .style("stroke", (d, i) => i === 0 ? "blue" : "red")
+        //     .style("fill", "none")
+        //     .style("stroke-width", 2);
+        if (props.study1 != "") {
         svg.selectAll(".line")
-            .data([filteredData1, filteredData2])
+            .data([filteredData1])
             .join("path")
-            .attr("class", "line")
+            .attr("class", "line1")
             .attr("d", line)
-            .style("stroke", (d, i) => i === 0 ? "blue" : "red")
+            .style("stroke", "blue")
             .style("fill", "none")
             .style("stroke-width", 2);
+        }
+        
+        if (props.study2 != "") {
+            svg.selectAll(".line2")
+            .data([filteredData2])
+            .join("path")
+            .attr("class", "line2")
+            .attr("d", line)
+            .style("stroke", "red")
+            .style("fill", "none")
+            .style("stroke-width", 2);
+        }
 
         // Append labels for the x-axis
         svg.append("text")
@@ -143,7 +167,7 @@ export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
             .style("text-anchor", "middle")
             .text(y_label);
 
-    }, [props.data1, props.data2, timeRange, currentTime, width, height]);
+    }, [props.data1, props.data2, props.study1, props.study2, timeRange, currentTime, width, height]);
 
     const handlePlayPause = () => {
         setIsPlaying(prev => {
@@ -163,14 +187,18 @@ export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
         <div className="flex flex-col justify-center items-center mt-4">
             <h1 className='font-bold'>Velocity-Time Chart</h1>
             <div className="flex mt-4">
+                {props.study1 === "" ? (<></>) : (
                 <div className="flex mr-4">
                     <div className="w-4 h-4 mt-1 mr-2 bg-blue-600 rounded-full"></div>
                     <span>{props.study1}</span>
                 </div>
+                )}
+                {props.study2 === "" ? (<></>) : (
                 <div className="flex ml-4">
                     <div className="w-4 h-4 mt-1 mr-2 bg-red-500 rounded-full"></div>
                     <span>{props.study2}</span>
                 </div>
+                )}
             </div>
             <svg ref={svgRef} width={width + margin.left + margin.right} height={height + margin.top + margin.bottom}></svg>
             <div className="flex justify-center rounded-md p-4 w-4/5 border border-gray-300 bg-white">
