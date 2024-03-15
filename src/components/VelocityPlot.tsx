@@ -41,7 +41,7 @@ export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
 
     // Hook to handle the initial setup of the chart by setting the max time as the current time
     useEffect(() => {
-        if (!initialized && props.data1.length && props.data2.length) {
+        if (!initialized && (props.data1.length || props.data2.length)) {
             const allData = [...props.data1, ...props.data2];
             const maxTime = d3.max(allData, d => d.time)!;
             setCurrentTime(maxTime);
@@ -51,7 +51,7 @@ export const VelocityChart: React.FC<VelocityChartProps> = (props) => {
     
     // Hook to handle the initial setup of the play/pause functionality
     useEffect(() => {
-        if (!props.data1.length || !props.data2.length || !svgRef.current) return;
+        if ((!props.data1.length && !props.data2.length) || !svgRef.current) return;
 
         const allData = [...props.data1, ...props.data2];
         const minTime = d3.min(allData, d => d.time)!;
