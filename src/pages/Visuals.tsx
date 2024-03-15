@@ -352,10 +352,10 @@ const Visualisation = () => {
                             <div className="mb-4">
                                 <label className="block mb-4 font-bold">Select Markers:</label>
                                 <div className="mb-6">
-                                    <button className="px-4 py-2 rounded-md bg-blue-900 text-white mr-4" onClick={() => selectAllMarkers()}>
+                                    <button className={`px-4 py-2 rounded-md ${(selectedMarkers.length === allGroups.length) ? 'bg-gray-300 text-black' : 'bg-blue-900 text-white' } mr-4`} onClick={() => selectAllMarkers()}>
                                         Select All
                                     </button>
-                                    <button className="px-4 py-2 rounded-md bg-gray-300 text-black mr-4" onClick={() => deselectAllMarkers()}>
+                                    <button className={`px-4 py-2 rounded-md ${(selectedMarkers.length === 0) ? 'bg-gray-300 text-black' : 'bg-blue-900 text-white' } mr-4`} onClick={() => deselectAllMarkers()}>
                                         Deselect All
                                     </button>
                                 </div>
