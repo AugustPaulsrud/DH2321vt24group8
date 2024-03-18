@@ -323,6 +323,12 @@ const Visualisation = () => {
         }
     };
 
+    const stringRange = (start:number, end:number, step:number) =>
+        Array.from(
+        { length: ((end - start)/step) + 1 },
+        (value, index) => (start + index*step).toString()
+    );
+
     const [isImageVisible, setIsImageVisible] = useState(true);
 
     const toggleImageVisibility = () => {
@@ -638,10 +644,11 @@ const Visualisation = () => {
                 <label className="ml-4 font-bold">Select Time Range: <span className="font-medium">(Sync time ranges <input type="checkbox" checked={true} onChange={() => setSyncTimeSliders(false)} />)</span></label>
                 <MultiRangeSlider
                     style={{width: "90%", backgroundColor: "white", padding: "24px"}}
-                    className="m-2 ml-4"
+                    className="m-2 ml-4"  
                     min={timeMin1 < timeMin2 ? timeMin1 : timeMin2}
                     max={timeMax1 > timeMax2 ? timeMax1 : timeMax2}
                     step={1}
+                    labels={stringRange(timeMin1 < timeMin2 ? timeMin1 : timeMin2, timeMax1 > timeMax2 ? timeMax1 : timeMax2, 10)}
                     minValue={timeStart1}
                     maxValue={timeEnd1}
                     onChange={(e: ChangeResult) => {
@@ -664,6 +671,7 @@ const Visualisation = () => {
                     min={timeMin1}
                     max={timeMax1}
                     step={1}
+                    labels={stringRange(timeMin1, timeMax1, 50)}
                     minValue={timeStart1}
                     maxValue={timeEnd1}
                     onChange={(e: ChangeResult) => {
@@ -679,6 +687,7 @@ const Visualisation = () => {
                     className="m-2 ml-4"
                     min={timeMin2}
                     max={timeMax2}
+                    labels={stringRange(timeMin2, timeMax2, 50)}
                     step={1}
                     minValue={timeStart2}
                     maxValue={timeEnd2}
@@ -699,6 +708,7 @@ const Visualisation = () => {
                     min={minX1 < minX2 ? minX1 : minX2}
                     max={maxX1 > maxX2 ? maxX1 : maxX2}
                     step={10}
+                    labels={stringRange(minX1 < minX2 ? minX1 : minX2, maxX1 > maxX2 ? maxX1 : maxX2, 50)}
                     minValue={lowerX}
                     maxValue={upperX}
                     onChange={(e: ChangeResult) => {
@@ -714,6 +724,7 @@ const Visualisation = () => {
                     min={minY1 < minY2 ? minY1 : minY2}
                     max={maxY1 > maxY2 ? maxY1 : maxY2}
                     step={10}
+                    labels={stringRange(minY1 < minY2 ? minY1 : minY2, maxY1 > maxY2 ? maxY1 : maxY2, 50)}
                     minValue={lowerY}
                     maxValue={upperY}
                     onChange={(e: ChangeResult) => {
@@ -729,6 +740,7 @@ const Visualisation = () => {
                     min={minZ1 < minZ2 ? minZ1 : minZ2}
                     max={maxZ1 > maxZ2 ? maxZ1 : maxZ2}
                     step={10}
+                    labels={stringRange(minZ1 < minZ2 ? minZ1 : minZ2, maxZ1 > maxZ2 ? maxZ1 : maxZ2, 50)}
                     minValue={lowerZ}
                     maxValue={upperZ}
                     onChange={(e: ChangeResult) => {
