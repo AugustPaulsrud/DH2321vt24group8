@@ -637,7 +637,7 @@ const Visualisation = () => {
                 <>
                 <label className="ml-4 font-bold">Select Time Range: <span className="font-medium">(Sync time ranges <input type="checkbox" checked={true} onChange={() => setSyncTimeSliders(false)} />)</span></label>
                 <MultiRangeSlider
-                    style={{width: "90%", backgroundColor: "white"}}
+                    style={{width: "90%", backgroundColor: "white", padding: "24px"}}
                     className="m-2 ml-4"
                     min={timeMin1 < timeMin2 ? timeMin1 : timeMin2}
                     max={timeMax1 > timeMax2 ? timeMax1 : timeMax2}
@@ -659,7 +659,7 @@ const Visualisation = () => {
                 <div className="w-full">
                 <label className="ml-4 font-bold">Select Time Range for Study #1: <span className="font-medium">(Sync time ranges <input type="checkbox" checked={false} onChange={() => setSyncTimeSliders(true)} />)</span></label>
                 <MultiRangeSlider
-                    style={{width: "90%", backgroundColor: "white"}}
+                    style={{width: "90%", backgroundColor: "white", padding: "24px"}}
                     className="m-2 ml-4"
                     min={timeMin1}
                     max={timeMax1}
@@ -675,7 +675,7 @@ const Visualisation = () => {
                 <div className="w-full">
                 <label className="ml-4 font-bold">Select Time Range for Study #2: <span className="font-medium">(Sync time ranges <input type="checkbox" checked={false} onChange={() => setSyncTimeSliders(true)} />)</span></label>
                 <MultiRangeSlider
-                    style={{width: "90%", backgroundColor: "white"}}
+                    style={{width: "90%", backgroundColor: "white", padding: "24px"}}
                     className="m-2 ml-4"
                     min={timeMin2}
                     max={timeMax2}
@@ -694,7 +694,7 @@ const Visualisation = () => {
                )}
                 <label className="ml-4 font-bold">Select X-Range:</label>
                 <MultiRangeSlider
-                    style={{width: "90%", backgroundColor: "white"}}
+                    style={{width: "90%", backgroundColor: "white", padding: "24px"}}
                     className="m-2 ml-4"
                     min={minX1 < minX2 ? minX1 : minX2}
                     max={maxX1 > maxX2 ? maxX1 : maxX2}
@@ -709,7 +709,7 @@ const Visualisation = () => {
                 <br />
                 <label className="ml-4 font-bold">Select Y-Range:</label>
                 <MultiRangeSlider
-                    style={{width: "90%", backgroundColor: "white"}}
+                    style={{width: "90%", backgroundColor: "white", padding: "24px"}}
                     className="m-2 ml-4"
                     min={minY1 < minY2 ? minY1 : minY2}
                     max={maxY1 > maxY2 ? maxY1 : maxY2}
@@ -724,7 +724,7 @@ const Visualisation = () => {
                 <br />
                 <label className="ml-4 font-bold">Select Z-Range:</label>
                 <MultiRangeSlider
-                    style={{width: "90%", backgroundColor: "white"}}
+                    style={{width: "90%", backgroundColor: "white", padding: "24px"}}
                     className="m-2 ml-4"
                     min={minZ1 < minZ2 ? minZ1 : minZ2}
                     max={maxZ1 > maxZ2 ? maxZ1 : maxZ2}
