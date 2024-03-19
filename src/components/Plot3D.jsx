@@ -157,7 +157,7 @@ const Plot3D = (props) => {
   }
 
   const marker = {
-    name: 'Phantom',
+    name: 'Marker Tree',
     opacity: 0.05,
     color: 'rgb(102, 102, 153)',
     type: 'mesh3d',
