@@ -20,8 +20,8 @@ const About = () => {
                 </div>
                 <h1 className="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-4 animate-fade-up">How to Use</h1>
                 <iframe 
-                    width="640" 
-                    height="320" 
+                    width="560" 
+                    height="315" 
                     src="https://www.youtube.com/embed/wND7qNWUTRc?si=mc7YbE8bymSj5vKo" 
                     title="YouTube video player" 
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
