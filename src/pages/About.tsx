@@ -18,6 +18,12 @@ const About = () => {
                     <div className="h-2 w-2 bg-blue-900 rounded-full mx-2"></div>
                     <div className="h-2 w-2 bg-blue-900 rounded-full mx-2"></div>
                 </div>
+                <h1 className="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-4 animate-fade-up">How to Use</h1>
+                <div className="flex justify-center items-center my-16 relative animate-fade-up">
+                    <div className="h-2 w-2 bg-blue-900 rounded-full mx-2"></div>
+                    <div className="h-2 w-2 bg-blue-900 rounded-full mx-2"></div>
+                    <div className="h-2 w-2 bg-blue-900 rounded-full mx-2"></div>
+                </div>
                 <h1 className="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-4 animate-fade-up">Data</h1>
                 <p className="text-gray-600 text-center mb-8 my-4 animate-fade-up">
                     The data for multiple procedures/trials from different settings (i.e. location and system to capture the data, amount of markers, etc.) was given to us from <b>Alessandro Iop</b>. We selected <b>5</b> different trials from <b>one</b> setting (the setting which had the least number of markers, for simplicity). The selected raw data can be found 
