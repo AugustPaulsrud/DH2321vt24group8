@@ -11,8 +11,8 @@ import { Bars3BottomRightIcon, XMarkIcon } from '@heroicons/react/24/solid'
 // Navbar Functional Component
 const Navbar = () => {
     const Links =[
-        {name:"About",link:"/"},
         {name:"Visualisation",link:"/"},
+        {name:"About",link:"/"},
         {name:"Team",link:"/"},
       ];
 
