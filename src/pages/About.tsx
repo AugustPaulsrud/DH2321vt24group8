@@ -5,32 +5,39 @@ import research_image3 from "./research_image3.png";
 
 const About = () => {
     return (
-        <div className="w-full mx-auto p-16 bg-gray-100">
-            <h1 className="text-3xl font-bold mb-4">Progress</h1>
-            <ul className="list-disc ml-6">
-                <li>Researched and read papers on similar studies for inspiration on what visual structures, attempted to implement a few examples (with massive help from Alessandro). Some examples include...</li>
-                <li>[1] Merriaux, Pierre, et al. "A study of vicon system positioning performance." Sensors 17.7 (2017): 1591.</li>
-                <img src={research_image2} className="mt-4 mb-4"/>
-                <img src={research_image3} className="mt-4 mb-4"/>
-                <li>[2] Kim, Sunwook, and Maury A. Nussbaum. "Performance evaluation of a wearable inertial motion capture system for capturing physical exposures during manual material handling tasks." Ergonomics 56.2 (2013): 314-326.</li>
-                <img src={research_image1} className="mt-4 mb-4"/>
-                <li>Created Figma Prototypes of possible implementations and visual structures <a href="https://www.figma.com/file/ifiSF1PLdKRUAzwRWlCDxG/Visualization-DH2321?type=design&mode=design&t=8y3xmuCLSgHDaXiW-1" className="text-blue-500" target="_blank" rel="noopener noreferrer">(link)</a></li>
-                <li>Data has been normalised and preprocessed, can dedicate more resources into frontend development</li>
-                <li>Prototyped and deployed a barebones application to showcase how we can handle and understand the data</li>
-                <li>Established development conventions and delegated tasks appropriately accordiing to experience and deadlines</li>
-                <li>Met with Alessandro multiple times for feedback and questions regarding the project, as well as suggestions and recommendations on steps to take</li>
-            </ul>
-            <h1 className="text-3xl font-bold my-4">Challenges</h1>
-            <ul className="list-disc ml-6">
-                <li>Learning new technologies; conflicts between multiple libraries e.g. Plotly, React, D3.js</li>
-                <li>Refining and selecting appropriate visualisations for our preprocessed data to balance ease of understanding and conveying information</li>
-            </ul>
-            <h1 className="text-3xl font-bold my-4">Future Plans</h1>
-            <ul className="list-disc ml-6">
-                <li>Complete implementations of our planned visual structures and features from Figma prototypes and meeting discussions</li>
-                <li>Make the application mobile responsive to be portable</li>
-                <li>Continue meeting with Alessandro to refine our project and ideas</li>
-            </ul>
+        <div className="bg-gray-100 py-12 px-6 md:px-8 lg:px-16 xl:px-24">
+            <h1 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-4 animate-fade-up">Project Description</h1>
+            <div className="max-w-3xl mx-auto">
+                <p className="text-gray-600 text-center mb-8 my-4 animate-fade-up">
+                    At 4DMotion, we are trying to tackle the issue of visualizing 4D motion data from external ventricular drainage (EVD) surgery simulations captured on a motion capture system by researchers at KTH. 
+                    EVD is a risky procedure as improper placement of the catheter could cause intracranial haemorrhaging or permanent brain injuries to the patient. 
+                    With this in mind, 4DMotion was created as a tool to allow researchers and future surgeons in training to visualize the procedures of EVD surgery by referencing data of previous surgical trials captured using motion capture.
+                </p>
+                <h1 className="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-4 animate-fade-up">Data</h1>
+                <p className="text-gray-600 text-center mb-8 my-4 animate-fade-up">
+                    The data for multiple procedures/trials from different settings (i.e. location and system to capture the data, amount of markers, etc.) was given to us from <b>Alessandro Iop</b>. We selected <b>5</b> different trials from <b>one</b> setting (the setting which had the least number of markers, for simplicity). The selected raw data can be found 
+                    <a href="https://github.com/AugustPaulsrud/DH2321vt24group8/tree/main/public/data" className="text-blue-500"> here</a> and consists of tsv files. The raw data is parsed and downsampled to 500 points using the Largest Triangle Three Buckets algorithm with <a href="https://github.com/AugustPaulsrud/DH2321vt24group8/tree/main/public/data/notebooks" className="text-blue-500">the following scripts</a>. 
+                    The subsampled data can be found <a href="https://github.com/AugustPaulsrud/DH2321vt24group8/tree/main/public/data/csv_downsampled" className="text-blue-500"> here</a> and the metadata <a href="https://github.com/AugustPaulsrud/DH2321vt24group8/blob/main/public/data/metadata.csv" className="text-blue-500"> here</a>. <br/><br/>
+                    <b>Note:</b> The parsed data includes angle but this was not used by the visual mappings due to time constraints.
+                </p>
+                <h1 className="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-4 animate-fade-up">Credits/Acknowledgements</h1>
+                <p className="text-gray-600 text-center mb-8 my-4 animate-fade-up">
+                    We would like to acknowledge <b>Alessandro Iop</b> for proposing the idea, sharing the data, giving us feedback and supporting us throughout the project. 
+                    We also want to thank <b>Mario Romero Vega</b> for taking time to review our visualization tool and giving us valuable feedback as well as inspiring us to learn more about information visualization. 
+                    Lastly we want to thank <b>Henrik Garde</b> for letting us do a semi-structured interview and giving us a chance to test how well the visualization worked for generating insights as well as giving us important feedback. 
+                </p>
+                <h1 className="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-4 animate-fade-up">Citations/References/Source</h1>
+                <p className="text-gray-600 text-left mb-8 my-4 animate-fade-up">
+                    <ul className="list-disc ml-6">
+                        <li className="p-2">[1] Merriaux, Pierre, et al. "A study of vicon system positioning performance." Sensors 17.7 (2017): 1591.</li>
+                        <li className="p-2">[2] Kim, Sunwook, and Maury A. Nussbaum. "Performance evaluation of a wearable inertial motion capture system for capturing physical exposures during manual material handling tasks." Ergonomics 56.2 (2013): 314-326.</li>
+                        <li className="p-2">[3] Y. Tashiro and T. Saitoh, "A Study on Motion Visualization System Using Motion Capture Data," 17th International Conference on Artificial Reality and Telexistence (ICAT 2007), Esbjerg, Denmark, 2007, pp. 314-315, doi: 10.1109/ICAT.2007.53.</li>
+                        <li className="p-2">[4] Wippich, M. (2023). Effects of Virtual Reality and Trajectory Visualization on Neurosurgical Training (Dissertation). Retrieved from https://urn.kb.se/resolve?urn=urn:nbn:se:kth:diva-343144</li>
+                        <li className="p-2">[5] Steinarsson, S. (2013). Downsampling time series for visual representation (Doctoral dissertation).</li>
+                        <li className="p-2">The source code of the project can be found <a href="https://github.com/AugustPaulsrud/DH2321vt24group8" className="text-blue-500">here</a>.</li>
+                    </ul>
+                </p>
+            </div>
         </div>
     );
 };
