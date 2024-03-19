@@ -57,6 +57,27 @@ const About = () => {
                     <div className="h-2 w-2 bg-blue-900 rounded-full mx-2"></div>
                     <div className="h-2 w-2 bg-blue-900 rounded-full mx-2"></div>
                 </div>
+                <h1 className="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-4 animate-fade-up">Addressing Feedback</h1>
+                <p className="text-gray-600 text-left mb-8 my-4 animate-fade-up">
+                    <ul className="list-disc ml-6">
+                        <li className="p-2"><b>“If the first step is to select previously record session, why isn’t the list of those sessions on the top of the page?” / “If you need to select a dataset before you see the plots it should be nice to have the overview on top instead of the bottom”</b> - This suggestion has been incorporated into the final deliverable.</li>
+                        <li className="p-2"><b>“Why is the visualisation tool so vertical? There's a bunch of empty space, huge sliders, and you need to scroll to see every feature.” / ”I feel theres too much info on 1 screen..especially with a vertical layout.Hmm ?”</b> - We have discussed and planned with Alessandro to convert the layout to using carousels to reduce verticality for the future, however, this cannot be incorporated for the final deliverable.</li>
+                        <li className="p-2"><b>“Would be nice to overlay a threshold to quickly see if a session was outside the allowed threshold”</b> - Mario has briefly addressed this and has said that this implementation is outside the scope of this current project, although it is a good suggestion for the future.</li>
+                        <li className="p-2"><b>“2. would it be useful to synchronise their times to the point of insertion?”</b> - Too much preprocessing to be done before the final deliverable deadline, although there are plans for the future to implement this by Alessandro.</li>
+                        <li className="p-2"><b>“Can you show a cylinder marking the boundaries of a successful insertion?”</b> - We have plans for implementing something similar after handing off the project to Alessandro, but currently this cannot be done before the final deliverable</li>
+                        <li className="p-2"><b>“Can you show aggregate data? Say, aggregate all of the trials from a participant?”</b> - You can use the Filtering in the Overview Table under the “Trial Name” column, and filter trials to only include the ones with the participant you are looking for. But for a page to only one participant, this is currently out of the scope of the project.</li>
+                        <li className="p-2"><b>“A feature to filter out the marker positions before insertion might be helpful”</b> - This would require a lot of preprocessing to detect when the point of insertion has occurred, and as such, it will not be implemented for the final deliverable but is planned for the future.</li>
+                        <li className="p-2"><b>“Great job! But would be nice to put values on the sliders”</b> - This has been implemented to a certain extent.</li>
+                        <li className="p-2"><b>“Would be nice with a range of Color connected to time, so you can easily see in time when each dot is. Like a gradient over time”</b> - We have this feature already implemented before, Time is based on Opacity, the lower the Opacity the earlier in Time for the trial</li>
+                        <li className="p-2"><b>“For the sliders, could be nice to also make it possible to enter the start/end values, not only adjust with the sliders”</b> - As we are using a third-party component, we cannot currently add this feature as we would have to change the source-code of that component, we have plans in the future of refactoring the sliders but this will not be finished by the deadline.</li>
+                        <li className="p-2"><b>“Would be cool if displaying the skull would happen on both graphs, or maybe I don‘t see the use of having it only toggled on in one graph”</b> - This can already be done, you simply have to toggle the skull on for both graphs.</li>
+                    </ul>
+                </p>
+                <div className="flex justify-center items-center my-16 relative animate-fade-up">
+                    <div className="h-2 w-2 bg-blue-900 rounded-full mx-2"></div>
+                    <div className="h-2 w-2 bg-blue-900 rounded-full mx-2"></div>
+                    <div className="h-2 w-2 bg-blue-900 rounded-full mx-2"></div>
+                </div>
                 <h1 className="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-4 animate-fade-up">Citations/References/Source</h1>
                 <p className="text-gray-600 text-left mb-8 my-4 animate-fade-up">
                     <ul className="list-disc ml-6">
