@@ -10,16 +10,46 @@ const Team = () => {
     return (
         <div className="bg-gray-100 py-12 px-6 md:px-8 lg:px-16 xl:px-24 flex flex-row gap-8">
             <div>
-                <h1 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-8">Learning Objectives Reached</h1>
+                <h1 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-4">Learning Objectives Reached</h1>
                 <div className="max-w-3xl mx-auto">
+                    <p className="text-lg font-bold mb-4">Throughout the project we have reached the following learning objectives in relation to the the intended learning outcomes: </p>
                     <p className="text-lg leading-relaxed text-gray-700 mb-6">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vel felis nec lacus eleifend feugiat. Integer at felis varius, ultrices elit eget, hendrerit lectus. Suspendisse potenti. Nulla facilisi. Vivamus porta dui et arcu efficitur congue. Nulla facilisi. Duis eget nisi magna. Fusce vitae magna pharetra, commodo mi a, efficitur ipsum. Nullam vel orci ac sem tempor scelerisque. Aliquam erat volutpat. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nullam lobortis nibh non purus gravida, ac mollis sem auctor.
+                        Design:
+                        <ul className="list-disc ml-6">
+                            <li>Learned how to use D3.js and Plotly.js to create visual mappings for effective visualisations.</li>
+                            <li>Learned how to combine D3.js and Plotly.js with React.js in order to facilitate data and view transformations.</li>
+                            <li>Learned how to facilitate actionable insights through our visualizations by using the visualization pipeline and methods learned in the course.</li>
+                            <li>Practiced how to discuss the design and the visualization choices within the team and with the intended user on how to balance the user needs with time constraints.</li>
+                            <li>Practiced concurrent collaboration on GitHub and how to collaborate on different features using Agile methodologies.</li>
+                        </ul>
                     </p>
                     <p className="text-lg leading-relaxed text-gray-700 mb-6">
-                        Nam congue, eros sit amet eleifend aliquet, neque purus faucibus mauris, et fermentum nisl metus et metus. Nullam quis risus libero. Sed nec augue eros. Praesent auctor laoreet lectus, vitae sodales metus viverra vel. Ut varius felis ac mi mattis, quis cursus sapien dapibus. Duis eget lacinia nulla. Vestibulum congue fermentum enim a finibus. Proin dictum bibendum felis nec bibendum. Praesent fermentum metus vel ligula suscipit, id molestie lectus lacinia. Sed luctus purus sit amet posuere aliquam. Nulla nec accumsan dolor.
+                        Defend:
+                        <ul className="list-disc ml-6">
+                            <li>Although the prerequisite domain knowledge needed to generate insights from the visualization tool was high (since it is a brain surgery procedure and used motion capture, things that we all were unfamiliar with), we were able to defend our design choices by continuously having meetings with the intended user and by reading articles related to the topic.</li>
+                        </ul>
                     </p>
                     <p className="text-lg leading-relaxed text-gray-700 mb-6">
-                        Donec rhoncus eros eu nunc eleifend, vitae vestibulum enim congue. Proin blandit sapien eget nunc tempus, id bibendum nisi feugiat. Integer placerat, nisi ut vestibulum efficitur, mi dui fringilla nulla, ac malesuada orci leo eu turpis. Nullam ac purus eget diam fermentum tempor. Nam lacinia sapien a arcu gravida, in aliquet ante posuere. Vivamus vel tortor arcu. Suspendisse rhoncus quam eu elit varius tempus. Aliquam convallis tortor nec libero bibendum, vel egestas nulla vestibulum.
+                        Critique:
+                        <ul className="list-disc ml-6">
+                            <li>We were able to criticize other visualization tools through domain theory. For example the default motion capture visualization tool that lacked interactive data transformations and did not facilitate much insight.</li>
+                            <li>Learned how to critique our own visualizations through theories and practices learnt in the course. For example lack of direct manipulation.</li>
+                        </ul>
+                    </p>
+                    <p className="text-lg leading-relaxed text-gray-700 mb-6">
+                        Evaluate:
+                        <ul className="list-disc ml-6">
+                            <li>Prepared, ran and analyzed a semi-structured interview with an external partner in order to  get criticism.</li>
+                            <li>Evaluate feedback from different sources and integrate them into the visualization tool.</li>
+                        </ul>
+                    </p>
+                    <p className="text-lg leading-relaxed text-gray-700 mb-6">
+                        Demonstrate:
+                        <ul className="list-disc ml-6">
+                            <li>Demonstrated our visualization systems to our intended users / domain experts (Alessandro, Mario and Henrik)</li>
+                            <li>Demonstrated our visualization systems to novices (Through Hello World Demo and Final Presentation with students from the course)</li>
+                            <li>Learned how to present a highly specific visualization to an audience lacking the domain expertise by simplifying explanations</li>
+                        </ul>
                     </p>
                  </div>
             </div>
