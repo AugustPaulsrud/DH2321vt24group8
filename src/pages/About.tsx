@@ -19,6 +19,16 @@ const About = () => {
                     <div className="h-2 w-2 bg-blue-900 rounded-full mx-2"></div>
                 </div>
                 <h1 className="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-4 animate-fade-up">How to Use</h1>
+                <iframe 
+                    width="640" 
+                    height="320" 
+                    src="https://www.youtube.com/embed/wND7qNWUTRc?si=mc7YbE8bymSj5vKo" 
+                    title="YouTube video player" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                    className="justify-center items-center mx-auto my-8"
+                    >
+                </iframe>
                 <div className="flex justify-center items-center my-16 relative animate-fade-up">
                     <div className="h-2 w-2 bg-blue-900 rounded-full mx-2"></div>
                     <div className="h-2 w-2 bg-blue-900 rounded-full mx-2"></div>
