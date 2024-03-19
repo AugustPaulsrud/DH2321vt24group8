@@ -345,7 +345,22 @@ const Visualisation = () => {
                     Show 3D Graph
                 </button>
             </div>
-            <div className="mb-4 mt-10 animate-fade-up">
+            <div className="mt-10 animate-fade-up">
+                <div className="w-full mb-8">
+                    <h1 className="flex text-3xl font-bold mb-2 mt-4 justify-center items-center text-blue-900">
+                        Studies Overview
+                    </h1>
+                    <p className="flex mb-4 justify-center items-center">
+                        Select two studies for comparison to render the data on the graphs above. 
+                        Table can be sorted in ascending/descending order by clicking on the column headers.
+                    </p>
+                    <OverviewTable 
+                        onSelectStudies1={handleSelectStudies1} 
+                        selectedStudies1={selectedStudies1} 
+                        onSelectStudies2={handleSelectStudiesStudy2}
+                        selectedStudies2={selectedStudies2}
+                    />
+                </div> 
                 <div className="flex gap-5 justify-center">
                     <div className="rounded-lg border border-gray-300 p-8 shadow-md bg-white">
                         <div className="flex flex-col items-center">
@@ -738,7 +753,7 @@ const Visualisation = () => {
                 />
                 <br />
             </div>
-            <div className="animate-fade-up">
+            <div className="animate-fade-up mb-8">
                 <VelocityChart 
                     study1={selectedCsvFile1}
                     study2={selectedCsvFile2}
@@ -749,21 +764,6 @@ const Visualisation = () => {
                     allMarkerGroups={allGroups}
                     timeStart={timeEnd1 < timeEnd2 ? timeEnd1 : timeEnd2} 
                     timeEnd={timeEnd1 > timeEnd2 ? timeEnd1 : timeEnd2} /> 
-                 <div className="w-full mt-8">
-                    <h1 className="flex text-3xl font-bold mb-2 mt-4 justify-center items-center text-blue-900">
-                        Studies Overview
-                    </h1>
-                    <p className="flex mb-4 justify-center items-center">
-                        Select two studies for comparison to render the data on the graphs above. 
-                        Table can be sorted in ascending/descending order by clicking on the column headers.
-                    </p>
-                    <OverviewTable 
-                        onSelectStudies1={handleSelectStudies1} 
-                        selectedStudies1={selectedStudies1} 
-                        onSelectStudies2={handleSelectStudiesStudy2}
-                        selectedStudies2={selectedStudies2}
-                    />
-                </div> 
             </div>
         </div>
     );

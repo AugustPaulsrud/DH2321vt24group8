@@ -3,7 +3,7 @@ import research_image1 from "./research_image1.png";
 import research_image2 from "./research_image2.png";
 import research_image3 from "./research_image3.png";
 
-const Home = () => {
+const About = () => {
     return (
         <div className="w-full mx-auto p-16 bg-gray-100">
             <h1 className="text-3xl font-bold mb-4">Progress</h1>
@@ -35,4 +35,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default About;

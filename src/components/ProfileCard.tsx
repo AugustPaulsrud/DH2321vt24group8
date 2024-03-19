@@ -1,5 +1,5 @@
 import React from 'react';
-// import { FaLinkedin } from 'react-icons/fa';
+import { FaLinkedin } from 'react-icons/fa';
 
 interface ProfileCardProps {
     name: string;
@@ -23,11 +23,11 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ name, email, role, secondRole
             <p className="text-gray-600 mb-6 text-center">{email}</p>
             <p className="text-gray-600 text-center">{role}</p>
             <p className="text-gray-600 mb-4 text-center">{secondRole}</p>
-            {/* <div className="px-6 py-4">
-                <a href={linkedin} target="_blank" rel="noopener noreferrer" className="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+            <div className="px-6 py-4">
+                <a href={linkedin} target="_blank" rel="noopener noreferrer" className="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded-full">
                     <FaLinkedin />
                 </a>
-            </div> */}
+            </div>
         </div>
     );
 };
