@@ -6,6 +6,7 @@ import OverviewTable from "../components/OverviewTable";
 import * as d3 from 'd3';
 import { Plot2D } from "../components/Plot2D";
 import catimg from "./catraw3marked.png";
+import skullimg from "./skull1labels.png";
 
 // For changing perspecitves
 const X_DIM = 0;
@@ -323,7 +324,7 @@ const Visualisation = () => {
         }
     };
 
-    const [isImageVisible, setIsImageVisible] = useState(true);
+    const [isImageVisible, setIsImageVisible] = useState(false);
 
     const toggleImageVisibility = () => {
         setIsImageVisible(prevState => !prevState);
@@ -377,13 +378,24 @@ const Visualisation = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="relative ml-4">
-                        {isImageVisible && (
-                            <img src={catimg} alt="Catheter with markers" className="object-scale-down h-80 rounded-md" />
-                        )}
-                        <button onClick={toggleImageVisibility} className={`absolute bottom-0 right-0 p-2 bg-blue-900 text-white rounded-lg focus:outline-none ${isImageVisible ? '' : 'mb-24 left-3'}`}>
-                            {isImageVisible ? 'Hide Marker Reference' : 'Show Marker Reference'}
-                        </button>
+                    <div className="flex justify-center flex-col">
+                        <div className="relative ml-4 ">
+                            {isImageVisible && (
+                                <img src={catimg} alt="Catheter with markers" className="object-scale-down h-80 rounded-md" />
+                            )}
+                            
+                        </div>
+                        <div className="relative ml-4">
+                            {isImageVisible && (
+                                <img src={skullimg} alt="Skull  with markers" className="object-scale-down h-80 rounded-md" />
+                            )}
+                            
+                        </div>
+                        <div className="flex justify-center m-4">
+                            <button onClick={toggleImageVisibility} className={` p-2 bg-blue-900 text-white rounded-lg focus:outline-none ${isImageVisible ? '' : 'mb-24'}`}>
+                                {isImageVisible ? 'Hide Marker Reference' : 'Show Marker Reference'}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
