@@ -257,6 +257,7 @@ const OverviewTable: React.FC<OverviewTableProps> = ({ onSelectStudies1, selecte
     };
 
     return (
+        <div className="overflow-scroll">
         <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
                 <tr>
@@ -364,6 +365,7 @@ const OverviewTable: React.FC<OverviewTableProps> = ({ onSelectStudies1, selecte
                 ))}
             </tbody>
         </table>
+        </div>
     );
 };
 
